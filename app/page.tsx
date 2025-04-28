@@ -35,20 +35,37 @@ export default function Home() {
 
         {/* Hero Section with Google-style Layout */}
         <section id="home" className="flex flex-col md:flex-row items-center justify-between min-h-screen px-8 md:px-16 lg:px-24 max-w-7xl mx-auto">
-          {/* Left Side - Text Content */}
+          {/* Avatar Image - First on Mobile */}
           <AnimatedContent 
-            className="flex-1 space-y-12 text-center md:text-left"
+            className="flex-1 flex justify-center md:justify-end order-1 md:order-2"
+            delay={0.2}
+          >
+            <div className="relative w-64 h-64 md:w-96 md:h-96 mb-12 md:mb-0">
+              <div className="absolute inset-0 bg-gradient-to-br from-[var(--primary-color)]/10 to-[var(--secondary-color)]/10 rounded-full transform rotate-6"></div>
+              <Image
+                src="/avatar.png"
+                alt="AnhND"
+                fill
+                className="object-cover rounded-full relative z-10 shadow-2xl"
+                priority
+              />
+            </div>
+          </AnimatedContent>
+
+          {/* Text Content - Second on Mobile */}
+          <AnimatedContent 
+            className="flex-1 space-y-12 text-center md:text-left order-2 md:order-1"
             delay={0}
           >
             <div className="max-w-2xl animate-fade-in">
               <h1 className="text-6xl md:text-7xl lg:text-8xl font-light text-[var(--text-color)] tracking-tight leading-tight">
                 <span className="inline-block text-5xl md:text-6xl lg:text-7xl">Hello,</span><br />
                 <span className="inline-flex items-center">
-                  I'm&nbsp;
-                  <span className="text-[var(--primary-color)] inline-block typing-animation text-6xl md:text-7xl lg:text-8xl">AnhND</span>
+                  <span className="text-[var(--primary-color)] inline-block typing-animation text-6xl md:text-7xl lg:text-8xl">I'm AnhND</span>
                 </span>
               </h1>
-              <div className="flex flex-col md:flex-row gap-8 justify-center md:justify-start mt-16">
+              {/* Buttons - Third on Mobile */}
+              <div className="flex flex-col md:flex-row gap-8 justify-center md:justify-start mt-16 order-3">
                 <Link
                   href="#contact" 
                   className="px-10 py-4 text-white bg-[var(--primary-color)] rounded-full hover:bg-[var(--secondary-color)] transition-all duration-300 transform hover:scale-105 text-base font-normal tracking-wide shadow-lg hover:shadow-xl"
@@ -62,23 +79,6 @@ export default function Home() {
                   View Projects
                 </Link>
               </div>
-            </div>
-          </AnimatedContent>
-
-          {/* Right Side - Avatar Image */}
-          <AnimatedContent 
-            className="flex-1 flex justify-center md:justify-end mt-20 md:mt-0"
-            delay={0.2}
-          >
-            <div className="relative w-80 h-80 md:w-96 md:h-96">
-              <div className="absolute inset-0 bg-gradient-to-br from-[var(--primary-color)]/10 to-[var(--secondary-color)]/10 rounded-full transform rotate-6"></div>
-              <Image
-                src="/avatar.png"
-                alt="AnhND"
-                fill
-                className="object-cover rounded-full relative z-10 shadow-2xl"
-                priority
-              />
             </div>
           </AnimatedContent>
         </section>
@@ -122,33 +122,57 @@ export default function Home() {
               </h2>
             </AnimatedContent>
             <AnimatedContent delay={0.4}>
-              <div className="grid gap-20 md:grid-cols-2">
-                <div>
-                  <h3 className="text-3xl font-light text-[var(--text-color)] mb-10">Get in Touch</h3>
-                  <p className="text-secondary mb-12 leading-relaxed text-lg tracking-wide">
-                    I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions. Let's create something amazing together!
-                  </p>
-                  <div className="space-y-8">
-                    <p className="text-secondary flex items-center text-lg tracking-wide">
-                      <span className="mr-4 text-2xl">📧</span>
-                      me@anhnd.com
-                    </p>
-                    <p className="text-secondary flex items-center text-lg tracking-wide">
-                      <span className="mr-4 text-2xl">📍</span>
-                      Hanoi, Vietnam
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+                {/* Left Column - Text */}
+                <div className="md:col-span-2 space-y-8 flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-3xl font-light text-[var(--text-color)] mb-6">Get in Touch</h3>
+                    <p className="text-secondary leading-relaxed text-lg tracking-wide">
+                      I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions. Let's create something amazing together!
                     </p>
                   </div>
+                  {/* Credit Section */}
+                  <div className="text-secondary text-sm">
+                    <p>© {new Date().getFullYear()} AnhND. All rights reserved.</p>
+                    <p className="mt-2">Built with Next.js and Tailwind CSS</p>
+                  </div>
                 </div>
-                <div className="flex justify-center md:justify-end">
-                  <Link 
-                    href="https://linkedin.com/in/anhngd" 
-                    className="text-secondary hover:text-[var(--primary-color)] transition-all duration-300 transform hover:scale-110"
-                  >
-                    <span className="sr-only">LinkedIn</span>
-                    <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                    </svg>
-                  </Link>
+
+                {/* Right Column - Contact Info */}
+                <div className="space-y-6">
+                  <div className="group flex items-center space-x-6 p-8 rounded-3xl bg-[var(--bg-color)] hover:bg-[var(--primary-color)]/10 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--primary-color)]/10">
+                    <span className="text-4xl group-hover:text-[var(--primary-color)] transition-colors duration-300">📧</span>
+                    <div>
+                      <p className="text-secondary text-lg tracking-wide">Email</p>
+                      <a href="mailto:me@anhnd.com" className="text-[var(--primary-color)] hover:text-[var(--secondary-color)] transition-colors duration-300 text-xl">me@anhnd.com</a>
+                    </div>
+                  </div>
+                  <div className="group flex items-center space-x-6 p-8 rounded-3xl bg-[var(--bg-color)] hover:bg-[var(--primary-color)]/10 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--primary-color)]/10">
+                    <span className="text-4xl group-hover:text-[var(--primary-color)] transition-colors duration-300">📍</span>
+                    <div>
+                      <p className="text-secondary text-lg tracking-wide">Location</p>
+                      <p className="text-[var(--text-color)] text-xl">Hanoi, Vietnam</p>
+                    </div>
+                  </div>
+                  <div className="group flex items-center space-x-6 p-8 rounded-3xl bg-[var(--bg-color)] hover:bg-[var(--primary-color)]/10 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--primary-color)]/10">
+                    <Link 
+                      href="https://linkedin.com/in/anhngd" 
+                      className="text-4xl group-hover:text-[var(--primary-color)] transition-colors duration-300"
+                    >
+                      <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                      </svg>
+                    </Link>
+                    <div>
+                      <p className="text-secondary text-lg tracking-wide">LinkedIn</p>
+                      <Link 
+                        href="https://linkedin.com/in/anhngd" 
+                        className="text-[var(--primary-color)] hover:text-[var(--secondary-color)] transition-colors duration-300 text-xl"
+                      >
+                        anhngd
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               </div>
             </AnimatedContent>
