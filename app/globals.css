@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-rgb: 255, 255, 255;
+  --primary-color: #FF5F00;
+  --secondary-color: #EB001B;
+  --text-color: #1a1a1a;
+  --bg-color: #ffffff;
+  --section-bg: #f8f9fa;
+  --nav-bg: rgba(255, 255, 255, 0.8);
+  --text-secondary: #4b5563;
+}
+
+[data-theme="dark"] {
+  --foreground-rgb: 255, 255, 255;
+  --background-rgb: 0, 0, 0;
+  --primary-color: #FF7F33;
+  --secondary-color: #FF3333;
+  --text-color: #f3f4f6;
+  --bg-color: #0f172a;
+  --section-bg: #1e293b;
+  --nav-bg: rgba(15, 23, 42, 0.8);
+  --text-secondary: #9ca3af;
+}
+
+body {
+  color: var(--text-color);
+  background: var(--bg-color);
+  font-family: 'Lexend', sans-serif;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+.bg-section {
+  background-color: var(--section-bg);
+}
+
+.nav-bg {
+  background-color: var(--nav-bg);
+  backdrop-filter: blur(8px);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .section-title {
+    @apply text-3xl font-bold text-center text-gray-900 mb-8;
+  }
+  
+  .section-subtitle {
+    @apply text-xl font-semibold text-gray-900 mb-4;
+  }
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink {
+  50% { border-color: transparent }
+}
+
+.typing-animation {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 3px solid var(--primary-color);
+  animation: 
+    typing 1.2s steps(20, end),
+    blink .8s step-end infinite;
+  padding-right: 2px;
+  margin-left: 2px;
+} 
