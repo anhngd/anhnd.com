@@ -4,24 +4,28 @@ import Script from 'next/script'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 
-export default function GoogleAnalytics({ GA_MEASUREMENT_ID }: { GA_MEASUREMENT_ID: string }) {
+declare global {
+  interface Window {
+    gtag: any
+  }
+}
+
+export default function GoogleAnalytics() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
   useEffect(() => {
     const url = pathname + searchParams.toString()
-    
-    // Track page views
-    window.gtag('config', GA_MEASUREMENT_ID, {
+    window.gtag('config', process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || '', {
       page_path: url,
     })
-  }, [pathname, searchParams, GA_MEASUREMENT_ID])
+  }, [pathname, searchParams])
 
   return (
     <>
       <Script
         strategy="afterInteractive"
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+        src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || ''}`}
       />
       <Script
         id="google-analytics"
@@ -31,9 +35,7 @@ export default function GoogleAnalytics({ GA_MEASUREMENT_ID }: { GA_MEASUREMENT_
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', '${GA_MEASUREMENT_ID}', {
-              page_path: window.location.pathname,
-            });
+            gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || ''}');
           `,
         }}
       />
