@@ -13,7 +13,7 @@ export default function Home() {
       <ThemeProvider />
       <main className="min-h-screen">
         {/* Navigation Bar */}
-        <nav className="fixed top-0 left-0 right-0 z-50 py-12 px-8 md:px-16 lg:px-24 nav-bg">
+        <nav className="fixed top-0 left-0 right-0 z-50 py-4 md:py-12 px-8 md:px-16 lg:px-24 nav-bg">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center space-x-12">
               <Link 
@@ -34,13 +34,13 @@ export default function Home() {
         </nav>
 
         {/* Hero Section with Google-style Layout */}
-        <section id="home" className="flex flex-col md:flex-row items-center justify-between min-h-screen px-8 md:px-16 lg:px-24 max-w-7xl mx-auto">
+        <section id="home" className="flex flex-col md:flex-row items-center justify-between min-h-screen px-8 md:px-16 lg:px-24 max-w-7xl mx-auto pt-32 md:pt-0">
           {/* Avatar Image - First on Mobile */}
           <AnimatedContent 
             className="flex-1 flex justify-center md:justify-end order-1 md:order-2"
             delay={0.2}
           >
-            <div className="relative w-64 h-64 md:w-96 md:h-96 mb-12 md:mb-0">
+            <div className="relative w-48 h-48 sm:w-64 sm:h-64 md:w-96 md:h-96 mb-8 sm:mb-12 md:mb-0">
               <div className="absolute inset-0 bg-gradient-to-br from-[var(--primary-color)]/10 to-[var(--secondary-color)]/10 rounded-full transform rotate-6"></div>
               <Image
                 src="/avatar.png"
@@ -87,12 +87,12 @@ export default function Home() {
         <AnimatedSection id="about" className="py-40 bg-section">
           <div className="max-w-5xl mx-auto px-8">
             <AnimatedContent delay={0.2}>
-              <h2 className="text-5xl font-light text-[var(--text-color)] mb-20">
+              <h2 className="text-5xl font-light text-[var(--text-color)] mb-20 font-[var(--font-playfair)]">
                 About Me
               </h2>
             </AnimatedContent>
             <AnimatedContent delay={0.4}>
-              <div className="space-y-10 text-secondary text-lg leading-relaxed tracking-wide">
+              <div className="space-y-10 text-secondary text-lg leading-relaxed tracking-wide font-[var(--font-cormorant)]">
                 <p>
                   My name is Anh. My background is in Applied Mathematics and Computer Science. With an engineering degree and a Master of Science in Applied Mathematics from Hanoi University of Science and Technology, I've built a strong academic foundation, a systematic mindset, and the ability to work through complex, uncertain problems.
                 </p>
@@ -124,17 +124,12 @@ export default function Home() {
             <AnimatedContent delay={0.4}>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
                 {/* Left Column - Text */}
-                <div className="md:col-span-2 space-y-8 flex flex-col justify-between">
+                <div className="md:col-span-2 space-y-8">
                   <div>
                     <h3 className="text-3xl font-light text-[var(--text-color)] mb-6">Get in Touch</h3>
-                    <p className="text-secondary leading-relaxed text-lg tracking-wide">
+                    <p className="text-secondary leading-relaxed text-lg tracking-wide font-[var(--font-cormorant)]">
                       I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions. Let's create something amazing together!
                     </p>
-                  </div>
-                  {/* Credit Section */}
-                  <div className="text-secondary text-sm">
-                    <p>© {new Date().getFullYear()} AnhND. All rights reserved.</p>
-                    <p className="mt-2">Built with Next.js and Tailwind CSS</p>
                   </div>
                 </div>
 
@@ -145,13 +140,6 @@ export default function Home() {
                     <div>
                       <p className="text-secondary text-lg tracking-wide">Email</p>
                       <a href="mailto:me@anhnd.com" className="text-[var(--primary-color)] hover:text-[var(--secondary-color)] transition-colors duration-300 text-xl">me@anhnd.com</a>
-                    </div>
-                  </div>
-                  <div className="group flex items-center space-x-6 p-8 rounded-3xl bg-[var(--bg-color)] hover:bg-[var(--primary-color)]/10 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--primary-color)]/10">
-                    <span className="text-4xl group-hover:text-[var(--primary-color)] transition-colors duration-300">📍</span>
-                    <div>
-                      <p className="text-secondary text-lg tracking-wide">Location</p>
-                      <p className="text-[var(--text-color)] text-xl">Hanoi, Vietnam</p>
                     </div>
                   </div>
                   <div className="group flex items-center space-x-6 p-8 rounded-3xl bg-[var(--bg-color)] hover:bg-[var(--primary-color)]/10 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--primary-color)]/10">
@@ -178,6 +166,17 @@ export default function Home() {
             </AnimatedContent>
           </div>
         </AnimatedSection>
+
+        {/* Footer */}
+        <footer className="py-8 px-8 text-center md:text-left">
+          <div className="max-w-5xl mx-auto">
+            <div className="text-secondary text-sm">
+              <p>© {new Date().getFullYear()} AnhND. All rights reserved.</p>
+              <p className="mt-2">Built with Next.js and Tailwind CSS</p>
+              <p className="mt-2">Version 1.0.0</p>
+            </div>
+          </div>
+        </footer>
       </main>
     </>
   )

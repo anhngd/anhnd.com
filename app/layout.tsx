@@ -1,9 +1,18 @@
 import type { Metadata } from 'next'
-import { Lexend } from 'next/font/google'
+import { Lexend, Cormorant_Garamond, Playfair_Display } from 'next/font/google'
 import './globals.css'
 import GoogleAnalytics from './components/GoogleAnalytics'
 
 const lexend = Lexend({ subsets: ['latin'] })
+const cormorant = Cormorant_Garamond({ 
+  weight: ['300', '400', '500', '600', '700'],
+  subsets: ['latin'],
+  variable: '--font-cormorant'
+})
+const playfair = Playfair_Display({ 
+  subsets: ['latin'],
+  variable: '--font-playfair'
+})
 
 export const metadata: Metadata = {
   title: 'AnhND | Full-stack Developer & UI/UX Enthusiast',
@@ -56,7 +65,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={lexend.className}>
+    <html lang="en" className={`${lexend.className} ${cormorant.variable} ${playfair.variable}`}>
       <head>
         <link rel="icon" href="/favicon.ico" />
         <link rel="canonical" href="https://anhnd.com" />
