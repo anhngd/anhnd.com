@@ -15,14 +15,14 @@ const playfair = Playfair_Display({
 })
 
 export const metadata: Metadata = {
-  title: 'AnhND | Full-stack Developer & UI/UX Enthusiast',
+  title: `I'm AnhND`,
   description: 'Personal website of AnhND, a Full-stack Developer with expertise in digital transformation, gaming industry, and management. Based in Vietnam.',
   keywords: 'AnhND, Full-stack Developer, UI/UX, Digital Transformation, Gaming Industry, Vietnam, Applied Mathematics, Computer Science',
   authors: [{ name: 'AnhND' }],
   creator: 'AnhND',
   publisher: 'AnhND',
   openGraph: {
-    title: 'AnhND | Full-stack Developer & UI/UX Enthusiast',
+    title: `I'm AnhND`,
     description: 'Personal website of AnhND, a Full-stack Developer with expertise in digital transformation, gaming industry, and management.',
     url: 'https://anhnd.com',
     siteName: 'AnhND',
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AnhND | Full-stack Developer & UI/UX Enthusiast',
+    title: `I'm AnhND`,
     description: 'Personal website of AnhND, a Full-stack Developer with expertise in digital transformation, gaming industry, and management.',
     images: ['https://anhnd.com/avatar.png'],
   },
