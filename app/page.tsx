@@ -1,182 +1,176 @@
 'use client'
 
+import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import ThemeProvider from './components/ThemeProvider'
 import ThemeSwitch from './components/ThemeSwitch'
-import AnimatedSection from './components/AnimatedSection'
-import AnimatedContent from './components/AnimatedContent'
+import Modal from './components/Modal'
 
 export default function Home() {
+  const [activeModal, setActiveModal] = useState<'about' | 'contact' | 'blog' | null>(null)
+  const [hoveredButton, setHoveredButton] = useState<string | null>(null)
+
   return (
     <>
       <ThemeProvider />
-      <main className="min-h-screen">
-        {/* Navigation Bar */}
-        <nav className="fixed top-0 left-0 right-0 z-50 py-4 md:py-12 px-8 md:px-16 lg:px-24 nav-bg">
-          <div className="max-w-7xl mx-auto flex items-center justify-between">
-            <div className="flex items-center space-x-12">
-              <Link 
-                href="#home" 
-                className="text-secondary hover:text-[var(--primary-color)] transition-all duration-300 transform hover:scale-105 text-base font-normal tracking-wide"
-              >
-                Home
-              </Link>
-              <Link 
-                href="#about" 
-                className="text-secondary hover:text-[var(--primary-color)] transition-all duration-300 transform hover:scale-105 text-base font-normal tracking-wide"
-              >
-                About
-              </Link>
-            </div>
-            <ThemeSwitch />
-          </div>
-        </nav>
+      <main className="h-screen flex flex-col overflow-hidden bg-gradient-to-b from-[var(--bg-color)] to-[var(--bg-color)]/95">
+        {/* Theme Switch */}
+        <div className="absolute top-4 right-8 md:right-16 lg:right-24 z-10">
+          <ThemeSwitch />
+        </div>
 
-        {/* Hero Section with Google-style Layout */}
-        <section id="home" className="flex flex-col md:flex-row items-center justify-between min-h-screen px-8 md:px-16 lg:px-24 max-w-7xl mx-auto pt-32 md:pt-0">
-          {/* Avatar Image - First on Mobile */}
-          <AnimatedContent 
-            className="flex-1 flex justify-center md:justify-end order-1 md:order-2"
-            delay={0.2}
-          >
-            <div className="relative w-48 h-48 sm:w-64 sm:h-64 md:w-96 md:h-96 mb-8 sm:mb-12 md:mb-0">
-              <div className="absolute inset-0 bg-gradient-to-br from-[var(--primary-color)]/10 to-[var(--secondary-color)]/10 rounded-full transform rotate-6"></div>
-              <Image
-                src="/avatar.png"
-                alt="AnhND"
-                fill
-                className="object-cover rounded-full relative z-10 shadow-2xl"
-                priority
-              />
-            </div>
-          </AnimatedContent>
-
-          {/* Text Content - Second on Mobile */}
-          <AnimatedContent 
-            className="flex-1 space-y-12 text-center md:text-left order-2 md:order-1"
-            delay={0}
-          >
-            <div className="max-w-2xl animate-fade-in">
-              <h1 className="text-6xl md:text-7xl lg:text-8xl font-light text-[var(--text-color)] tracking-tight leading-tight">
-                <span className="inline-block text-5xl md:text-6xl lg:text-7xl">Hello,</span><br />
+        {/* Main Content */}
+        <section className="flex-1 flex flex-col items-center justify-center px-8 md:px-16 lg:px-24">
+          <div className="max-w-7xl mx-auto w-full">
+            {/* Avatar and Name */}
+            <div className="flex flex-col items-center space-y-6 mb-12">
+              <div className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 group">
+                <div className="absolute inset-0 bg-gradient-to-br from-[var(--primary-color)]/10 to-[var(--secondary-color)]/10 rounded-full transform rotate-6 transition-transform duration-500 group-hover:rotate-12"></div>
+                <div className="absolute inset-0 bg-gradient-to-br from-[var(--primary-color)]/5 to-[var(--secondary-color)]/5 rounded-full transform -rotate-6 transition-transform duration-500 group-hover:-rotate-12"></div>
+                <Image
+                  src="/avatar.png"
+                  alt="AnhND"
+                  fill
+                  className="object-cover rounded-full relative z-10 shadow-2xl transition-transform duration-500 group-hover:scale-105"
+                  priority
+                />
+              </div>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-light text-[var(--text-color)] tracking-tight leading-tight text-center">
+                <span className="inline-block text-3xl md:text-4xl lg:text-5xl opacity-90">Hello,</span><br />
                 <span className="inline-flex items-center">
-                  <span className="text-[var(--primary-color)] inline-block typing-animation text-6xl md:text-7xl lg:text-8xl">I'm AnhND</span>
+                  <span className="text-[var(--primary-color)] inline-block typing-animation text-4xl md:text-5xl lg:text-6xl">I'm AnhND</span>
                 </span>
               </h1>
-              {/* Buttons - Third on Mobile */}
-              <div className="flex flex-col md:flex-row gap-8 justify-center md:justify-start mt-16 order-3">
-                <Link
-                  href="#contact" 
-                  className="px-10 py-4 text-white bg-[var(--primary-color)] rounded-full hover:bg-[var(--secondary-color)] transition-all duration-300 transform hover:scale-105 text-base font-normal tracking-wide shadow-lg hover:shadow-xl"
-                >
-                  Get in Touch
-                </Link>
-                <Link
-                  href="#projects" 
-                  className="px-10 py-4 text-[var(--primary-color)] border-2 border-[var(--primary-color)] rounded-full hover:bg-[var(--primary-color)]/10 transition-all duration-300 transform hover:scale-105 text-base font-normal tracking-wide"
-                >
-                  View Projects
-                </Link>
-              </div>
             </div>
-          </AnimatedContent>
+          </div>
         </section>
 
-        {/* About Section */}
-        <AnimatedSection id="about" className="py-40 bg-section">
-          <div className="max-w-5xl mx-auto px-8">
-            <AnimatedContent delay={0.2}>
-              <h2 className="text-5xl font-light text-[var(--text-color)] mb-20 font-[var(--font-playfair)]">
-                About Me
-              </h2>
-            </AnimatedContent>
-            <AnimatedContent delay={0.4}>
-              <div className="space-y-10 text-secondary text-lg leading-relaxed tracking-wide font-[var(--font-cormorant)]">
-                <p>
-                  My name is Anh. My background is in Applied Mathematics and Computer Science. With an engineering degree and a Master of Science in Applied Mathematics from Hanoi University of Science and Technology, I've built a strong academic foundation, a systematic mindset, and the ability to work through complex, uncertain problems.
-                </p>
-                <p>
-                  I spent over six years working on digital transformation projects for government agencies – from central ministries to local departments. Through those projects, I realized that technology only creates real value when we understand how people and systems actually work.
-                </p>
-                <p>
-                  Since 2020, I've been in the gaming industry. I've worked on both traditional online games and GameFi projects – where gaming meets blockchain technology. These days, I focus on applying data and AI to real-world use cases, especially in business operations and product development.
-                </p>
-                <p>
-                  Lately, I've also been learning about management – not to become a boss (at least not yet), but to better understand how people work together: in teams, in projects, and in the everyday flow of work.
-                </p>
-                <p>
-                  This website is where I quietly write down what I've learned, built, and been curious about. A way to look back at the journey – with clarity and honesty.
-                </p>
-              </div>
-            </AnimatedContent>
-          </div>
-        </AnimatedSection>
+        {/* Bottom Navigation */}
+        <div className="fixed bottom-0 left-0 right-0 bg-[var(--bg-color)]/80 backdrop-blur-sm border-t border-[var(--primary-color)]/10">
+          <div className="flex justify-center py-4">
+            <div className="grid grid-cols-3 w-1/2">
+              <button
+                onClick={() => setActiveModal('about')}
+                onMouseEnter={() => setHoveredButton('about')}
+                onMouseLeave={() => setHoveredButton(null)}
+                className="group h-20 bg-[var(--bg-color)] hover:bg-[var(--primary-color)]/5 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--primary-color)]/10 border-r border-[var(--primary-color)]/10 relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-[var(--primary-color)]/0 via-[var(--primary-color)]/0 to-[var(--primary-color)]/0 group-hover:from-[var(--primary-color)]/5 group-hover:via-[var(--primary-color)]/10 group-hover:to-[var(--primary-color)]/5 transition-all duration-500 transform translate-x-[-100%] group-hover:translate-x-[100%]" />
+                <span className={`relative text-xl font-[var(--font-cormorant)] text-[var(--text-color)] tracking-wider transition-all duration-300 ${hoveredButton === 'about' ? 'text-[var(--primary-color)]' : ''}`}>About</span>
+              </button>
 
-        {/* Contact Section */}
-        <AnimatedSection id="contact" className="py-40">
-          <div className="max-w-5xl mx-auto px-8">
-            <AnimatedContent delay={0.2}>
-              <h2 className="text-5xl font-light text-[var(--text-color)] mb-20">
-                Let's Connect
-              </h2>
-            </AnimatedContent>
-            <AnimatedContent delay={0.4}>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-                {/* Left Column - Text */}
-                <div className="md:col-span-2 space-y-8">
-                  <div>
-                    <h3 className="text-3xl font-light text-[var(--text-color)] mb-6">Get in Touch</h3>
-                    <p className="text-secondary leading-relaxed text-lg tracking-wide font-[var(--font-cormorant)]">
-                      I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions. Let's create something amazing together!
-                    </p>
-                  </div>
-                </div>
+              <button
+                onClick={() => setActiveModal('contact')}
+                onMouseEnter={() => setHoveredButton('contact')}
+                onMouseLeave={() => setHoveredButton(null)}
+                className="group h-20 bg-[var(--bg-color)] hover:bg-[var(--primary-color)]/5 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--primary-color)]/10 border-r border-[var(--primary-color)]/10 relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-[var(--primary-color)]/0 via-[var(--primary-color)]/0 to-[var(--primary-color)]/0 group-hover:from-[var(--primary-color)]/5 group-hover:via-[var(--primary-color)]/10 group-hover:to-[var(--primary-color)]/5 transition-all duration-500 transform translate-x-[-100%] group-hover:translate-x-[100%]" />
+                <span className={`relative text-xl font-[var(--font-cormorant)] text-[var(--text-color)] tracking-wider transition-all duration-300 ${hoveredButton === 'contact' ? 'text-[var(--primary-color)]' : ''}`}>Contact</span>
+              </button>
 
-                {/* Right Column - Contact Info */}
-                <div className="space-y-6">
-                  <div className="group flex items-center space-x-6 p-8 rounded-3xl bg-[var(--bg-color)] hover:bg-[var(--primary-color)]/10 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--primary-color)]/10">
-                    <span className="text-4xl group-hover:text-[var(--primary-color)] transition-colors duration-300">📧</span>
-                    <div>
-                      <p className="text-secondary text-lg tracking-wide">Email</p>
-                      <a href="mailto:me@anhnd.com" className="text-[var(--primary-color)] hover:text-[var(--secondary-color)] transition-colors duration-300 text-xl">me@anhnd.com</a>
-                    </div>
-                  </div>
-                  <div className="group flex items-center space-x-6 p-8 rounded-3xl bg-[var(--bg-color)] hover:bg-[var(--primary-color)]/10 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--primary-color)]/10">
-                    <Link 
-                      href="https://linkedin.com/in/anhngd" 
-                      className="text-4xl group-hover:text-[var(--primary-color)] transition-colors duration-300"
-                    >
-                      <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                      </svg>
-                    </Link>
-                    <div>
-                      <p className="text-secondary text-lg tracking-wide">LinkedIn</p>
-                      <Link 
-                        href="https://linkedin.com/in/anhngd" 
-                        className="text-[var(--primary-color)] hover:text-[var(--secondary-color)] transition-colors duration-300 text-xl"
-                      >
-                        anhngd
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </AnimatedContent>
+              <button
+                onClick={() => setActiveModal('blog')}
+                onMouseEnter={() => setHoveredButton('blog')}
+                onMouseLeave={() => setHoveredButton(null)}
+                className="group h-20 bg-[var(--bg-color)] hover:bg-[var(--primary-color)]/5 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--primary-color)]/10 relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-[var(--primary-color)]/0 via-[var(--primary-color)]/0 to-[var(--primary-color)]/0 group-hover:from-[var(--primary-color)]/5 group-hover:via-[var(--primary-color)]/10 group-hover:to-[var(--primary-color)]/5 transition-all duration-500 transform translate-x-[-100%] group-hover:translate-x-[100%]" />
+                <span className={`relative text-xl font-[var(--font-cormorant)] text-[var(--text-color)] tracking-wider transition-all duration-300 ${hoveredButton === 'blog' ? 'text-[var(--primary-color)]' : ''}`}>Blog</span>
+              </button>
+            </div>
           </div>
-        </AnimatedSection>
+        </div>
 
         {/* Footer */}
-        <footer className="py-8 px-8 text-center md:text-left">
+        <footer className="py-4 px-8 text-center">
           <div className="max-w-5xl mx-auto">
             <div className="text-secondary text-sm">
               <p>© {new Date().getFullYear()} AnhND. All rights reserved.</p>
-              <p className="mt-2">Built with Next.js and Tailwind CSS</p>
-              <p className="mt-2">Version 1.0.0</p>
             </div>
           </div>
         </footer>
+
+        {/* Modals */}
+        <Modal
+          isOpen={activeModal === 'about'}
+          onClose={() => setActiveModal(null)}
+          title="About Me"
+        >
+          <div className="space-y-8 text-secondary text-lg leading-relaxed tracking-wide font-[var(--font-cormorant)]">
+            <p>
+              My name is Anh. My background is in Applied Mathematics and Computer Science. With an engineering degree and a Master of Science in Applied Mathematics from Hanoi University of Science and Technology, I've built a strong academic foundation, a systematic mindset, and the ability to work through complex, uncertain problems.
+            </p>
+            <p>
+              I spent over six years working on digital transformation projects for government agencies – from central ministries to local departments. Through those projects, I realized that technology only creates real value when we understand how people and systems actually work.
+            </p>
+            <p>
+              Since 2020, I've been in the gaming industry. I've worked on both traditional online games and GameFi projects – where gaming meets blockchain technology. These days, I focus on applying data and AI to real-world use cases, especially in business operations and product development.
+            </p>
+            <p>
+              Lately, I've also been learning about management – not to become a boss (at least not yet), but to better understand how people work together: in teams, in projects, and in the everyday flow of work.
+            </p>
+            <p>
+              This website is where I quietly write down what I've learned, built, and been curious about. A way to look back at the journey – with clarity and honesty.
+            </p>
+          </div>
+        </Modal>
+
+        <Modal
+          isOpen={activeModal === 'contact'}
+          onClose={() => setActiveModal(null)}
+          title="Contact"
+        >
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-12 md:gap-20">
+            {/* Left: Contact Info */}
+            <div className="flex-1 min-w-[260px] max-w-md">
+              <p className="mb-8 text-secondary text-base md:text-lg font-[var(--font-cormorant)]">Feel free to reach out — I'm always open to new connections, collaborations, or just a friendly chat.</p>
+              <ul className="space-y-6 text-[var(--text-color)]">
+                <li className="flex items-center gap-4">
+                  <span className="inline-flex items-center justify-center w-7 h-7">
+                    {/* LinkedIn SVG */}
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-[#0077b5]">
+                      <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                    </svg>
+                  </span>
+                  <a href="https://linkedin.com/in/anhngd" target="_blank" rel="noopener" className="underline hover:text-[var(--primary-color)] transition-colors">LinkedIn: anhngd</a>
+                </li>
+                <li className="flex items-center gap-4">
+                  <span className="inline-flex items-center justify-center w-7 h-7">
+                    {/* Email SVG */}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-[var(--primary-color)]">
+                      <rect x="3" y="5" width="18" height="14" rx="2" fill="none"/>
+                      <path d="M3 7l9 6 9-6" />
+                    </svg>
+                  </span>
+                  <a href="mailto:me@anhnd.com" className="underline hover:text-[var(--primary-color)] transition-colors">me@anhnd.com</a>
+                </li>
+              </ul>
+            </div>
+            {/* Right: Illustration */}
+            <div className="flex-1 flex justify-center items-center">
+              <Image
+                src="/contact-hello.svg"
+                alt="Contact illustration"
+                width={260}
+                height={200}
+                className="w-[220px] md:w-[260px] h-auto"
+                priority
+              />
+            </div>
+          </div>
+        </Modal>
+
+        <Modal
+          isOpen={activeModal === 'blog'}
+          onClose={() => setActiveModal(null)}
+          title="Blog"
+        >
+          <div className="text-center py-12">
+            <p className="text-secondary text-xl font-[var(--font-cormorant)]">Coming soon...</p>
+          </div>
+        </Modal>
       </main>
     </>
   )
