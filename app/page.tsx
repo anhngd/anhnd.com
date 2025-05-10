@@ -1,15 +1,62 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import ThemeProvider from './components/ThemeProvider'
 import ThemeSwitch from './components/ThemeSwitch'
 import Modal from './components/Modal'
+import { motion } from 'framer-motion'
 
 export default function Home() {
   const [activeModal, setActiveModal] = useState<'about' | 'contact' | 'blog' | null>(null)
   const [hoveredButton, setHoveredButton] = useState<string | null>(null)
+  const [showText, setShowText] = useState(false)
+  const [showAvatar, setShowAvatar] = useState(false)
+  const [showRest, setShowRest] = useState(false)
+  const [displayedText, setDisplayedText] = useState('')
+
+  // Full text for typing
+  const fullText = "Hello, I'm AnhND"
+
+  // Typing effect
+  useEffect(() => {
+    setShowText(false)
+    setShowAvatar(false)
+    setShowRest(false)
+    setDisplayedText('')
+    let timeout1: NodeJS.Timeout, timeout2: NodeJS.Timeout, timeout3: NodeJS.Timeout, pauseTimeout: NodeJS.Timeout
+    let i = 0
+    const helloPart = 'Hello,'
+    function typeChar() {
+      if (i <= helloPart.length) {
+        setDisplayedText(fullText.slice(0, i))
+        i++
+        timeout1 = setTimeout(typeChar, 60)
+      } else if (i === helloPart.length + 1) {
+        // Pause after 'Hello,'
+        pauseTimeout = setTimeout(() => {
+          i++
+          typeChar()
+        }, 600)
+      } else if (i <= fullText.length) {
+        setDisplayedText(fullText.slice(0, i))
+        i++
+        timeout1 = setTimeout(typeChar, 60)
+      } else {
+        setShowAvatar(true)
+        timeout2 = setTimeout(() => setShowRest(true), 500)
+      }
+    }
+    setShowText(true)
+    timeout3 = setTimeout(typeChar, 400)
+    return () => {
+      clearTimeout(timeout1)
+      clearTimeout(timeout2)
+      clearTimeout(timeout3)
+      clearTimeout(pauseTimeout)
+    }
+  }, [])
 
   return (
     <>
@@ -25,7 +72,13 @@ export default function Home() {
           <div className="max-w-7xl mx-auto w-full">
             {/* Avatar and Name */}
             <div className="flex flex-col items-center space-y-6 mb-12">
-              <div className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 group">
+              {/* Avatar */}
+              <motion.div
+                className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 group"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: showAvatar ? 1 : 0, scale: showAvatar ? 1 : 0.9 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+              >
                 <div className="absolute inset-0 bg-gradient-to-br from-[var(--primary-color)]/10 to-[var(--secondary-color)]/10 rounded-full transform rotate-6 transition-transform duration-500 group-hover:rotate-12"></div>
                 <div className="absolute inset-0 bg-gradient-to-br from-[var(--primary-color)]/5 to-[var(--secondary-color)]/5 rounded-full transform -rotate-6 transition-transform duration-500 group-hover:-rotate-12"></div>
                 <Image
@@ -35,20 +88,39 @@ export default function Home() {
                   className="object-cover rounded-full relative z-10 shadow-2xl transition-transform duration-500 group-hover:scale-105"
                   priority
                 />
-              </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-light text-[var(--text-color)] tracking-tight leading-tight text-center">
-                <span className="inline-block text-3xl md:text-4xl lg:text-5xl opacity-90">Hello,</span><br />
-                <span className="inline-flex items-center">
-                  <span className="text-[var(--primary-color)] inline-block typing-animation text-4xl md:text-5xl lg:text-6xl">I'm AnhND</span>
+              </motion.div>
+              {/* Typing Text */}
+              <motion.h1
+                className="text-4xl md:text-5xl lg:text-6xl font-light text-[var(--text-color)] tracking-tight leading-tight text-center min-h-[3.5em]"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: showText ? 1 : 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <span className="inline-block text-3xl md:text-4xl lg:text-5xl opacity-90">
+                  <span className="typing-animation" style={{ borderRight: displayedText.length < fullText.length ? '3px solid var(--primary-color)' : 'none' }}>{displayedText}</span>
                 </span>
-              </h1>
+              </motion.h1>
+              {/* The rest of the content (only show after avatar) */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: showRest ? 1 : 0, y: showRest ? 0 : 20 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="w-full"
+              >
+                {/* Place any additional content here if needed */}
+              </motion.div>
             </div>
           </div>
         </section>
 
         {/* Bottom Navigation */}
-        <div className="fixed bottom-0 left-0 right-0 bg-[var(--bg-color)]/80 backdrop-blur-sm border-t border-[var(--primary-color)]/10">
-          <div className="flex justify-center py-4">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: showRest ? 1 : 0, y: showRest ? 0 : 30 }}
+          transition={{ duration: 0.7, delay: 0.1 }}
+          className="fixed bottom-0 left-0 right-0 bg-[var(--bg-color)]/80 backdrop-blur-sm border-t border-[var(--primary-color)]/10"
+        >
+          <div className="flex justify-center">
             <div className="grid grid-cols-3 w-1/2">
               <button
                 onClick={() => setActiveModal('about')}
@@ -81,16 +153,21 @@ export default function Home() {
               </button>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Footer */}
-        <footer className="py-4 px-8 text-center">
+        <motion.footer
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: showRest ? 1 : 0, y: showRest ? 0 : 20 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="py-4 px-8 text-center"
+        >
           <div className="max-w-5xl mx-auto">
             <div className="text-secondary text-sm">
               <p>© {new Date().getFullYear()} AnhND. All rights reserved.</p>
             </div>
           </div>
-        </footer>
+        </motion.footer>
 
         {/* Modals */}
         <Modal
@@ -98,7 +175,7 @@ export default function Home() {
           onClose={() => setActiveModal(null)}
           title="About Me"
         >
-          <div className="space-y-8 text-secondary text-lg leading-relaxed tracking-wide font-[var(--font-cormorant)]">
+          <div className="space-y-8 text-secondary text-lg leading-relaxed tracking-wide font-[var(--font-lora)]">
             <p>
               My name is Anh. My background is in Applied Mathematics and Computer Science. With an engineering degree and a Master of Science in Applied Mathematics from Hanoi University of Science and Technology, I've built a strong academic foundation, a systematic mindset, and the ability to work through complex, uncertain problems.
             </p>
