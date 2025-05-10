@@ -71,10 +71,10 @@ export default function Home() {
         <section className="flex-1 flex flex-col items-center justify-center px-8 md:px-16 lg:px-24">
           <div className="max-w-7xl mx-auto w-full">
             {/* Avatar and Name */}
-            <div className="flex flex-col items-center space-y-6 mb-12">
+            <div className="flex flex-col items-center space-y-4 sm:space-y-6 mb-8 sm:mb-12">
               {/* Avatar */}
               <motion.div
-                className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 group"
+                className="relative w-24 h-24 xs:w-28 xs:h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 group"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: showAvatar ? 1 : 0, scale: showAvatar ? 1 : 0.9 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
@@ -91,7 +91,7 @@ export default function Home() {
               </motion.div>
               {/* Typing Text */}
               <motion.h1
-                className="text-4xl md:text-5xl lg:text-6xl font-light text-[var(--text-color)] tracking-tight leading-tight text-center min-h-[3.5em]"
+                className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-[var(--text-color)] tracking-tight leading-tight text-center min-h-[2.5em] sm:min-h-[3.5em]"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: showText ? 1 : 0 }}
                 transition={{ duration: 0.5 }}
@@ -105,7 +105,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: showRest ? 1 : 0, y: showRest ? 0 : 20 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                className="w-full"
+                className="w-full px-2 sm:px-0"
               >
                 {/* Place any additional content here if needed */}
               </motion.div>
@@ -121,12 +121,12 @@ export default function Home() {
           className="fixed bottom-0 left-0 right-0 bg-[var(--bg-color)]/80 backdrop-blur-sm border-t border-[var(--primary-color)]/10"
         >
           <div className="flex justify-center">
-            <div className="grid grid-cols-3 w-1/2">
+            <div className="grid grid-cols-3 w-full">
               <button
                 onClick={() => setActiveModal('about')}
                 onMouseEnter={() => setHoveredButton('about')}
                 onMouseLeave={() => setHoveredButton(null)}
-                className="group h-20 bg-[var(--bg-color)] hover:bg-[var(--primary-color)]/5 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--primary-color)]/10 border-r border-[var(--primary-color)]/10 relative overflow-hidden"
+                className="group h-20 w-full bg-[var(--bg-color)] hover:bg-[var(--primary-color)]/5 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--primary-color)]/10 border-r border-[var(--primary-color)]/10 relative overflow-hidden"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-[var(--primary-color)]/0 via-[var(--primary-color)]/0 to-[var(--primary-color)]/0 group-hover:from-[var(--primary-color)]/5 group-hover:via-[var(--primary-color)]/10 group-hover:to-[var(--primary-color)]/5 transition-all duration-500 transform translate-x-[-100%] group-hover:translate-x-[100%]" />
                 <span className={`relative text-xl font-[var(--font-cormorant)] text-[var(--text-color)] tracking-wider transition-all duration-300 ${hoveredButton === 'about' ? 'text-[var(--primary-color)]' : ''}`}>About</span>
@@ -136,7 +136,7 @@ export default function Home() {
                 onClick={() => setActiveModal('contact')}
                 onMouseEnter={() => setHoveredButton('contact')}
                 onMouseLeave={() => setHoveredButton(null)}
-                className="group h-20 bg-[var(--bg-color)] hover:bg-[var(--primary-color)]/5 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--primary-color)]/10 border-r border-[var(--primary-color)]/10 relative overflow-hidden"
+                className="group h-20 w-full bg-[var(--bg-color)] hover:bg-[var(--primary-color)]/5 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--primary-color)]/10 border-r border-[var(--primary-color)]/10 relative overflow-hidden"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-[var(--primary-color)]/0 via-[var(--primary-color)]/0 to-[var(--primary-color)]/0 group-hover:from-[var(--primary-color)]/5 group-hover:via-[var(--primary-color)]/10 group-hover:to-[var(--primary-color)]/5 transition-all duration-500 transform translate-x-[-100%] group-hover:translate-x-[100%]" />
                 <span className={`relative text-xl font-[var(--font-cormorant)] text-[var(--text-color)] tracking-wider transition-all duration-300 ${hoveredButton === 'contact' ? 'text-[var(--primary-color)]' : ''}`}>Contact</span>
@@ -146,7 +146,7 @@ export default function Home() {
                 onClick={() => setActiveModal('blog')}
                 onMouseEnter={() => setHoveredButton('blog')}
                 onMouseLeave={() => setHoveredButton(null)}
-                className="group h-20 bg-[var(--bg-color)] hover:bg-[var(--primary-color)]/5 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--primary-color)]/10 relative overflow-hidden"
+                className="group h-20 w-full bg-[var(--bg-color)] hover:bg-[var(--primary-color)]/5 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[var(--primary-color)]/10 relative overflow-hidden"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-[var(--primary-color)]/0 via-[var(--primary-color)]/0 to-[var(--primary-color)]/0 group-hover:from-[var(--primary-color)]/5 group-hover:via-[var(--primary-color)]/10 group-hover:to-[var(--primary-color)]/5 transition-all duration-500 transform translate-x-[-100%] group-hover:translate-x-[100%]" />
                 <span className={`relative text-xl font-[var(--font-cormorant)] text-[var(--text-color)] tracking-wider transition-all duration-300 ${hoveredButton === 'blog' ? 'text-[var(--primary-color)]' : ''}`}>Blog</span>
@@ -154,20 +154,6 @@ export default function Home() {
             </div>
           </div>
         </motion.div>
-
-        {/* Footer */}
-        <motion.footer
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: showRest ? 1 : 0, y: showRest ? 0 : 20 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-          className="py-4 px-8 text-center"
-        >
-          <div className="max-w-5xl mx-auto">
-            <div className="text-secondary text-sm">
-              <p>© {new Date().getFullYear()} AnhND. All rights reserved.</p>
-            </div>
-          </div>
-        </motion.footer>
 
         {/* Modals */}
         <Modal
