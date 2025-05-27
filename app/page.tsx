@@ -9,7 +9,7 @@ import Modal from './components/Modal'
 import { motion } from 'framer-motion'
 
 export default function Home() {
-  const [activeModal, setActiveModal] = useState<'about' | 'contact' | 'blog' | null>(null)
+  const [activeModal, setActiveModal] = useState<'about' | 'contact' | null>(null)
   const [hoveredButton, setHoveredButton] = useState<string | null>(null)
   const [showText, setShowText] = useState(false)
   const [showAvatar, setShowAvatar] = useState(false)
@@ -128,6 +128,15 @@ export default function Home() {
                     </span>
                     <span>anhngd</span>
                   </a>
+                  <span className="text-[var(--text-color)]/20">•</span>
+                  <button onClick={() => window.location.href = '/blog'} className="flex items-center gap-2 hover:text-[var(--primary-color)] transition-colors group">
+                    <span className="w-8 h-8 flex items-center justify-center rounded-full bg-[var(--primary-color)]/10 group-hover:bg-[var(--primary-color)]/20 transition-colors">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-[var(--primary-color)]">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+                      </svg>
+                    </span>
+                    <span>Blog</span>
+                  </button>
                 </div>
               </motion.div>
             </div>
@@ -170,7 +179,7 @@ export default function Home() {
           </button>
           
           <button
-            onClick={() => setActiveModal('blog')}
+            onClick={() => window.location.href = '/blog'}
             className="group w-14 h-14 rounded-full bg-[var(--bg-color)]/80 backdrop-blur-sm hover:bg-[var(--primary-color)]/10 border border-[var(--primary-color)]/20 flex items-center justify-center shadow-xl transition-all duration-300 hover:scale-110 relative overflow-hidden"
             aria-label="Blog"
           >
@@ -182,16 +191,6 @@ export default function Home() {
         </motion.div>
 
         {/* Modals */}
-        <Modal
-          isOpen={activeModal === 'about'}
-          onClose={() => setActiveModal(null)}
-          title="About Me"
-        >
-          <div className="flex flex-col items-center justify-center py-8 min-h-[300px]">
-            {/* Empty About page as requested */}
-          </div>
-        </Modal>
-
         <Modal
           isOpen={activeModal === 'contact'}
           onClose={() => setActiveModal(null)}
@@ -245,20 +244,7 @@ export default function Home() {
           </div>
         </Modal>
 
-        <Modal
-          isOpen={activeModal === 'blog'}
-          onClose={() => setActiveModal(null)}
-          title="Blog"
-        >
-          <div className="flex flex-col items-center justify-center py-12 min-h-[300px]">
-            <div className="w-20 h-20 rounded-full bg-[var(--primary-color)]/10 flex items-center justify-center mb-6">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10 text-[var(--primary-color)]">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
-              </svg>
-            </div>
-            <p className="text-[var(--text-color)]/80 text-xl font-light">Coming soon...</p>
-          </div>
-        </Modal>
+
       </main>
     </>
   )

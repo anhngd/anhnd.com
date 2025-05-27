@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Lexend, Cormorant_Garamond, Playfair_Display } from 'next/font/google'
 import './globals.css'
 import GoogleAnalytics from './components/GoogleAnalytics'
+import 'katex/dist/katex.min.css'
 
 const lexend = Lexend({ subsets: ['latin'] })
 const cormorant = Cormorant_Garamond({ 
