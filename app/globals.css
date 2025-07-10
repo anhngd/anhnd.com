@@ -26,6 +26,19 @@
   --text-secondary: #9ca3af;
 }
 
+/* Thêm chế độ color-scheme cho trình duyệt */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color-scheme: light;
+  }
+}
+
 body {
   color: var(--text-color);
   background: var(--bg-color);

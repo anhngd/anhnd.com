@@ -1,38 +1,52 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Lexend, Cormorant_Garamond, Playfair_Display } from 'next/font/google'
 import './globals.css'
 import GoogleAnalytics from './components/GoogleAnalytics'
 import 'katex/dist/katex.min.css'
+import ThemeProvider from './components/ThemeProvider'
+import Script from 'next/script'
 
-const lexend = Lexend({ subsets: ['latin'] })
+const lexend = Lexend({ 
+  subsets: ['latin'],
+  display: 'swap' // Cải thiện hiệu suất với font display swap
+})
 const cormorant = Cormorant_Garamond({ 
   weight: ['300', '400', '500', '600', '700'],
   subsets: ['latin'],
-  variable: '--font-cormorant'
+  variable: '--font-cormorant',
+  display: 'swap'
 })
 const playfair = Playfair_Display({ 
   subsets: ['latin'],
-  variable: '--font-playfair'
+  variable: '--font-playfair',
+  display: 'swap'
 })
 
 export const metadata: Metadata = {
-  title: `I'm AnhND`,
-  description: 'Personal website of AnhND, a Full-stack Developer with expertise in digital transformation, gaming industry, and management. Based in Vietnam.',
-  keywords: 'AnhND, Full-stack Developer, UI/UX, Digital Transformation, Gaming Industry, Vietnam, Applied Mathematics, Computer Science',
-  authors: [{ name: 'AnhND' }],
+  metadataBase: new URL('https://anhnd.com'),
+  title: {
+    template: '%s | AnhND',
+    default: `I'm AnhND - Full-stack Developer`,
+  },
+  description: 'Personal website of AnhND, a Full-stack Developer with expertise in UI/UX, digital transformation, and gaming industry. Based in Vietnam.',
+  keywords: 'AnhND, Full-stack Developer, UI/UX, Digital Transformation, Gaming Industry, Vietnam, Applied Mathematics, Computer Science, Software Engineer',
+  authors: [{ name: 'AnhND', url: 'https://anhnd.com' }],
   creator: 'AnhND',
   publisher: 'AnhND',
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
-    title: `I'm AnhND`,
-    description: 'Personal website of AnhND, a Full-stack Developer with expertise in digital transformation, gaming industry, and management.',
+    title: `I'm AnhND - Full-stack Developer`,
+    description: 'Personal website of AnhND, a Full-stack Developer with expertise in UI/UX, digital transformation, and gaming industry. Based in Vietnam.',
     url: 'https://anhnd.com',
     siteName: 'AnhND',
     images: [
       {
-        url: 'https://anhnd.com/avatar.png',
-        width: 800,
-        height: 800,
-        alt: 'AnhND',
+        url: 'https://anhnd.com/og-image.png', // Optimized social sharing image
+        width: 1200,
+        height: 630,
+        alt: 'AnhND - Full-stack Developer',
       },
     ],
     locale: 'en_US',
@@ -40,8 +54,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: `I'm AnhND`,
-    description: 'Personal website of AnhND, a Full-stack Developer with expertise in digital transformation, gaming industry, and management.',
+    title: `I'm AnhND - Full-stack Developer`,
+    description: 'Personal website of AnhND, a Full-stack Developer with expertise in UI/UX, digital transformation, and gaming industry.',
+    creator: '@anhnd',
     images: ['https://anhnd.com/avatar.png'],
   },
   robots: {
@@ -50,14 +65,40 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
       'max-image-preview': 'large',
       'max-snippet': -1,
+      'max-video-preview': -1
     },
   },
   verification: {
     google: 'your-google-site-verification',
   },
+  category: 'technology',
+  applicationName: 'AnhND Personal Website',
+  appleWebApp: {
+    title: 'AnhND',
+    statusBarStyle: 'black-translucent',
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  manifest: '/site.webmanifest',
+  archives: ['https://anhnd.com/notes'],
+  assets: ['https://anhnd.com/assets'],
+  bookmarks: ['https://anhnd.com/notes'],
+  itunes: {
+    appId: 'myAppStoreID',
+    appArgument: 'https://anhnd.com',
+  },
+}
+
+// Viewport metadata
+// Enhance viewport settings for better mobile experience
+export const viewport: Viewport = {
+  themeColor: [{ media: '(prefers-color-scheme: light)', color: '#ffffff' }, { media: '(prefers-color-scheme: dark)', color: '#0f172a' }],
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
 }
 
 export default function RootLayout({
@@ -66,15 +107,17 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${lexend.className} ${cormorant.variable} ${playfair.variable}`}>
+    <html lang="en" className={`${lexend.className} ${cormorant.variable} ${playfair.variable}`} suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" />
         <link rel="canonical" href="https://anhnd.com" />
       </head>
       <body>
-        {children}
-        <GoogleAnalytics />
+        <ThemeProvider>
+          {children}
+          <GoogleAnalytics />
+        </ThemeProvider>
       </body>
     </html>
   )
-} 
+}

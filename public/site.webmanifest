@@ -1,0 +1,23 @@
+{
+  "name": "AnhND - Personal Website",
+  "short_name": "AnhND",
+  "description": "Personal website of AnhND, a Full-stack Developer with expertise in UI/UX, digital transformation, and gaming industry.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#FF5F00",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

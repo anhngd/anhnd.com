@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
-import ThemeProvider from '../components/ThemeProvider'
+// Theme is already provided in the root layout
 import ThemeSwitch from '../components/ThemeSwitch'
+import { ReactNode } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
@@ -234,7 +235,6 @@ export default function Blog() {
   
   return (
     <>
-      <ThemeProvider />
       <main className="min-h-screen bg-gradient-to-b from-[var(--bg-color)] to-[var(--bg-color)]/95 text-[var(--text-color)] relative">
         {/* Header with back button and theme switch */}
         <header className="sticky top-0 z-10 backdrop-blur-md bg-[var(--bg-color)]/80 border-b border-[var(--primary-color)]/10 px-6 py-4">
@@ -428,6 +428,7 @@ function BlogPostDetail({ post, onBack }: { post: BlogPost, onBack: () => void }
                     <img {...props} className="rounded-lg w-full" />
                   </div>
                 ),
+                // @ts-ignore - ReactMarkdown's typings are incomplete
                 code: ({ node, inline, className, children, ...props }) => {
                   if (inline) {
                     return <code className="px-1 py-0.5 rounded bg-[var(--primary-color)]/10 text-[var(--primary-color)]" {...props}>{children}</code>
