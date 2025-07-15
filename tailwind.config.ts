@@ -6,37 +6,34 @@ const config: Config = {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-  darkMode: ['class', '[data-theme="dark"]'],
+  // Dark mode removed - using only light mode
   theme: {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#FF5F00',
-          light: '#FF7F33',
-          dark: '#FF7F33',
+          DEFAULT: '#FF7700', // Orange
+          light: '#FF9E45',
         },
         secondary: {
-          DEFAULT: '#EB001B',
-          dark: '#FF3333',
+          DEFAULT: '#FF9E45', // Lighter orange
         },
         text: {
-          DEFAULT: '#1a1a1a',
-          light: '#1a1a1a',
-          dark: '#f3f4f6',
-          secondary: '#4b5563',
-          'secondary-dark': '#9ca3af',
+          DEFAULT: '#000000', // Black
+          secondary: '#666666', // Gray
         },
         bg: {
-          DEFAULT: '#ffffff',
-          light: '#ffffff',
-          dark: '#0f172a',
-          section: '#f8f9fa',
-          'section-dark': '#1e293b',
+          DEFAULT: '#ffffff', // White
+          section: '#f4f4f4', // Light gray
+        },
+        gray: {
+          DEFAULT: '#666666', // Medium gray
+          light: '#CCCCCC', // Light gray
+          dark: '#333333', // Dark gray
         },
       },
       fontFamily: {
-        playfair: ['var(--font-playfair)'],
-        cormorant: ['var(--font-cormorant)'],
+        jakarta: ['var(--font-jakarta)', 'Plus Jakarta Sans', 'sans-serif'],
+        sans: ['var(--font-jakarta)', 'Plus Jakarta Sans', 'sans-serif'],
       },
       keyframes: {
         'fade-in': {

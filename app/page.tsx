@@ -3,35 +3,54 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import ThemeSwitch from './components/ThemeSwitch'
+// ThemeSwitch removed - only using light mode
 import { motion } from 'framer-motion'
 import StructuredData from './components/StructuredData'
 import { Metadata } from 'next'
 
 export default function Home() {
   // Use Mastercard orange as primary color - already configured in tailwind.config.ts
-  const [text, setText] = useState('')
-  const [fullText] = useState('Hello, I\'m AnhND.')
+  const [helloText, setHelloText] = useState('')
+  const [nameText, setNameText] = useState('')
+  const [isTypingHello, setIsTypingHello] = useState(true)
   const [index, setIndex] = useState(0)
   const [showCursor, setShowCursor] = useState(true)
   const [showRest, setShowRest] = useState(false)
 
+  const helloFullText = "Hello,"
+  const nameFullText = "I am AnhND."
+
   // Typing effect
   useEffect(() => {
-    if (index < fullText.length) {
+    if (isTypingHello && index < helloFullText.length) {
       const timeout = setTimeout(() => {
-        setText(prevText => prevText + fullText[index])
+        setHelloText(prevText => prevText + helloFullText[index])
         setIndex(prevIndex => prevIndex + 1)
-      }, index === 23 ? 500 : Math.random() * 120 + 30) // Longer pause after first line
+      }, Math.random() * 120 + 30)
 
       return () => clearTimeout(timeout)
-    } else {
+    } else if (isTypingHello && index >= helloFullText.length) {
+      // Switch to typing the name after a pause
+      const timeout = setTimeout(() => {
+        setIsTypingHello(false)
+        setIndex(0) // Reset index for name typing
+      }, 500)
+      
+      return () => clearTimeout(timeout)
+    } else if (!isTypingHello && index < nameFullText.length) {
+      const timeout = setTimeout(() => {
+        setNameText(prevText => prevText + nameFullText[index])
+        setIndex(prevIndex => prevIndex + 1)
+      }, Math.random() * 120 + 30)
+
+      return () => clearTimeout(timeout)
+    } else if (!isTypingHello && index >= nameFullText.length) {
       // Show the rest of the content after typing is complete
       setTimeout(() => {
         setShowRest(true)
       }, 500)
     }
-  }, [fullText, index])
+  }, [helloFullText, nameFullText, index, isTypingHello])
 
   // Blinking cursor effect
   useEffect(() => {
@@ -43,7 +62,7 @@ export default function Home() {
   }, [])
 
   return (
-    <main className="h-screen flex flex-col overflow-hidden bg-gradient-to-b from-bg dark:from-bg-dark to-bg/95 dark:to-bg-dark/95 relative">
+    <main className="min-h-screen h-full flex flex-col overflow-hidden bg-gradient-to-b from-white to-[#f4f4f4] relative">
       <StructuredData 
         type="Person"
         data={{
@@ -56,40 +75,50 @@ export default function Home() {
           ]
         }}
       />
-      {/* Theme Switch */}
-      <div className="absolute top-4 right-8 md:right-16 lg:right-24 z-10">
-        <ThemeSwitch />
-      </div>
+      {/* Theme Switch removed - only using light mode */}
 
       {/* Main Content */}
-      <section className="flex-1 flex flex-col items-center justify-center px-6">
-        <div className="max-w-5xl w-full">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
-            <div className="md:col-span-8 space-y-10">
-              <h1 className="text-5xl lg:text-7xl font-playfair font-light text-text dark:text-text-dark tracking-wider">
-                {text}
-                <span className={`ml-1 font-light ${showCursor ? 'opacity-100' : 'opacity-0'} transition-opacity duration-100 text-primary`}>_</span>
-              </h1>
+      <section className="flex-1 flex flex-col items-center justify-center p-3 sm:p-6 md:p-8 min-h-[600px]">
+        <div className="max-w-5xl w-full py-3 sm:py-0 my-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 sm:gap-12 items-center">
+            {/* Avatar - On mobile it appears first, on desktop it appears last */}
+            <motion.div
+              className="sm:col-span-5 flex justify-center sm:justify-end items-center order-first sm:order-last mb-4 sm:mb-0 mt-6 sm:mt-0"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <div className="relative w-[160px] h-[160px] sm:w-[200px] sm:h-[200px] md:w-[220px] md:h-[220px] lg:w-[240px] lg:h-[240px]">
+                <Image
+                  src="/avatar.png"
+                  alt="AnhND"
+                  fill
+                  sizes="(max-width: 640px) 160px, (max-width: 768px) 200px, (max-width: 1024px) 220px, 240px"
+                  className="rounded-full object-cover"
+                  priority
+                />
+              </div>
+            </motion.div>
+            <div className="sm:col-span-7 space-y-4 sm:space-y-6 md:space-y-8 order-last sm:order-first px-2 sm:px-0">
+              <div className="space-y-2 sm:space-y-3 md:space-y-4 pb-2">
+                <h1 className="text-4xl sm:text-5xl lg:text-7xl font-jakarta font-light text-black tracking-wide sm:tracking-widest leading-tight letter-spacing-[-.02em]">
+                  {helloText}
+                  {isTypingHello && <span className={`ml-1 font-light ${showCursor ? 'opacity-100' : 'opacity-0'} transition-opacity duration-100 text-primary`}>_</span>}
+                </h1>
+                <h2 className="text-2xl sm:text-3xl lg:text-5xl font-jakarta font-light text-black tracking-wide letter-spacing-[-.01em]">
+                  {nameText}
+                  {!isTypingHello && <span className={`ml-1 font-light ${showCursor ? 'opacity-100' : 'opacity-0'} transition-opacity duration-100 text-primary`}>_</span>}
+                </h2>
+              </div>
               
               {showRest && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
-                  className="space-y-10"
+                  className="mt-4 sm:mt-6"
                 >
-                  <div className="flex flex-wrap gap-8 text-2xl font-cormorant font-light text-text/80 dark:text-text-dark/80 tracking-wide">
-                    <a href="mailto:me@anhnd.com" className="flex items-center gap-3 hover:text-primary transition-colors group">
-                      <span className="w-10 h-10 flex items-center justify-center rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.2} stroke="currentColor" className="w-5 h-5 text-primary">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
-                        </svg>
-                      </span>
-                      <span className="font-light tracking-wider">me@anhnd.com</span>
-                    </a>
-                    
-                    <span className="text-text/20 dark:text-text-dark/20">•</span>
-                    
+                  <div className="flex flex-wrap gap-4 sm:gap-6 items-center pt-2">
                     <a href="https://linkedin.com/in/anhngd" target="_blank" rel="noopener" className="flex items-center gap-3 hover:text-primary transition-colors group">
                       <span className="w-10 h-10 flex items-center justify-center rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-5 h-5 text-primary">
@@ -99,7 +128,18 @@ export default function Home() {
                       <span className="font-light tracking-wider">anhngd</span>
                     </a>
                     
-                    <span className="text-text/20 dark:text-text-dark/20">•</span>
+                    <span className="text-[#666666]/40">•</span>
+                    
+                    <a href="mailto:me@anhnd.com" className="flex items-center gap-3 hover:text-primary transition-colors group">
+                      <span className="w-10 h-10 flex items-center justify-center rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.2} stroke="currentColor" className="w-5 h-5 text-primary">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                        </svg>
+                      </span>
+                      <span className="font-light tracking-wider">me@anhnd.com</span>
+                    </a>
+                    
+                    <span className="text-[#666666]/40">•</span>
                     
                     <Link href="/notes" className="flex items-center gap-3 hover:text-primary transition-colors group">
                       <span className="w-10 h-10 flex items-center justify-center rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
@@ -113,27 +153,6 @@ export default function Home() {
                 </motion.div>
               )}
             </div>
-            
-            {showRest && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="md:col-span-4"
-              >
-                <div className="relative w-[280px] h-[280px] rounded-full bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 to-secondary/5 rounded-full blur-xl"></div>
-                  <Image
-                    src="/avatar.png"
-                    alt="AnhND"
-                    width={220}
-                    height={220}
-                    className="rounded-full"
-                    priority
-                  />
-                </div>
-              </motion.div>
-            )}
           </div>
         </div>
       </section>
@@ -153,7 +172,7 @@ export default function Home() {
       >
         <Link
           href="/notes"
-          className="group w-14 h-14 rounded-full bg-bg/80 dark:bg-bg-dark/80 backdrop-blur-sm hover:bg-primary/10 border border-primary/20 flex items-center justify-center shadow-xl transition-all duration-300 hover:scale-110 relative overflow-hidden"
+          className="group w-14 h-14 rounded-full bg-white/90 backdrop-blur-sm hover:bg-[#FF7700]/10 border border-[#FF7700]/20 flex items-center justify-center shadow-xl transition-all duration-300 hover:scale-110 relative overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-primary/0 via-primary/0 to-primary/0 group-hover:from-primary/5 group-hover:via-primary/10 group-hover:to-primary/5 transition-all duration-500 transform translate-x-[-100%] group-hover:translate-x-[100%]"></div>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.2} stroke="currentColor" className="w-6 h-6 text-primary">
@@ -165,7 +184,7 @@ export default function Home() {
           href="https://linkedin.com/in/anhngd"
           target="_blank"
           rel="noopener noreferrer"
-          className="group w-14 h-14 rounded-full bg-bg/80 dark:bg-bg-dark/80 backdrop-blur-sm hover:bg-primary/10 border border-primary/20 flex items-center justify-center shadow-xl transition-all duration-300 hover:scale-110 relative overflow-hidden"
+          className="group w-14 h-14 rounded-full bg-white/90 backdrop-blur-sm hover:bg-[#FF7700]/10 border border-[#FF7700]/20 flex items-center justify-center shadow-xl transition-all duration-300 hover:scale-110 relative overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-primary/0 via-primary/0 to-primary/0 group-hover:from-primary/5 group-hover:via-primary/10 group-hover:to-primary/5 transition-all duration-500 transform translate-x-[-100%] group-hover:translate-x-[100%]"></div>
           <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-6 h-6 text-primary">

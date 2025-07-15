@@ -1,25 +1,16 @@
 import type { Metadata, Viewport } from 'next'
-import { Lexend, Cormorant_Garamond, Playfair_Display } from 'next/font/google'
+import { Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
 import GoogleAnalytics from './components/GoogleAnalytics'
 import 'katex/dist/katex.min.css'
 import ThemeProvider from './components/ThemeProvider'
 import Script from 'next/script'
 
-const lexend = Lexend({ 
+const jakartaSans = Plus_Jakarta_Sans({ 
   subsets: ['latin'],
-  display: 'swap' // Cải thiện hiệu suất với font display swap
-})
-const cormorant = Cormorant_Garamond({ 
-  weight: ['300', '400', '500', '600', '700'],
-  subsets: ['latin'],
-  variable: '--font-cormorant',
-  display: 'swap'
-})
-const playfair = Playfair_Display({ 
-  subsets: ['latin'],
-  variable: '--font-playfair',
-  display: 'swap'
+  weight: ['200', '300', '400', '500', '600', '700', '800'],
+  variable: '--font-jakarta',
+  display: 'swap' // Improve performance with font display swap
 })
 
 export const metadata: Metadata = {
@@ -54,8 +45,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: `I'm AnhND - Full-stack Developer`,
-    description: 'Personal website of AnhND, a Full-stack Developer with expertise in UI/UX, digital transformation, and gaming industry.',
+    title: `I'm AnhND`,
+    description: 'Technology-driven, data-centered, and AI-powered – that’s how I build value."',
     creator: '@anhnd',
     images: ['https://anhnd.com/avatar.png'],
   },
@@ -107,10 +98,13 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${lexend.className} ${cormorant.variable} ${playfair.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${jakartaSans.className} ${jakartaSans.variable}`} suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" />
         <link rel="canonical" href="https://anhnd.com" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet" />
       </head>
       <body>
         <ThemeProvider>

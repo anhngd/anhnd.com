@@ -5,44 +5,25 @@
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-rgb: 255, 255, 255;
-  --primary-color: #FF5F00;
-  --secondary-color: #EB001B;
-  --text-color: #1a1a1a;
-  --bg-color: #ffffff;
-  --section-bg: #f8f9fa;
-  --nav-bg: rgba(255, 255, 255, 0.8);
-  --text-secondary: #4b5563;
+  --primary-color: #FF7700; /* Orange */
+  --secondary-color: #FF9E45; /* Lighter orange */
+  --text-color: #000000; /* Black */
+  --bg-color: #ffffff; /* White */
+  --section-bg: #f4f4f4; /* Light gray */
+  --nav-bg: rgba(255, 255, 255, 0.9);
+  --text-secondary: #666666; /* Gray */
+  --accent-gray: #CCCCCC; /* Additional gray shade */
 }
 
-[data-theme="dark"] {
-  --foreground-rgb: 255, 255, 255;
-  --background-rgb: 0, 0, 0;
-  --primary-color: #FF7F33;
-  --secondary-color: #FF3333;
-  --text-color: #f3f4f6;
-  --bg-color: #0f172a;
-  --section-bg: #1e293b;
-  --nav-bg: rgba(15, 23, 42, 0.8);
-  --text-secondary: #9ca3af;
-}
-
-/* Thêm chế độ color-scheme cho trình duyệt */
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-  }
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color-scheme: light;
-  }
+/* Color scheme for browser */
+:root {
+  color-scheme: light;
 }
 
 body {
   color: var(--text-color);
   background: var(--bg-color);
-  font-family: 'Lexend', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   transition: background-color 0.5s ease, color 0.5s ease;
 }
 
