@@ -1,13 +1,69 @@
 import Link from 'next/link'
 
-// Sample notes data - in a real app, this would come from a database or API
-const notesData = [
-  {
-    id: '1',
-    title: 'The Art of Simplicity',
-    date: 'July 10, 2025',
-    category: 'Design',
-    content: `
+// Generate mock notes data (same as used in the notes listing page)
+function generateMockNotes() {
+  const categories = ['Design', 'Development', 'Productivity', 'Career', 'Life', 'Technology']
+  const notes = []
+  
+  for (let i = 1; i <= 100; i++) {
+    const titleIndex = i % 10
+    const titles = [
+      'The Art of Simplicity',
+      'Building with Next.js',
+      'The Future of Web Development',
+      'Color Theory for Digital Interfaces',
+      'Typography in Modern Design',
+      'Optimizing Performance in React Apps',
+      'Designing for Accessibility',
+      'The Role of Animation in UX',
+      'From Concept to Deployment',
+      'Creating Effective Design Systems'
+    ]
+    
+    const categoryIndex = i % categories.length
+    const date = new Date(2025, 6, Math.max(1, 30 - i % 30))
+    
+    // Generate an excerpt from the content based on title
+    let excerpt = ''
+    switch (titleIndex) {
+      case 0:
+        excerpt = 'Exploring how simplicity in design creates more effective and enjoyable user experiences.'
+        break
+      case 1:
+        excerpt = 'A deep dive into the benefits and features of the Next.js framework for React applications.'
+        break
+      case 2:
+        excerpt = 'Examining trends and technologies shaping the future of web development and user experiences.'
+        break
+      case 3:
+        excerpt = 'Understanding how color influences user perception and how to create effective color schemes.'
+        break
+      case 4:
+        excerpt = 'The impact of typography choices on readability, brand perception, and user engagement.'
+        break
+      case 5:
+        excerpt = 'Strategies and techniques for building high-performance React applications that users love.'
+        break
+      case 6:
+        excerpt = 'Creating inclusive designs that work for everyone, regardless of ability or circumstance.'
+        break
+      case 7:
+        excerpt = 'How thoughtful animation can enhance user experience and guide interaction.'
+        break
+      case 8:
+        excerpt = 'The journey of taking a project from initial idea through to final deployment.'
+        break
+      case 9:
+        excerpt = 'Building and maintaining design systems that scale across products and teams.'
+        break
+      default:
+        excerpt = 'Exploring ideas and concepts in design and development.'
+    }
+    
+    // Create the full content based on the title
+    let content = ''
+    if (titleIndex === 0) {
+      content = `
       <p>In the realm of design, simplicity isn't just an aesthetic choice—it's a fundamental principle that can transform user experiences.</p>
       
       <p>Minimalist design strips away the unnecessary, focusing attention on what truly matters. This approach isn't about creating something plain or boring, but rather about achieving clarity and purpose in every element.</p>
@@ -27,13 +83,8 @@ const notesData = [
       
       <p>Remember: in design, what you remove is often more important than what you add.</p>
     `
-  },
-  {
-    id: '2',
-    title: 'Building with Next.js',
-    date: 'July 8, 2025',
-    category: 'Development',
-    content: `
+    } else if (titleIndex === 1) {
+      content = `
       <p>Next.js has revolutionized how we build React applications by providing a framework that addresses common challenges in web development.</p>
       
       <p>From server-side rendering to static site generation, Next.js offers flexible rendering options that optimize both performance and developer experience.</p>
@@ -49,64 +100,65 @@ const notesData = [
         <li><strong>API routes</strong> - Create backend functionality within the same project, simplifying full-stack development.</li>
       </ul>
       
-      <p>The framework continues to evolve with features like the App Router, which brings component-level data fetching and more granular control over rendering.</p>
+      <p>Whether you're building a blog, e-commerce site, or complex web application, Next.js provides the tools needed to create performant, scalable solutions.</p>
       
-      <p>Whether you're building a blog, e-commerce site, or complex web application, Next.js provides a solid foundation that scales with your needs.</p>
+      <h2>Getting Started</h2>
+      
+      <p>Setting up a new Next.js project is straightforward:</p>
+      
+      <pre><code>npx create-next-app@latest my-project
+cd my-project
+npm run dev</code></pre>
+      
+      <p>This creates a new project with a sensible default configuration, allowing you to focus on building your application rather than setting up infrastructure.</p>
     `
-  },
-  {
-    id: '3',
-    title: 'Typography in Digital Design',
-    date: 'July 5, 2025',
-    category: 'Design',
-    content: `
-      <p>Typography is often the unsung hero of digital design—it silently carries your message while shaping the entire mood of your interface.</p>
+    } else {
+      content = `
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod, nisl eget ultricies aliquam, quam libero ultricies nisl, eget ultricies nisl nunc eget nisl.</p>
       
-      <p>The right typeface choices can establish hierarchy, improve readability, and create emotional connections with users.</p>
+      <h2>Key Points</h2>
       
-      <h2>Type Fundamentals for Digital</h2>
-      
-      <p>When working with typography in digital spaces, consider:</p>
+      <p>Here are some important considerations:</p>
       
       <ul>
-        <li><strong>Readability at various sizes</strong> - Text should be legible on both large monitors and small mobile screens.</li>
-        <li><strong>Font loading and performance</strong> - Custom fonts impact page load times; use system fonts or optimize loading strategies.</li>
-        <li><strong>Hierarchy and scanning patterns</strong> - Users scan content rather than read word-by-word; typography should guide this natural behavior.</li>
-        <li><strong>Responsive considerations</strong> - Font sizes, line heights, and spacing need to adapt across different viewport sizes.</li>
+        <li><strong>Point One</strong> - Description of the first main point with relevant details.</li>
+        <li><strong>Point Two</strong> - Explanation of the second concept and its implications.</li>
+        <li><strong>Point Three</strong> - Discussion of the third element and why it matters.</li>
       </ul>
       
-      <p>The interplay between typeface, spacing, color, and size creates a typographic system that guides users through content while reflecting your brand's personality.</p>
+      <p>When we consider these factors together, we can develop more effective approaches and solutions.</p>
       
-      <p>Remember that great typography often goes unnoticed by the average user—it simply makes the experience feel right.</p>
+      <h2>Looking Ahead</h2>
+      
+      <p>The future in this area looks promising, with several emerging trends:</p>
+      
+      <ol>
+        <li>Trend one and its potential impact</li>
+        <li>Second major development to watch</li>
+        <li>Third significant shift in the landscape</li>
+      </ol>
+      
+      <p>By staying informed and adaptable, we can leverage these changes for better outcomes.</p>
+      
+      <p>Remember that continuous learning and experimentation are key to mastery in this domain.</p>
     `
-  },
-  {
-    id: '4',
-    title: 'Color Theory for Digital Interfaces',
-    date: 'June 28, 2025',
-    category: 'Design',
-    content: `
-      <p>Color is one of the most powerful tools in a designer's toolkit, capable of influencing mood, directing attention, and communicating meaning without words.</p>
-      
-      <p>Understanding the psychology and principles behind color selection can dramatically improve your digital interfaces.</p>
-      
-      <h2>Color in Interface Design</h2>
-      
-      <p>When developing color systems for digital products:</p>
-      
-      <ul>
-        <li><strong>Accessibility is non-negotiable</strong> - Ensure sufficient contrast ratios for text and interactive elements to meet WCAG standards.</li>
-        <li><strong>Consistency builds trust</strong> - Establish clear meaning for colors (e.g., blue for links, red for errors) and apply them consistently.</li>
-        <li><strong>Cultural context matters</strong> - Colors carry different meanings across cultures; research your audience before finalizing choices.</li>
-        <li><strong>Dark mode considerations</strong> - Color palettes need to work in both light and dark environments without losing meaning or accessibility.</li>
-      </ul>
-      
-      <p>A well-designed color system extends beyond primary brand colors to include functional colors for states like hover, active, disabled, and error conditions.</p>
-      
-      <p>The most successful color implementations are those that users hardly notice—they simply enhance the experience without calling attention to themselves.</p>
-    `
+    }
+    
+    notes.push({
+      id: String(i),
+      title: titles[titleIndex],
+      date: date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+      category: categories[categoryIndex],
+      excerpt,
+      content
+    })
   }
-]
+  
+  return notes
+}
+
+// Generate the mock notes data
+const notesData = generateMockNotes()
 
 // This function is required for static site generation with dynamic routes
 export function generateStaticParams() {
