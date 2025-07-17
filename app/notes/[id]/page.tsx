@@ -6,6 +6,7 @@ const notesData = [
     id: '1',
     title: 'The Art of Simplicity',
     date: 'July 10, 2025',
+    category: 'Design',
     content: `
       <p>In the realm of design, simplicity isn't just an aesthetic choice—it's a fundamental principle that can transform user experiences.</p>
       
@@ -25,13 +26,13 @@ const notesData = [
       <p>When we embrace simplicity, we create interfaces that communicate clearly and function effortlessly. The user isn't distracted by unnecessary elements or confused by complex interactions.</p>
       
       <p>Remember: in design, what you remove is often more important than what you add.</p>
-    `,
-    tags: ['Design', 'UX', 'Minimalism']
+    `
   },
   {
     id: '2',
     title: 'Building with Next.js',
     date: 'July 8, 2025',
+    category: 'Development',
     content: `
       <p>Next.js has revolutionized how we build React applications by providing a framework that addresses common challenges in web development.</p>
       
@@ -51,13 +52,13 @@ const notesData = [
       <p>The framework continues to evolve with features like the App Router, which brings component-level data fetching and more granular control over rendering.</p>
       
       <p>Whether you're building a blog, e-commerce site, or complex web application, Next.js provides a solid foundation that scales with your needs.</p>
-    `,
-    tags: ['Development', 'Next.js', 'React']
+    `
   },
   {
     id: '3',
     title: 'Typography in Digital Design',
     date: 'July 5, 2025',
+    category: 'Design',
     content: `
       <p>Typography is often the unsung hero of digital design—it silently carries your message while shaping the entire mood of your interface.</p>
       
@@ -77,13 +78,13 @@ const notesData = [
       <p>The interplay between typeface, spacing, color, and size creates a typographic system that guides users through content while reflecting your brand's personality.</p>
       
       <p>Remember that great typography often goes unnoticed by the average user—it simply makes the experience feel right.</p>
-    `,
-    tags: ['Typography', 'Design', 'Accessibility']
+    `
   },
   {
     id: '4',
     title: 'Color Theory for Digital Interfaces',
     date: 'June 28, 2025',
+    category: 'Design',
     content: `
       <p>Color is one of the most powerful tools in a designer's toolkit, capable of influencing mood, directing attention, and communicating meaning without words.</p>
       
@@ -103,8 +104,7 @@ const notesData = [
       <p>A well-designed color system extends beyond primary brand colors to include functional colors for states like hover, active, disabled, and error conditions.</p>
       
       <p>The most successful color implementations are those that users hardly notice—they simply enhance the experience without calling attention to themselves.</p>
-    `,
-    tags: ['Color Theory', 'Design', 'Psychology']
+    `
   }
 ]
 
@@ -153,7 +153,7 @@ export default function NotePage({ params }: { params: { id: string } }) {
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.2} stroke="currentColor" className="w-4 h-4 mr-2">
             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
           </svg>
-          <span className="font-cormorant text-lg tracking-wide font-light">Home</span>
+          <span className="font-cormorant text-lg tracking-wide font-light">Back to Notes</span>
         </Link>
         
         <div>
@@ -166,16 +166,8 @@ export default function NotePage({ params }: { params: { id: string } }) {
                 {note.date}
               </time>
               
-              <div className="flex flex-wrap gap-1.5">
-                {note.tags.map(tag => (
-                  <Link 
-                    key={tag}
-                    href={`/notes?tag=${encodeURIComponent(tag)}`}
-                    className="px-2 py-0.5 text-xs text-[#FF5F00]/80 hover:text-[#FF5F00] transition-colors"
-                  >
-                    #{tag}
-                  </Link>
-                ))}
+              <div className="text-xs text-text/40 dark:text-text-dark/40 tracking-wide font-light">
+                {note.category}
               </div>
             </div>
           </header>
