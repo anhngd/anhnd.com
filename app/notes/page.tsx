@@ -145,22 +145,21 @@ export default function Notes() {
             <span className="font-cormorant text-lg tracking-wide font-light">Home</span>
           </Link>
           
-          <motion.h1 
-            initial={{ opacity: 0, y: 10 }}
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="font-playfair text-4xl md:text-5xl font-light text-text dark:text-text-dark mb-4 tracking-wide"
+            transition={{ duration: 0.5 }}
+            className="font-playfair text-4xl md:text-5xl font-medium text-text dark:text-text-dark mb-4 tracking-wide"
           >
             Notes
           </motion.h1>
-          
           <motion.p 
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.1 }}
-            className="font-cormorant text-xl text-text/70 dark:text-text-dark/70 tracking-wide font-light"
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="font-cormorant text-xl text-text/70 dark:text-text-dark/70 tracking-wide font-light max-w-3xl"
           >
-            Thoughts and ideas
+            Collection of thoughts, learnings, and explorations.
           </motion.p>
         </header>
         
@@ -172,7 +171,7 @@ export default function Notes() {
           className="mb-10"
         >
           <div>
-            <h2 className="text-sm uppercase text-text/50 dark:text-text-dark/50 mb-3 font-medium tracking-wider">Categories</h2>
+            <h2 className="font-playfair text-lg font-medium text-text dark:text-text-dark mb-3 tracking-wide">Categories</h2>
             <div className="flex flex-wrap gap-2 items-center">
               <button
                 onClick={() => handleCategoryChange(null)}
@@ -246,7 +245,7 @@ export default function Notes() {
                         initial={{ opacity: 0, y: 10 }}
                         animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
                         transition={{ duration: 0.3, delay: 0.05 * index }}
-                        className="py-5 border-b border-text/5 dark:border-text-dark/5 hover:bg-bg-section/30 dark:hover:bg-bg-section-dark/30 transition-colors px-2"
+                        className="py-5 border-b border-text/10 dark:border-text-dark/10 hover:bg-bg-section/30 dark:hover:bg-bg-section-dark/30 transition-colors px-2"
                       >
                         <Link href={`/notes/${note.id}`} className="group block">
                           <div className="flex justify-between items-start mb-1.5">
@@ -262,7 +261,7 @@ export default function Notes() {
                           </p>
                         </Link>
                         <div className="flex flex-wrap gap-1.5 mt-3">
-                          <span className="text-xs text-text/40 dark:text-text-dark/40 px-2 py-1">
+                          <span className="text-xs text-text/40 dark:text-text-dark/40 px-2 py-1 tracking-wide font-light">
                             {note.category}
                           </span>
                         </div>

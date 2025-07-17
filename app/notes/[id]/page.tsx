@@ -157,8 +157,8 @@ export default function NotePage({ params }: { params: { id: string } }) {
         </Link>
         
         <div>
-          <header className="mb-10 border-b border-text/5 dark:border-text-dark/5 pb-6">
-            <h1 className="font-playfair text-3xl md:text-4xl font-medium text-text dark:text-text-dark mb-3 tracking-wide">
+          <header className="mb-10 border-b border-text/10 dark:border-text-dark/10 pb-6">
+            <h1 className="font-playfair text-4xl md:text-5xl font-medium text-text dark:text-text-dark mb-3 tracking-wide">
               {note.title}
             </h1>
             <div className="flex justify-between items-center flex-wrap gap-y-4">
@@ -166,7 +166,7 @@ export default function NotePage({ params }: { params: { id: string } }) {
                 {note.date}
               </time>
               
-              <div className="text-xs text-text/40 dark:text-text-dark/40 tracking-wide font-light">
+              <div className="text-xs text-text/40 dark:text-text-dark/40 px-2 py-1 tracking-wide font-light">
                 {note.category}
               </div>
             </div>
