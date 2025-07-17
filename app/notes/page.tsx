@@ -5,89 +5,21 @@ import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import StructuredData from '../components/StructuredData'
 import { useInView } from 'react-intersection-observer'
+import { Metadata } from 'next'
 
-// Generate mock data with 100 notes
-const generateMockNotes = () => {
-  // Categories to use
-  const categories = [
-    'Design',
-    'Development',
-    'Productivity',
-    'Technology',
-    'Career',
-    'Personal Growth'
-  ]
+// Define note type
+type Note = {
+  id: string
+  title: string
+  date: string
+  excerpt: string
+  category: string
+}
 
-  // Article titles
-  const titlePrefixes = [
-    'The Art of', 'Mastering', 'Understanding', 'Exploring', 'Deep Dive into',
-    'Beginner\'s Guide to', 'Advanced Tips for', 'Essential', '10 Ways to Improve',
-    'Why You Should Use', 'The Future of', 'Building Better', 'Rethinking', 'Optimizing',
-    'Breaking Down', 'The Science of', 'Practical Guide to', 'How to Create', 'Learning'
-  ]
-
-  const titleSubjects = [
-    'Simplicity', 'Design Systems', 'React Components', 'Web Performance', 'Accessibility',
-    'User Experience', 'Modern Interfaces', 'Typography', 'Color Selection', 'CSS Grid',
-    'JavaScript Patterns', 'State Management', 'API Design', 'Error Handling', 'Testing',
-    'Productivity', 'Focus', 'Remote Work', 'Documentation', 'Code Reviews',
-    'Career Growth', 'Technical Interviews', 'Open Source', 'Learning', 'Teaching'
-  ]
-
-  // Generate dates within the last 2 years
-  const generateRandomDate = () => {
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-    const currentDate = new Date()
-    const randomDaysAgo = Math.floor(Math.random() * 730) // 0-730 days ago (2 years)
-    const date = new Date(currentDate.getTime() - randomDaysAgo * 24 * 60 * 60 * 1000)
-    return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`
-  }
-
-  // Generate random excerpt
-  const excerptParts = [
-    'Exploring the principles of', 'A deep dive into', 'Understanding the fundamentals of',
-    'Practical approaches to', 'Key insights about', 'Essential techniques for',
-    'How to effectively implement', 'Strategies for optimizing', 'Best practices for'
-  ]
-
-  const excerptSubjects = [
-    'modern design systems', 'effective user interfaces', 'performant web applications',
-    'accessible digital experiences', 'component architecture', 'responsive layouts',
-    'state management patterns', 'API integration', 'clean code practices',
-    'productive development workflows', 'effective time management', 'technical leadership',
-    'continuous learning', 'career advancement', 'remote collaboration'
-  ]
-
-  // Generate notes array
-  const notes = Array.from({ length: 100 }, (_, index) => {
-    const titlePrefix = titlePrefixes[Math.floor(Math.random() * titlePrefixes.length)]
-    const titleSubject = titleSubjects[Math.floor(Math.random() * titleSubjects.length)]
-    const title = `${titlePrefix} ${titleSubject}`
-    
-    const date = generateRandomDate()
-    
-    const excerptPart = excerptParts[Math.floor(Math.random() * excerptParts.length)]
-    const excerptSubject = excerptSubjects[Math.floor(Math.random() * excerptSubjects.length)]
-    const excerpt = `${excerptPart} ${excerptSubject} and how it can improve your workflow and outcomes.`
-    
-    // Assign one category
-    const category = categories[Math.floor(Math.random() * categories.length)]
-    
-    return {
-      id: (index + 1).toString(),
-      title,
-      date,
-      excerpt,
-      category
-    }
-  })
-  
-  // Sort notes by date (newest first)
-  return notes.sort((a, b) => {
-    const dateA = new Date(a.date)
-    const dateB = new Date(b.date)
-    return dateB.getTime() - dateA.getTime()
-  })
+// Generate empty notes array for future real content
+const generateMockNotes = (): Note[] => {  
+  // Return empty array - no mock notes
+  return []
 }
 
 // Generate the mock notes data
@@ -107,16 +39,17 @@ export default function Notes() {
     return Array.from(categories).sort()
   }, [])
 
-  // Filter notes by category
+  // Get filtered notes based on selected category and search term
   const filteredNotes = useMemo(() => {
     let filtered = notesData
-    
-    if (selectedCategory) {
+
+    // Apply category filter if we have data and category
+    if (selectedCategory && filtered.length > 0) {
       filtered = filtered.filter(note => note.category === selectedCategory)
     }
-    
+
     return filtered
-  }, [selectedCategory])
+  }, [selectedCategory, notesData])
   
   // Paginate the filtered notes
   const displayedNotes = useMemo(() => {
@@ -330,7 +263,7 @@ export default function Notes() {
                 className="space-y-6"
               >
                 <p className="font-cormorant text-xl text-text/60 dark:text-text-dark/60 mb-4 tracking-wide font-light">
-                  No notes found with the selected filters.
+                  {notesData.length === 0 ? 'No notes have been published yet. Check back soon!' : 'No notes found with the selected filters.'}
                 </p>
                 <div className="flex gap-3 justify-center">
                   {selectedCategory && (
