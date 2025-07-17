@@ -1,143 +1,205 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import StructuredData from '../components/StructuredData'
 import { useInView } from 'react-intersection-observer'
 
-// Sample notes data - in a real app, this would come from a database or API
-const notesData = [
-  {
-    id: '1',
-    title: 'The Art of Simplicity',
-    date: 'July 10, 2025',
-    excerpt: 'Exploring the beauty of minimalist design principles and how they can transform digital experiences.',
-    tags: ['Design', 'UX', 'Minimalism']
-  },
-  {
-    id: '2',
-    title: 'Building with Next.js',
-    date: 'July 8, 2025',
-    excerpt: 'A deep dive into creating performant web applications with Next.js and React.',
-    tags: ['Development', 'Next.js', 'React']
-  },
-  {
-    id: '3',
-    title: 'Typography in Digital Design',
-    date: 'July 5, 2025',
-    excerpt: 'How thoughtful font choices create meaningful hierarchies and enhance user experience.',
-    tags: ['Typography', 'Design', 'Accessibility']
-  },
-  {
-    id: '4',
-    title: 'Color Theory for Digital Interfaces',
-    date: 'June 28, 2025',
-    excerpt: 'Understanding the psychology of color and its application in modern web design.',
-    tags: ['Color Theory', 'Design', 'Psychology']
+// Generate mock data with 100 notes
+const generateMockNotes = () => {
+  // Categories to use
+  const categories = [
+    'Design',
+    'Development',
+    'Productivity',
+    'Technology',
+    'Career',
+    'Personal Growth'
+  ]
+
+  // Article titles
+  const titlePrefixes = [
+    'The Art of', 'Mastering', 'Understanding', 'Exploring', 'Deep Dive into',
+    'Beginner\'s Guide to', 'Advanced Tips for', 'Essential', '10 Ways to Improve',
+    'Why You Should Use', 'The Future of', 'Building Better', 'Rethinking', 'Optimizing',
+    'Breaking Down', 'The Science of', 'Practical Guide to', 'How to Create', 'Learning'
+  ]
+
+  const titleSubjects = [
+    'Simplicity', 'Design Systems', 'React Components', 'Web Performance', 'Accessibility',
+    'User Experience', 'Modern Interfaces', 'Typography', 'Color Selection', 'CSS Grid',
+    'JavaScript Patterns', 'State Management', 'API Design', 'Error Handling', 'Testing',
+    'Productivity', 'Focus', 'Remote Work', 'Documentation', 'Code Reviews',
+    'Career Growth', 'Technical Interviews', 'Open Source', 'Learning', 'Teaching'
+  ]
+
+  // Generate dates within the last 2 years
+  const generateRandomDate = () => {
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    const currentDate = new Date()
+    const randomDaysAgo = Math.floor(Math.random() * 730) // 0-730 days ago (2 years)
+    const date = new Date(currentDate.getTime() - randomDaysAgo * 24 * 60 * 60 * 1000)
+    return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`
   }
-]
+
+  // Generate random excerpt
+  const excerptParts = [
+    'Exploring the principles of', 'A deep dive into', 'Understanding the fundamentals of',
+    'Practical approaches to', 'Key insights about', 'Essential techniques for',
+    'How to effectively implement', 'Strategies for optimizing', 'Best practices for'
+  ]
+
+  const excerptSubjects = [
+    'modern design systems', 'effective user interfaces', 'performant web applications',
+    'accessible digital experiences', 'component architecture', 'responsive layouts',
+    'state management patterns', 'API integration', 'clean code practices',
+    'productive development workflows', 'effective time management', 'technical leadership',
+    'continuous learning', 'career advancement', 'remote collaboration'
+  ]
+
+  // Generate notes array
+  const notes = Array.from({ length: 100 }, (_, index) => {
+    const titlePrefix = titlePrefixes[Math.floor(Math.random() * titlePrefixes.length)]
+    const titleSubject = titleSubjects[Math.floor(Math.random() * titleSubjects.length)]
+    const title = `${titlePrefix} ${titleSubject}`
+    
+    const date = generateRandomDate()
+    
+    const excerptPart = excerptParts[Math.floor(Math.random() * excerptParts.length)]
+    const excerptSubject = excerptSubjects[Math.floor(Math.random() * excerptSubjects.length)]
+    const excerpt = `${excerptPart} ${excerptSubject} and how it can improve your workflow and outcomes.`
+    
+    // Assign one category
+    const category = categories[Math.floor(Math.random() * categories.length)]
+    
+    return {
+      id: (index + 1).toString(),
+      title,
+      date,
+      excerpt,
+      category
+    }
+  })
+  
+  // Sort notes by date (newest first)
+  return notes.sort((a, b) => {
+    const dateA = new Date(a.date)
+    const dateB = new Date(b.date)
+    return dateB.getTime() - dateA.getTime()
+  })
+}
+
+// Generate the mock notes data
+const notesData = generateMockNotes()
 
 export default function Notes() {
-  const [selectedTag, setSelectedTag] = useState<string | null>(null)
-  const [scrollY, setScrollY] = useState(0)
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [page, setPage] = useState(1)
+  const notesPerPage = 12
 
-  // Effect for parallax scrolling
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY)
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  // Function to get all unique tags from notes data
-  const getAllTags = () => {
-    const tags = notesData.reduce((acc, note) => {
-      note.tags.forEach(tag => acc.add(tag))
+  // Function to get all categories
+  const getAllCategories = useMemo(() => {
+    const categories = notesData.reduce((acc, note) => {
+      acc.add(note.category)
       return acc
     }, new Set<string>())
-    return Array.from(tags)
+    return Array.from(categories).sort()
+  }, [])
+
+  // Filter notes by category
+  const filteredNotes = useMemo(() => {
+    let filtered = notesData
+    
+    if (selectedCategory) {
+      filtered = filtered.filter(note => note.category === selectedCategory)
+    }
+    
+    return filtered
+  }, [selectedCategory])
+  
+  // Paginate the filtered notes
+  const displayedNotes = useMemo(() => {
+    const startIndex = (page - 1) * notesPerPage
+    return filteredNotes.slice(startIndex, startIndex + notesPerPage)
+  }, [filteredNotes, page])
+  
+  // Calculate total pages
+  const totalPages = Math.ceil(filteredNotes.length / notesPerPage)
+  
+  // Reset page when filter changes
+  const handleCategoryChange = (category: string | null) => {
+    setSelectedCategory(category)
+    setPage(1)
   }
 
-  // Get all unique tags
-  const allTags = getAllTags().sort()
-
-  // Filter notes by tag if a tag filter is active
-  const filteredNotes = selectedTag
-    ? notesData.filter(note => note.tags.includes(selectedTag))
-    : notesData
-
   return (
-    <main className="min-h-screen py-20 px-6 sm:px-8 lg:px-12 bg-gradient-to-b from-bg dark:from-bg-dark to-bg/95 dark:to-bg-dark/95">
-      <div className="max-w-5xl mx-auto">
+    <main className="min-h-screen py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-bg dark:from-bg-dark to-bg/95 dark:to-bg-dark/95">
+      <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <header className="mb-20">
-          <Link href="/" className="flex items-center mb-10 text-text/60 dark:text-text-dark/60 hover:text-[#FF5F00] transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.2} stroke="currentColor" className="w-5 h-5 mr-2">
+        <header className="mb-12">
+          <Link href="/" className="flex items-center mb-8 text-text/60 dark:text-text-dark/60 hover:text-[#FF5F00] transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.2} stroke="currentColor" className="w-4 h-4 mr-2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
             </svg>
-            <span className="font-cormorant text-xl tracking-wide font-light">Return Home</span>
+            <span className="font-cormorant text-lg tracking-wide font-light">Home</span>
           </Link>
           
           <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="font-playfair text-6xl md:text-7xl font-light text-text dark:text-text-dark mb-6 tracking-wider"
+            transition={{ duration: 0.4 }}
+            className="font-playfair text-4xl md:text-5xl font-light text-text dark:text-text-dark mb-4 tracking-wide"
           >
             Notes
           </motion.h1>
           
           <motion.p 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="font-cormorant text-2xl text-text/70 dark:text-text-dark/70 tracking-wide font-light"
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="font-cormorant text-xl text-text/70 dark:text-text-dark/70 tracking-wide font-light"
           >
-            Thoughts, ideas, and explorations on design and development
+            Thoughts and ideas
           </motion.p>
         </header>
         
-        {/* Tags Filter */}
+        {/* Categories Filter */}
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="mb-16"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
+          className="mb-10"
         >
-          <div className="flex flex-wrap gap-3 items-center">
-            <span className="font-cormorant text-xl text-text/60 dark:text-text-dark/60 mr-3 tracking-wide font-light">Filter by:</span>
-            <button
-              onClick={() => setSelectedTag(null)}
-              className={`px-4 py-2 rounded-full font-cormorant text-xl tracking-wide font-light transition-colors ${
-                selectedTag === null 
-                  ? 'bg-[#FF5F00] text-white' 
-                  : 'bg-bg-section dark:bg-bg-section-dark text-text/70 dark:text-text-dark/70 hover:bg-[#FF5F00]/10'
-              }`}
-            >
-              All
-            </button>
-            
-            {allTags.map(tag => (
+          <div>
+            <h2 className="text-sm uppercase text-text/50 dark:text-text-dark/50 mb-3 font-medium tracking-wider">Categories</h2>
+            <div className="flex flex-wrap gap-2 items-center">
               <button
-                key={tag}
-                onClick={() => setSelectedTag(tag)}
-                className={`px-4 py-2 rounded-full font-cormorant text-xl tracking-wide font-light transition-colors ${
-                  selectedTag === tag 
-                    ? 'bg-[#FF5F00] text-white' 
-                    : 'bg-bg-section dark:bg-bg-section-dark text-text/70 dark:text-text-dark/70 hover:bg-[#FF5F00]/10'
-                }`}
+                onClick={() => handleCategoryChange(null)}
+                className={`px-3 py-1.5 border rounded-md text-sm transition-colors ${selectedCategory === null 
+                  ? 'border-[#FF5F00] bg-[#FF5F00]/5 text-[#FF5F00]' 
+                  : 'border-text/10 dark:border-text-dark/10 text-text/70 dark:text-text-dark/70 hover:border-[#FF5F00]/30'}`}
               >
-                {tag}
+                All
               </button>
-            ))}
+              
+              {getAllCategories.map(category => (
+                <button
+                  key={category}
+                  onClick={() => handleCategoryChange(category)}
+                  className={`px-3 py-1.5 border rounded-md text-sm transition-colors ${selectedCategory === category 
+                    ? 'border-[#FF5F00] bg-[#FF5F00]/5 text-[#FF5F00]' 
+                    : 'border-text/10 dark:border-text-dark/10 text-text/70 dark:text-text-dark/70 hover:border-[#FF5F00]/30'}`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
           </div>
         </motion.div>
         
-        {/* Notes list with staggered animation */}
-        <div className="mt-12">
+        {/* Notes list with minimal design */}
+        <div className="mt-8">
           {/* Add structured data for better SEO */}
           <StructuredData
             type="WebSite"
@@ -150,84 +212,137 @@ export default function Notes() {
           
           <AnimatePresence mode="wait">
             {filteredNotes.length > 0 ? (
+              <>
+                <div className="flex justify-between items-center mb-6">
+                  <p className="text-sm text-text/50 dark:text-text-dark/50">
+                    {filteredNotes.length} {filteredNotes.length === 1 ? 'note' : 'notes'} found
+                  </p>
+                  {totalPages > 1 && (
+                    <p className="text-sm text-text/50 dark:text-text-dark/50">
+                      Page {page} of {totalPages}
+                    </p>
+                  )}
+                </div>
+                
+                <motion.div
+                  key={`${selectedCategory}-${page}`}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="space-y-6"
+                >
+                  {displayedNotes.map((note, index) => {
+                    // Use intersection observer for each note item
+                    const [ref, inView] = useInView({
+                      triggerOnce: true,
+                      threshold: 0.1
+                    });
+                    
+                    return (
+                      <motion.article 
+                        key={note.id}
+                        ref={ref}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+                        transition={{ duration: 0.3, delay: 0.05 * index }}
+                        className="py-5 border-b border-text/5 dark:border-text-dark/5 hover:bg-bg-section/30 dark:hover:bg-bg-section-dark/30 transition-colors px-2"
+                      >
+                        <Link href={`/notes/${note.id}`} className="group block">
+                          <div className="flex justify-between items-start mb-1.5">
+                            <h2 className="font-playfair text-xl font-medium text-text dark:text-text-dark tracking-wide group-hover:text-[#FF5F00] transition-colors">
+                              {note.title}
+                            </h2>
+                            <time className="font-cormorant text-sm text-text/40 dark:text-text-dark/40 tracking-wide font-light">
+                              {note.date}
+                            </time>
+                          </div>
+                          <p className="font-cormorant text-base text-text/70 dark:text-text-dark/70 tracking-wide font-light leading-relaxed line-clamp-2">
+                            {note.excerpt}
+                          </p>
+                        </Link>
+                        <div className="flex flex-wrap gap-1.5 mt-3">
+                          <span className="text-xs text-text/40 dark:text-text-dark/40 px-2 py-1">
+                            {note.category}
+                          </span>
+                        </div>
+                      </motion.article>
+                    );
+                  })}
+                </motion.div>
+                
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="mt-10 flex justify-center items-center space-x-2">
+                    <button
+                      onClick={() => setPage(prev => Math.max(prev - 1, 1))}
+                      disabled={page === 1}
+                      className={`p-2 rounded-md ${page === 1 ? 'text-text/30 dark:text-text-dark/30 cursor-not-allowed' : 'text-text/70 dark:text-text-dark/70 hover:text-[#FF5F00]'}`}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                      </svg>
+                    </button>
+                    
+                    {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                      // Logic to show pages around current page
+                      let pageNum;
+                      if (totalPages <= 5) {
+                        pageNum = i + 1;
+                      } else if (page <= 3) {
+                        pageNum = i + 1;
+                      } else if (page >= totalPages - 2) {
+                        pageNum = totalPages - 4 + i;
+                      } else {
+                        pageNum = page - 2 + i;
+                      }
+                      
+                      return (
+                        <button
+                          key={pageNum}
+                          onClick={() => setPage(pageNum)}
+                          className={`w-8 h-8 rounded-md text-sm ${page === pageNum 
+                            ? 'bg-[#FF5F00]/10 text-[#FF5F00] font-medium' 
+                            : 'text-text/70 dark:text-text-dark/70 hover:text-[#FF5F00] hover:bg-[#FF5F00]/5'}`}
+                        >
+                          {pageNum}
+                        </button>
+                      );
+                    })}
+                    
+                    <button
+                      onClick={() => setPage(prev => Math.min(prev + 1, totalPages))}
+                      disabled={page === totalPages}
+                      className={`p-2 rounded-md ${page === totalPages ? 'text-text/30 dark:text-text-dark/30 cursor-not-allowed' : 'text-text/70 dark:text-text-dark/70 hover:text-[#FF5F00]'}`}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                      </svg>
+                    </button>
+                  </div>
+                )}
+              </>
+            ) : (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className="space-y-10"
+                className="space-y-6"
               >
-                {filteredNotes.map((note, index) => {
-                  // Use intersection observer for each note item
-                  const [ref, inView] = useInView({
-                    triggerOnce: true,
-                    threshold: 0.1,
-                    rootMargin: '0px 0px 100px 0px'
-                  });
-                  
-                  return (
-                    <motion.article 
-                      key={note.id}
-                      ref={ref}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                      transition={{ duration: 0.5, delay: 0.1 * index }}
-                      style={{ 
-                        // Add parallax effect based on scroll position
-                        transform: `translateY(${scrollY * 0.02 * (index % 2 === 0 ? -1 : 1)}px)`
-                      }}
-                      className="p-8 rounded-xl bg-bg/50 dark:bg-bg-dark/50 border border-[#FF5F00]/10 backdrop-blur-sm hover:border-[#FF5F00]/30 transition-all duration-300 shadow-sm hover:shadow-md"
-                    >
-                      <Link href={`/notes/${note.id}`} className="block">
-                        <h2 className="font-playfair text-3xl font-light text-text dark:text-text-dark mb-3 tracking-wide hover:text-[#FF5F00] transition-colors">
-                          {note.title}
-                        </h2>
-                        <time className="block font-cormorant text-xl text-[#FF5F00] mb-4 tracking-wide font-light">
-                          {note.date}
-                        </time>
-                        <p className="font-cormorant text-2xl text-text/80 dark:text-text-dark/80 mb-6 tracking-wide font-light leading-relaxed">
-                          {note.excerpt}
-                        </p>
-                      </Link>
-                      <div className="flex flex-wrap gap-2 mt-6">
-                        {note.tags.map((tag: string) => (
-                          <button
-                            key={tag}
-                            onClick={() => setSelectedTag(tag)}
-                            className="px-3 py-1.5 rounded-full bg-[#FF5F00]/10 text-[#FF5F00] text-base font-light tracking-wide hover:bg-[#FF5F00]/20 transition-colors"
-                          >
-                            {tag}
-                          </button>
-                        ))}
-                      </div>
-                      <div className="mt-8 text-right">
-                        <Link href={`/notes/${note.id}`} className="inline-flex items-center font-cormorant text-xl text-primary hover:text-primary/80 transition-colors tracking-wide font-light">
-                          Read more
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.2} stroke="currentColor" className="w-5 h-5 ml-2">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                          </svg>
-                        </Link>
-                      </div>
-                    </motion.article>
-                  );
-                })}
-              </motion.div>
-            ) : (
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className="text-center py-20"
-              >
-                <p className="font-cormorant text-3xl text-text/60 dark:text-text-dark/60 mb-6 tracking-wide font-light">
-                  No notes found with the selected filter.
+                <p className="font-cormorant text-xl text-text/60 dark:text-text-dark/60 mb-4 tracking-wide font-light">
+                  No notes found with the selected filters.
                 </p>
-                <button
-                  onClick={() => setSelectedTag(null)}
-                  className="px-6 py-2.5 rounded-lg bg-primary text-white font-light tracking-wide hover:bg-primary/90 transition-colors text-xl"
-                >
-                  Clear Filter
-                </button>
+                <div className="flex gap-3 justify-center">
+                  {selectedCategory && (
+                    <button
+                      onClick={() => handleCategoryChange(null)}
+                      className="px-4 py-1.5 rounded-md border border-[#FF5F00] text-[#FF5F00] text-sm font-light tracking-wide hover:bg-[#FF5F00]/5 transition-colors"
+                    >
+                      Clear Category
+                    </button>
+                  )}
+                </div>
               </motion.div>
             )}
           </AnimatePresence>

@@ -123,22 +123,22 @@ export default function NotePage({ params }: { params: { id: string } }) {
   
   if (!note) {
     return (
-      <main className="min-h-screen py-20 px-6 sm:px-8 lg:px-12 bg-gradient-to-b from-bg dark:from-bg-dark to-bg/95 dark:to-bg-dark/95">
+      <main className="min-h-screen py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-bg dark:from-bg-dark to-bg/95 dark:to-bg-dark/95">
         <div className="max-w-4xl mx-auto text-center">
-          <Link href="/notes" className="flex items-center justify-center mb-10 text-text/60 dark:text-text-dark/60 hover:text-primary transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.2} stroke="currentColor" className="w-5 h-5 mr-2">
+          <Link href="/notes" className="flex items-center justify-center mb-8 text-text/60 dark:text-text-dark/60 hover:text-[#FF5F00] transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.2} stroke="currentColor" className="w-4 h-4 mr-2">
               <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
             </svg>
-            <span className="font-cormorant text-xl tracking-wide font-light">Back to Notes</span>
+            <span className="font-cormorant text-lg tracking-wide font-light">Back to Notes</span>
           </Link>
           
-          <h1 className="font-playfair text-4xl font-light text-text dark:text-text-dark mb-6 tracking-wider">
+          <h1 className="font-playfair text-3xl font-medium text-text dark:text-text-dark mb-4 tracking-wide">
             Note Not Found
           </h1>
-          <p className="font-cormorant text-2xl text-text/70 dark:text-text-dark/70 mb-10 tracking-wide font-light">
+          <p className="font-cormorant text-xl text-text/70 dark:text-text-dark/70 mb-8 tracking-wide font-light">
             The note you're looking for doesn't exist or has been removed.
           </p>
-          <Link href="/notes" className="inline-flex items-center px-6 py-3 rounded-lg bg-[#FF5F00] text-white font-light tracking-wide hover:bg-[#FF5F00]/90 transition-colors text-xl">
+          <Link href="/notes" className="inline-flex items-center px-4 py-1.5 rounded-md border border-[#FF5F00] text-[#FF5F00] text-sm font-light tracking-wide hover:bg-[#FF5F00]/5 transition-colors">
             Return to Notes
           </Link>
         </div>
@@ -147,46 +147,48 @@ export default function NotePage({ params }: { params: { id: string } }) {
   }
 
   return (
-    <main className="min-h-screen py-20 px-6 sm:px-8 lg:px-12 bg-gradient-to-b from-bg dark:from-bg-dark to-bg/95 dark:to-bg-dark/95">
+    <main className="min-h-screen py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-bg dark:from-bg-dark to-bg/95 dark:to-bg-dark/95">
       <article className="max-w-4xl mx-auto">
-        <Link href="/notes" className="flex items-center mb-10 text-text/60 dark:text-text-dark/60 hover:text-[#FF5F00] transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.2} stroke="currentColor" className="w-5 h-5 mr-2">
+        <Link href="/notes" className="flex items-center mb-8 text-text/60 dark:text-text-dark/60 hover:text-[#FF5F00] transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.2} stroke="currentColor" className="w-4 h-4 mr-2">
             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
           </svg>
-          <span className="font-cormorant text-xl tracking-wide font-light">Back to Notes</span>
+          <span className="font-cormorant text-lg tracking-wide font-light">Home</span>
         </Link>
         
         <div>
-          <header className="mb-16">
-            <h1 className="font-playfair text-5xl md:text-6xl font-light text-text dark:text-text-dark mb-6 tracking-wider">
+          <header className="mb-10 border-b border-text/5 dark:border-text-dark/5 pb-6">
+            <h1 className="font-playfair text-3xl md:text-4xl font-medium text-text dark:text-text-dark mb-3 tracking-wide">
               {note.title}
             </h1>
-            <time className="block font-cormorant text-2xl text-[#FF5F00] mb-8 tracking-wide font-light">
-              {note.date}
-            </time>
-            
-            <div className="flex flex-wrap gap-3">
-              {note.tags.map(tag => (
-                <Link 
-                  key={tag}
-                  href={`/notes?tag=${encodeURIComponent(tag)}`}
-                  className="px-4 py-1.5 rounded-full bg-[#FF5F00]/10 text-[#FF5F00] text-lg font-light tracking-wide hover:bg-[#FF5F00]/20 transition-colors"
-                >
-                  {tag}
-                </Link>
-              ))}
+            <div className="flex justify-between items-center flex-wrap gap-y-4">
+              <time className="font-cormorant text-sm text-text/40 dark:text-text-dark/40 tracking-wide font-light">
+                {note.date}
+              </time>
+              
+              <div className="flex flex-wrap gap-1.5">
+                {note.tags.map(tag => (
+                  <Link 
+                    key={tag}
+                    href={`/notes?tag=${encodeURIComponent(tag)}`}
+                    className="px-2 py-0.5 text-xs text-[#FF5F00]/80 hover:text-[#FF5F00] transition-colors"
+                  >
+                    #{tag}
+                  </Link>
+                ))}
+              </div>
             </div>
           </header>
           
           <div 
-            className="prose prose-xl dark:prose-invert max-w-none font-cormorant 
-                       prose-headings:font-playfair prose-p:text-2xl prose-p:tracking-wide prose-p:leading-relaxed 
-                       prose-headings:text-text dark:prose-headings:text-text-dark prose-headings:tracking-wider prose-headings:font-light
-                       prose-p:font-light prose-li:font-light prose-li:text-xl prose-li:tracking-wide prose-li:leading-relaxed
+            className="prose dark:prose-invert max-w-none font-cormorant 
+                       prose-headings:font-playfair prose-p:text-base prose-p:tracking-wide prose-p:leading-relaxed 
+                       prose-headings:text-text dark:prose-headings:text-text-dark prose-headings:tracking-wide prose-headings:font-medium
+                       prose-p:font-light prose-li:font-light prose-li:text-base prose-li:tracking-wide prose-li:leading-relaxed
                        prose-a:text-[#FF5F00] prose-a:no-underline hover:prose-a:underline 
                        prose-strong:text-text dark:prose-strong:text-text-dark prose-strong:font-medium
-                       prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6
-                       prose-ul:my-8 prose-li:my-2"
+                       prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4
+                       prose-ul:my-4 prose-li:my-1"
             dangerouslySetInnerHTML={{ __html: note.content }}
           />
         </div>
