@@ -16,6 +16,31 @@ function generateMockNotes(): Note[] {
   return [];
 }
 
+// Generate metadata for the page
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  // For now with mock data, we'll return a generic metadata object
+  // In the future when real data is implemented, dynamically generate metadata from the note
+  return {
+    title: 'Note | Anh Nguyen',
+    description: 'Detailed note page with insights and information.',
+    openGraph: {
+      title: 'Note | Anh Nguyen',
+      description: 'Detailed note page with insights and information.',
+      url: `https://anhnd.com/notes/${params.id}`,
+      siteName: 'Anh Nguyen',
+      type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'Note | Anh Nguyen',
+      description: 'Detailed note page with insights and information.',
+    },
+    alternates: {
+      canonical: `https://anhnd.com/notes/${params.id}`,
+    }
+  }
+}
+
 // Generate the mock notes data
 const notesData = generateMockNotes()
 
