@@ -20,11 +20,22 @@
   color-scheme: light;
 }
 
+/* Prevent FOUC (Flash of Unstyled Content) */
+html {
+  visibility: visible;
+  opacity: 1;
+}
+
+html.theme-ready {
+  background-color: var(--bg-color);
+}
+
 body {
   color: var(--text-color);
   background: var(--bg-color);
   font-family: 'Plus Jakarta Sans', sans-serif;
-  transition: background-color 0.5s ease, color 0.5s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  opacity: 1;
 }
 
 .bg-section {

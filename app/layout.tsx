@@ -105,6 +105,15 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet" />
+        
+        {/* Prevent flash of unstyled content - preload theme */}
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function() {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.documentElement.style.setProperty('color-scheme', 'light');
+            document.documentElement.classList.add('theme-ready');
+          })()
+        ` }} />
       </head>
       <body>
         <ThemeProvider>
