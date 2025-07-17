@@ -45,10 +45,12 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 const notesData = generateMockNotes()
 
 // This function is required for static site generation with dynamic routes
-export function generateStaticParams() {
-  // Return empty array since we have no notes
-  // When real data is added, this should be updated to include all note IDs
-  return []
+export async function generateStaticParams() {
+  // For build to work with output: export, we need to return at least one param
+  // Even though we have no real notes, we'll provide a dummy ID for build purposes
+  return [
+    { id: 'placeholder-note' }
+  ]
 }
 
 function NotFoundUI() {

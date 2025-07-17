@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import StructuredData from '../components/StructuredData'
 import { useInView } from 'react-intersection-observer'
-import { Metadata } from 'next'
 
 // Define note type
 type Note = {
