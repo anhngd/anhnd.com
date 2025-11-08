@@ -86,4 +86,13 @@ body {
     blink .8s step-end infinite;
   padding-right: 2px;
   margin-left: 2px;
+}
+
+/* Mastercard gradient text on hover */
+.group:hover .greeting-gradient,
+.group:hover .title-gradient {
+  background: linear-gradient(135deg, #EB001B 0%, #FF5F00 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 } 

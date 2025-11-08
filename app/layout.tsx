@@ -1,23 +1,23 @@
 import type { Metadata, Viewport } from 'next'
-import { Plus_Jakarta_Sans } from 'next/font/google'
+import { Space_Grotesk } from 'next/font/google'
 import './globals.css'
 import GoogleAnalytics from './components/GoogleAnalytics'
 import 'katex/dist/katex.min.css'
 import ThemeProvider from './components/ThemeProvider'
 import Script from 'next/script'
 
-const jakartaSans = Plus_Jakarta_Sans({ 
+const spaceGrotesk = Space_Grotesk({ 
   subsets: ['latin'],
-  weight: ['200', '300', '400', '500', '600', '700', '800'],
-  variable: '--font-jakarta',
-  display: 'swap' // Improve performance with font display swap
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-space-grotesk',
+  display: 'swap'
 })
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://anhnd.com'),
   title: {
     template: '%s | AnhND',
-    default: `I'm AnhND - Full-stack Developer`,
+    default: `Build Systems. Grow Intelligently. | AnhND`,
   },
   description: 'Personal website of AnhND, a Full-stack Developer with expertise in UI/UX, digital transformation, and gaming industry. Based in Vietnam.',
   keywords: 'AnhND, Full-stack Developer, UI/UX, Digital Transformation, Gaming Industry, Vietnam, Applied Mathematics, Computer Science, Software Engineer',
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: `I'm AnhND - Full-stack Developer`,
+    title: `Build Systems. Grow Intelligently. | AnhND`,
     description: 'Personal website of AnhND, a Full-stack Developer with expertise in UI/UX, digital transformation, and gaming industry. Based in Vietnam.',
     url: 'https://anhnd.com',
     siteName: 'AnhND',
@@ -98,13 +98,13 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${jakartaSans.className} ${jakartaSans.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${spaceGrotesk.className} ${spaceGrotesk.variable}`} suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" />
         <link rel="canonical" href="https://anhnd.com" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
         
         {/* Prevent flash of unstyled content - preload theme */}
         <script dangerouslySetInnerHTML={{ __html: `

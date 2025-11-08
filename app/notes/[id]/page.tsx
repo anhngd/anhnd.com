@@ -1,5 +1,4 @@
-import Link from 'next/link'
-import { Metadata } from 'next'
+import NoteContent from './NoteContent'
 
 // Define note type
 type Note = {
@@ -11,123 +10,116 @@ type Note = {
   content: string
 }
 
-// Generate empty notes array for future real content
+// Generate mock notes data matching the posts on homepage
 function generateMockNotes(): Note[] {
-  return [];
-}
-
-// Generate metadata for the page
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  // For now with mock data, we'll return a generic metadata object
-  // In the future when real data is implemented, dynamically generate metadata from the note
-  return {
-    title: 'Note | Anh Nguyen',
-    description: 'Detailed note page with insights and information.',
-    openGraph: {
-      title: 'Note | Anh Nguyen',
-      description: 'Detailed note page with insights and information.',
-      url: `https://anhnd.com/notes/${params.id}`,
-      siteName: 'Anh Nguyen',
-      type: 'article',
+  return [
+    {
+      id: 'building-scalable-systems',
+      title: 'Building Scalable Systems',
+      date: '2024-01-15',
+      excerpt: 'Thoughts on building systems that grow with your business needs.',
+      category: 'Engineering',
+      content: `
+        <h2>Introduction</h2>
+        <p>Building scalable systems is one of the most critical challenges in modern software development. As businesses grow, their technical infrastructure must evolve to handle increased load, complexity, and user demands.</p>
+        
+        <h2>Key Principles</h2>
+        <p>When designing scalable systems, there are several fundamental principles to consider:</p>
+        <ul>
+          <li><strong>Horizontal Scaling:</strong> Design systems that can grow by adding more machines rather than upgrading existing ones.</li>
+          <li><strong>Stateless Services:</strong> Keep services stateless to allow easy replication and load distribution.</li>
+          <li><strong>Database Optimization:</strong> Use appropriate database strategies including caching, read replicas, and sharding.</li>
+          <li><strong>Microservices Architecture:</strong> Break down monolithic applications into smaller, independent services.</li>
+        </ul>
+        
+        <h2>Real-World Applications</h2>
+        <p>In my experience working with various systems, I've found that the most successful scalable architectures start with a clear understanding of current needs and future growth projections. It's essential to build for today while keeping tomorrow in mind.</p>
+        
+        <p>One common mistake is over-engineering from the start. Instead, focus on building a solid foundation that can be extended as requirements evolve. This approach allows teams to deliver value quickly while maintaining flexibility for future scaling needs.</p>
+      `
     },
-    twitter: {
-      card: 'summary_large_image',
-      title: 'Note | Anh Nguyen',
-      description: 'Detailed note page with insights and information.',
+    {
+      id: 'data-driven-decision-making',
+      title: 'Data-Driven Decision Making',
+      date: '2024-01-10',
+      excerpt: 'How to leverage data and AI in real-world business scenarios.',
+      category: 'Business',
+      content: `
+        <h2>The Power of Data</h2>
+        <p>In today's business landscape, data-driven decision making has become essential for competitive advantage. Organizations that effectively leverage data and AI can make more informed decisions, optimize operations, and create better customer experiences.</p>
+        
+        <h2>Building a Data Culture</h2>
+        <p>Creating a data-driven culture requires more than just tools and technology. It involves:</p>
+        <ul>
+          <li>Establishing clear data governance policies</li>
+          <li>Training teams to ask the right questions</li>
+          <li>Building trust in data quality and insights</li>
+          <li>Encouraging experimentation and learning from failures</li>
+        </ul>
+        
+        <h2>AI Integration</h2>
+        <p>Artificial Intelligence has transformed how we process and analyze data. From predictive analytics to automated decision-making, AI enables businesses to:</p>
+        <ul>
+          <li>Identify patterns that humans might miss</li>
+          <li>Process large volumes of data in real-time</li>
+          <li>Personalize experiences at scale</li>
+          <li>Automate routine decision-making processes</li>
+        </ul>
+        
+        <h2>Practical Implementation</h2>
+        <p>Start small with clear, measurable objectives. Focus on high-impact areas where data can provide immediate value. As you build confidence and capability, gradually expand your data initiatives across the organization.</p>
+      `
     },
-    alternates: {
-      canonical: `https://anhnd.com/notes/${params.id}`,
+    {
+      id: 'lessons-from-gaming-industry',
+      title: 'Lessons from Gaming Industry',
+      date: '2024-01-05',
+      excerpt: 'Insights from working in traditional games and GameFi projects.',
+      category: 'Gaming',
+      content: `
+        <h2>Gaming Industry Evolution</h2>
+        <p>The gaming industry has undergone remarkable transformation over the past decade. From traditional console and PC games to mobile gaming and now Web3/GameFi, the landscape continues to evolve rapidly.</p>
+        
+        <h2>Traditional Gaming Insights</h2>
+        <p>Working in traditional game development taught me valuable lessons about:</p>
+        <ul>
+          <li><strong>User Experience:</strong> Games excel at creating engaging, intuitive user experiences that keep players coming back.</li>
+          <li><strong>Performance Optimization:</strong> Real-time rendering and gameplay require extreme attention to performance and optimization.</li>
+          <li><strong>Community Building:</strong> Successful games build strong communities that extend beyond the game itself.</li>
+          <li><strong>Iterative Development:</strong> Games are refined through continuous playtesting and iteration.</li>
+        </ul>
+        
+        <h2>GameFi and Web3</h2>
+        <p>The emergence of GameFi has introduced new dimensions to game development:</p>
+        <ul>
+          <li>Tokenomics and economic models</li>
+          <li>Decentralized ownership of in-game assets</li>
+          <li>Community governance through DAOs</li>
+          <li>Cross-chain interoperability</li>
+        </ul>
+        
+        <h2>Key Takeaways</h2>
+        <p>Whether working in traditional games or GameFi, the core principles remain the same: focus on creating engaging experiences, build strong communities, and continuously iterate based on user feedback. The technology may change, but the fundamentals of great game design endure.</p>
+      `
     }
-  }
+  ];
 }
 
 // Generate the mock notes data
 const notesData = generateMockNotes()
 
-// This function is required for static site generation with dynamic routes
+// Generate static params for static site generation
 export async function generateStaticParams() {
-  // For build to work with output: export, we need to return at least one param
-  // Even though we have no real notes, we'll provide a dummy ID for build purposes
-  return [
-    { id: 'placeholder-note' }
-  ]
-}
-
-function NotFoundUI() {
-  return (
-    <main className="min-h-screen py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-bg dark:from-bg-dark to-bg/95 dark:to-bg-dark/95">
-      <div className="max-w-4xl mx-auto text-center">
-        <Link href="/notes" className="flex items-center justify-center mb-8 text-text/60 dark:text-text-dark/60 hover:text-[#FF5F00] transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.2} stroke="currentColor" className="w-4 h-4 mr-2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-          </svg>
-          <span className="font-cormorant text-lg tracking-wide font-light">Back to Notes</span>
-        </Link>
-        
-        <h1 className="font-playfair text-3xl font-medium text-text dark:text-text-dark mb-4 tracking-wide">
-          Note Not Found
-        </h1>
-        <p className="font-cormorant text-xl text-text/70 dark:text-text-dark/70 mb-8 tracking-wide font-light">
-          No notes are available yet. Check back soon!
-        </p>
-        <Link href="/notes" className="inline-flex items-center px-4 py-1.5 rounded-md border border-[#FF5F00] text-[#FF5F00] text-sm font-light tracking-wide hover:bg-[#FF5F00]/5 transition-colors">
-          Return to Notes
-        </Link>
-      </div>
-    </main>
-  )
+  return notesData.map((note) => ({
+    id: note.id,
+  }))
 }
 
 export default function NotePage({ params }: { params: { id: string } }) {
   const id = params.id
+  
+  // Find note by id (slug)
   const note = notesData.find(note => note.id === id)
   
-  // Since we have no notes, we'll always show the NotFoundUI
-  if (!note) {
-    return <NotFoundUI />
-  }
-
-  // This part would render a note if found
-  // We keep it for when real data is added
-  return (
-    <main className="min-h-screen py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-bg dark:from-bg-dark to-bg/95 dark:to-bg-dark/95">
-      <article className="max-w-4xl mx-auto">
-        <Link href="/notes" className="flex items-center mb-8 text-text/60 dark:text-text-dark/60 hover:text-[#FF5F00] transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.2} stroke="currentColor" className="w-4 h-4 mr-2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-          </svg>
-          <span className="font-cormorant text-lg tracking-wide font-light">Back to Notes</span>
-        </Link>
-        
-        <div>
-          <header className="mb-10 border-b border-text/10 dark:border-text-dark/10 pb-6">
-            <h1 className="font-playfair text-4xl md:text-5xl font-medium text-text dark:text-text-dark mb-3 tracking-wide">
-              {note.title}
-            </h1>
-            <div className="flex justify-between items-center flex-wrap gap-y-4">
-              <time className="font-cormorant text-sm text-text/40 dark:text-text-dark/40 tracking-wide font-light">
-                {note.date}
-              </time>
-              
-              <div className="text-xs text-text/40 dark:text-text-dark/40 px-2 py-1 tracking-wide font-light">
-                {note.category}
-              </div>
-            </div>
-          </header>
-          
-          <div 
-            className="prose dark:prose-invert max-w-none font-cormorant 
-                       prose-headings:font-playfair prose-p:text-base prose-p:tracking-wide prose-p:leading-relaxed 
-                       prose-headings:text-text dark:prose-headings:text-text-dark prose-headings:tracking-wide prose-headings:font-medium
-                       prose-p:font-light prose-li:font-light prose-li:text-base prose-li:tracking-wide prose-li:leading-relaxed
-                       prose-a:text-[#FF5F00] prose-a:no-underline hover:prose-a:underline 
-                       prose-strong:text-text dark:prose-strong:text-text-dark prose-strong:font-medium
-                       prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4
-                       prose-ul:my-4 prose-li:my-1"
-            dangerouslySetInnerHTML={{ __html: note.content }}
-          />
-        </div>
-      </article>
-    </main>
-  )
+  return <NoteContent note={note || null} />
 }
