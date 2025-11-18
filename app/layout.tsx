@@ -17,10 +17,10 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://anhnd.com'),
   title: {
     template: '%s | AnhND',
-    default: `Build Systems. Grow Intelligently. | AnhND`,
+    default: `AnhND - a developer. | Big Data & AI Lead`,
   },
-  description: 'Personal website of AnhND, a Full-stack Developer with expertise in UI/UX, digital transformation, and gaming industry. Based in Vietnam.',
-  keywords: 'AnhND, Full-stack Developer, UI/UX, Digital Transformation, Gaming Industry, Vietnam, Applied Mathematics, Computer Science, Software Engineer',
+  description: 'Engineer & Master of Applied Mathematics from HUST. 10+ years in IT: from government digital transformation, enterprise solutions, gaming, Web3, to Big Data & AI. Based in Vietnam.',
+  keywords: 'AnhND, Applied Mathematics, HUST, Big Data, AI, Machine Learning, Digital Transformation, Web3, Blockchain, Gaming, System Architecture, Data Engineering, Management, Vietnam, Software Engineer, Tech Lead',
   authors: [{ name: 'AnhND', url: 'https://anhnd.com' }],
   creator: 'AnhND',
   publisher: 'AnhND',
@@ -28,8 +28,8 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: `Build Systems. Grow Intelligently. | AnhND`,
-    description: 'Personal website of AnhND, a Full-stack Developer with expertise in UI/UX, digital transformation, and gaming industry. Based in Vietnam.',
+    title: `AnhND - a developer. | Big Data & AI Lead`,
+    description: 'Engineer & Master of Applied Mathematics from HUST. 10+ years: Digital Transformation → Gaming → Web3 → Big Data & AI. Building intelligent systems at scale.',
     url: 'https://anhnd.com',
     siteName: 'AnhND',
     images: [
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
         url: 'https://anhnd.com/og-image.png', // Optimized social sharing image
         width: 1200,
         height: 630,
-        alt: 'AnhND - Full-stack Developer',
+        alt: 'AnhND - Big Data & AI Lead | 10+ Years in Tech',
       },
     ],
     locale: 'en_US',
@@ -45,10 +45,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: `I'm AnhND`,
-    description: 'Technology-driven, data-centered, and AI-powered – that’s how I build value."',
+    title: `AnhND - a developer.`,
+    description: '10+ years: Gov DX → Enterprise → Gaming → Web3 → Big Data & AI. Math background, tech execution, strategic thinking.',
     creator: '@anhnd',
-    images: ['https://anhnd.com/avatar.png'],
+    images: ['https://anhnd.com/og-image.png'],
   },
   robots: {
     index: true,

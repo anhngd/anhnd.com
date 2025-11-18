@@ -39,7 +39,7 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="fixed inset-0 bg-[var(--bg-color)]/95 backdrop-blur-md z-50"
+            className="fixed inset-0 bg-white z-50"
             onClick={onClose}
           />
           
@@ -49,17 +49,17 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
-            className="fixed inset-0 z-50 flex flex-col"
+            className="fixed inset-0 z-50 flex flex-col bg-white"
           >
             {/* Header */}
-            <div className="px-8 py-6 border-b border-[var(--primary-color)]/10 bg-[var(--bg-color)]/80 backdrop-blur-sm">
+            <div className="px-8 py-6 border-b border-[#E1DFDD] bg-white">
               <div className="max-w-[1000px] mx-auto flex items-center justify-between">
-                <h2 className="text-3xl font-[var(--font-cormorant)] text-[var(--text-color)] tracking-wide">{title}</h2>
+                <h2 className="text-3xl font-light text-[#323130] tracking-wide" style={{ fontWeight: 300, letterSpacing: '-0.02em' }}>{title}</h2>
                 <button
                   onClick={onClose}
-                  className="p-2 hover:bg-[var(--primary-color)]/5 rounded-full transition-all duration-300 transform hover:scale-110 hover:rotate-90"
+                  className="p-2 hover:bg-[#F3F2F1] rounded-full transition-all duration-300 transform hover:scale-110 hover:rotate-90"
                 >
-                  <svg className="w-6 h-6 text-[var(--text-color)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-6 h-6 text-[#323130]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
