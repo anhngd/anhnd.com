@@ -7,17 +7,36 @@
   --background-rgb: 255, 255, 255;
   --primary-color: #FF7700; /* Orange */
   --secondary-color: #FF9E45; /* Lighter orange */
-  --text-color: #000000; /* Black */
-  --bg-color: #ffffff; /* White */
-  --section-bg: #f4f4f4; /* Light gray */
+  --text-color: #323130;
+  --text-secondary: #605E5C;
+  --bg-color: #ffffff;
+  --bg-secondary: #F3F2F1;
+  --section-bg: #F8F9FA;
   --nav-bg: rgba(255, 255, 255, 0.9);
-  --text-secondary: #666666; /* Gray */
-  --accent-gray: #CCCCCC; /* Additional gray shade */
+  --border-color: #E1DFDD;
+  --accent-gray: #CCCCCC;
+}
+
+/* Dark mode colors */
+[data-theme="dark"] {
+  --foreground-rgb: 255, 255, 255;
+  --background-rgb: 18, 18, 18;
+  --text-color: #E1DFDD;
+  --text-secondary: #A19F9D;
+  --bg-color: #1a1a1a;
+  --bg-secondary: #252525;
+  --section-bg: #1f1f1f;
+  --nav-bg: rgba(26, 26, 26, 0.9);
+  --border-color: #3B3A39;
 }
 
 /* Color scheme for browser */
 :root {
   color-scheme: light;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 /* Prevent FOUC (Flash of Unstyled Content) */
@@ -108,7 +127,7 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  background: #F3F2F1;
+  background: var(--bg-secondary);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -119,6 +138,15 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(135deg, #EB001B 0%, #FF5F00 100%);
   opacity: 0.8;
+}
+
+/* Dark mode scrollbar */
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #FF5F00 0%, #EB001B 100%);
 }
 
 /* Fade in animation */

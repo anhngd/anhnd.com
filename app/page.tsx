@@ -3,8 +3,14 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import dynamic from 'next/dynamic'
 import StructuredData from './components/StructuredData'
 import Modal from './components/Modal'
+
+// Load ThemeSwitch only on client-side to avoid SSR issues
+const ThemeSwitch = dynamic(() => import('./components/ThemeSwitch'), {
+  ssr: false,
+})
 
 export default function Home() {
   const [showContent, setShowContent] = useState(false)
@@ -685,6 +691,9 @@ export default function Home() {
           </div>
         </div>
       </Modal>
+
+      {/* Theme Toggle Button */}
+      <ThemeSwitch />
       </main>
   )
 } 

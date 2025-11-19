@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Space_Grotesk } from 'next/font/google'
 import './globals.css'
 import 'katex/dist/katex.min.css'
+import { ThemeProvider } from './components/ThemeProvider'
 
 const spaceGrotesk = Space_Grotesk({ 
   subsets: ['latin'],
@@ -104,7 +105,9 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
       </head>
       <body>
-        {children}
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   )
