@@ -1,10 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Space_Grotesk } from 'next/font/google'
 import './globals.css'
-import GoogleAnalytics from './components/GoogleAnalytics'
 import 'katex/dist/katex.min.css'
-import ThemeProvider from './components/ThemeProvider'
-import Script from 'next/script'
 
 const spaceGrotesk = Space_Grotesk({ 
   subsets: ['latin'],
@@ -105,21 +102,9 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-        
-        {/* Prevent flash of unstyled content - preload theme */}
-        <script dangerouslySetInnerHTML={{ __html: `
-          (function() {
-            document.documentElement.setAttribute('data-theme', 'light');
-            document.documentElement.style.setProperty('color-scheme', 'light');
-            document.documentElement.classList.add('theme-ready');
-          })()
-        ` }} />
       </head>
       <body>
-        <ThemeProvider>
-          {children}
-          <GoogleAnalytics />
-        </ThemeProvider>
+        {children}
       </body>
     </html>
   )
