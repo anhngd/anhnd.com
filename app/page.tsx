@@ -196,13 +196,9 @@ export default function Home() {
 
       {/* Hero Section - Full screen when at top, collapsed card header when scrolled */}
       <section 
-        className={`h-screen flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12 transition-all duration-300 ${
-          isScrolled 
-            ? 'fixed top-2 left-2 right-2 sm:top-4 sm:left-4 sm:right-4 z-50 h-auto' 
-            : ''
-        }`}
+        className="h-screen flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12 transition-all duration-300"
       >
-        {isScrolled ? (
+        {!isScrolled && (
           <motion.div 
             className="group w-full rounded-lg p-[2px] transition-all duration-300"
             style={{
@@ -303,11 +299,12 @@ export default function Home() {
                     </a>
                   </motion.div>
                 </div>
-                    </div>
-                  </div>
+              </div>
+            </div>
           </motion.div>
-        ) : (
-          <div className="max-w-6xl w-full transition-all duration-300">
+        )}
+        {!isScrolled && (
+          <div className="max-w-6xl w-full transition-all duration-300 mt-8">
             <div className="flex flex-col items-center justify-center text-center transition-all duration-300">
               {/* Greeting with typing effect */}
               <div className="mb-12 sm:mb-16 transition-all duration-300">
@@ -406,9 +403,6 @@ export default function Home() {
         )}
       </section>
 
-      {/* Spacer for fixed header when scrolled */}
-      {isScrolled && <div className="h-24 sm:h-28 md:h-20" />}
-
       {/* Blog Posts Section - Minimalist */}
       <section id="blog-section" className="min-h-screen flex flex-col items-center justify-start py-8 sm:py-12 md:py-16 lg:py-20 px-4 sm:px-6 md:px-8 bg-white">
         <div className="max-w-3xl w-full">
@@ -440,54 +434,63 @@ export default function Home() {
                 tag: "Big Data"
               },
               {
+                id: "ai-in-production-beyond-the-hype",
                 title: "AI in Production: Beyond the Hype",
                 date: "2024-11-08",
                 excerpt: "Real-world challenges of deploying machine learning models. From training to monitoring, what actually matters in production systems.",
                 tag: "AI/ML"
               },
               {
+                id: "the-hidden-cost-of-technical-debt",
                 title: "The Hidden Cost of Technical Debt",
                 date: "2024-10-28",
                 excerpt: "Why that quick fix from 2 years ago is now costing you millions. A framework for measuring and managing technical debt in growing teams.",
                 tag: "Engineering"
               },
               {
+                id: "from-developer-to-engineering-manager",
                 title: "From Developer to Engineering Manager",
                 date: "2024-10-20",
                 excerpt: "The transition nobody tells you about. What I wish I knew before taking my first management role and the mistakes I made along the way.",
                 tag: "Management"
               },
               {
+                id: "web3-gaming-promises-vs-reality",
                 title: "Web3 Gaming: Promises vs Reality",
                 date: "2024-10-12",
                 excerpt: "After 3 years building blockchain games, here's what actually works and what's still just hype. Lessons from millions of on-chain transactions.",
                 tag: "Web3"
               },
               {
+                id: "digital-transformation-in-government",
                 title: "Digital Transformation in Government",
                 date: "2024-09-30",
                 excerpt: "Why government tech projects fail (and how to fix them). 7 years of lessons from modernizing legacy systems in public sector.",
                 tag: "Gov Tech"
               },
               {
+                id: "the-economics-of-virtual-goods",
                 title: "The Economics of Virtual Goods",
                 date: "2024-09-22",
                 excerpt: "How in-game economies mirror real markets. Designing sustainable virtual economies that players actually enjoy and don't exploit.",
                 tag: "Gaming"
               },
               {
+                id: "building-teams-that-ship",
                 title: "Building Teams That Ship",
                 date: "2024-09-15",
                 excerpt: "Culture eats strategy for breakfast. How to build engineering teams that consistently deliver without burning out.",
                 tag: "Management"
               },
               {
+                id: "when-to-not-use-microservices",
                 title: "When to NOT Use Microservices",
                 date: "2024-09-08",
                 excerpt: "The monolith isn't dead. Why we moved back from microservices and what we learned about architectural decisions.",
                 tag: "Architecture"
               },
               {
+                id: "data-privacy-in-the-age-of-ai",
                 title: "Data Privacy in the Age of AI",
                 date: "2024-09-01",
                 excerpt: "Balancing innovation with privacy. Practical approaches to building AI systems that respect user data and comply with regulations.",
@@ -503,14 +506,14 @@ export default function Home() {
             
             return currentPosts.map((post, index) => (
               <motion.article
-                key={index}
+                key={post.id || index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: index * 0.1 }}
                 className="group border-b border-[#E1DFDD] pb-6 sm:pb-8 last:border-b-0"
               >
-                <Link href={`/notes/${post.title.toLowerCase().replace(/\s+/g, '-')}`} className="block">
+                <Link href={`/notes/${post.id}`} className="block">
                   {/* Tag and Date */}
                   <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
                     <span className="text-xs font-medium text-[#FF5F00] uppercase tracking-wider">
