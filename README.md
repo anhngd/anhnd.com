@@ -1,50 +1,80 @@
-# Personal Portfolio Website
+# anhnd.com
 
-A modern, SEO-optimized personal portfolio website built with Next.js and Tailwind CSS.
+Personal website of AnhND - a developer, a solo founder, and more.
 
-## Features
+## 🚀 Tech Stack
 
-- 🎨 Modern and responsive design
-- 🔍 SEO optimized with proper metadata
-- 🚀 Fast performance with Next.js
-- 📱 Mobile-friendly layout
-- 🎯 Personal branding focused
+- **Framework**: Next.js 14 (App Router)
+- **Styling**: Tailwind CSS
+- **Animations**: Framer Motion
+- **Deployment**: Static Export
 
-## Getting Started
+## ✨ Features
 
-1. Clone the repository
+- Minimalist design with smooth animations
+- Responsive layout (mobile, tablet, desktop optimized)
+- SEO optimized with structured data
+- Custom 404 page
+- Blog/Notes section with pagination
+- About Me modal
+- Dark theme footer
+
+## 🛠️ Development
+
 ```bash
-git clone https://github.com/yourusername/your-repo.git
-cd your-repo
-```
-
-2. Install dependencies
-```bash
+# Install dependencies
 npm install
-```
 
-3. Run the development server
-```bash
+# Run development server
 npm run dev
+
+# Build for production
+npm run build
+
+# Export static site
+npm run export
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📁 Project Structure
 
-## Customization
+```
+app/
+├── components/          # Reusable components
+│   ├── Modal.tsx       # About Me modal
+│   └── StructuredData.tsx  # SEO structured data
+├── notes/              # Blog/Notes pages
+├── page.tsx            # Home page
+├── layout.tsx          # Root layout
+├── not-found.tsx       # 404 page
+└── globals.css         # Global styles
+```
 
-1. Update your personal information in `app/page.tsx`
-2. Replace the avatar image in the `public` folder
-3. Update metadata in `app/layout.tsx`
-4. Customize colors in `tailwind.config.js`
+## 🎨 Key Components
 
-## Deployment
+- **Hero Section**: Typing animation with cycling phrases
+- **Blog List**: Paginated blog posts (5 per page)
+- **About Modal**: Full-screen modal with smooth transitions
+- **Responsive Navigation**: Sticky header that collapses on scroll
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme).
+## 📝 Content Updates
 
-## Contributing
+- Personal info: Update in `app/page.tsx`
+- Blog posts: Add/edit in `app/notes/[id]/page.tsx`
+- Metadata: Update in `app/layout.tsx`
+- Styling: Customize in `tailwind.config.ts`
 
-Feel free to submit issues and enhancement requests.
+## 🌐 Deployment
 
-## License
+This site is configured for static export. Deploy to:
+- **Vercel** (recommended)
+- **Netlify**
+- **GitHub Pages**
+- Any static hosting service
 
-This project is licensed under the MIT License. 
+## 📄 License
+
+MIT License - feel free to use this as a template for your own site.
+
+---
+
+Built with ❤️ by AnhND
