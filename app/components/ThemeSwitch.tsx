@@ -20,7 +20,7 @@ export default function ThemeSwitch() {
   return (
     <motion.button
       onClick={toggleTheme}
-      className="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-[#323130] shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl dark:bg-[#E1DFDD] sm:bottom-8 sm:right-8 sm:h-14 sm:w-14"
+      className="fixed bottom-[11rem] right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-[#323130] shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl dark:bg-[#E1DFDD] sm:bottom-[12rem] sm:right-8 sm:h-14 sm:w-14"
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
       initial={{ opacity: 0, y: 20 }}

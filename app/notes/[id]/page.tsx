@@ -1,4 +1,5 @@
 import NoteContent from './NoteContent'
+import { getAllNoteIds, getNoteData } from '@/lib/markdown'
 
 // Define note type
 type Note = {
@@ -10,8 +11,38 @@ type Note = {
   content: string
 }
 
-// Generate mock notes data matching the posts on homepage
-function generateMockNotes(): Note[] {
+// Generate static params for static site generation
+export async function generateStaticParams() {
+  const noteIds = getAllNoteIds()
+  return noteIds.map((note) => ({
+    id: note.id,
+  }))
+}
+
+export default async function NotePage({ params }: { params: { id: string } }) {
+  const id = params.id
+  
+  // Get note data from markdown file
+  const noteData = await getNoteData(id)
+  
+  if (!noteData) {
+    return <NoteContent note={null} />
+  }
+
+  const note: Note = {
+    id: noteData.id,
+    title: noteData.title,
+    date: noteData.date,
+    excerpt: noteData.excerpt,
+    category: noteData.category,
+    content: noteData.contentHtml
+  }
+  
+  return <NoteContent note={note} />
+}
+
+// Old mock data (keeping for reference, will be removed later)
+function generateMockNotesOld(): Note[] {
   return [
     {
       id: 'building-data-pipelines-at-scale',
@@ -322,23 +353,4 @@ function generateMockNotes(): Note[] {
       `
     }
   ];
-}
-
-// Generate the mock notes data
-const notesData = generateMockNotes()
-
-// Generate static params for static site generation
-export async function generateStaticParams() {
-  return notesData.map((note) => ({
-    id: note.id,
-  }))
-}
-
-export default function NotePage({ params }: { params: { id: string } }) {
-  const id = params.id
-  
-  // Find note by id (slug)
-  const note = notesData.find(note => note.id === id)
-  
-  return <NoteContent note={note || null} />
 }

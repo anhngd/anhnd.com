@@ -7,8 +7,11 @@ import dynamic from 'next/dynamic'
 import StructuredData from './components/StructuredData'
 import Modal from './components/Modal'
 
-// Load ThemeSwitch only on client-side to avoid SSR issues
+// Load components only on client-side to avoid SSR issues
 const ThemeSwitch = dynamic(() => import('./components/ThemeSwitch'), {
+  ssr: false,
+})
+const SocialBar = dynamic(() => import('./components/SocialBar'), {
   ssr: false,
 })
 
@@ -412,8 +415,25 @@ export default function Home() {
           {/* Simple list of posts */}
           <div className="space-y-6 sm:space-y-8">
             {(() => {
+              // This will be replaced with actual markdown data via props
+              // For now keeping mock data for reference
               const allPosts = [
               {
+                id: "welcome-to-my-blog",
+                title: "Welcome to My Blog",
+                date: "2024-01-15",
+                excerpt: "A brief introduction to this blog and what you can expect to find here.",
+                tag: "General"
+              },
+              {
+                id: "markdown-syntax-guide",
+                title: "Markdown Syntax Guide",
+                date: "2024-01-20",
+                excerpt: "A comprehensive guide to writing blog posts in Markdown format with examples of all supported syntax.",
+                tag: "Tutorial"
+              },
+              {
+                id: "building-data-pipelines-at-scale",
                 title: "Building Data Pipelines at Scale",
                 date: "2024-11-15",
                 excerpt: "Lessons learned from processing millions of events per day. How we designed fault-tolerant pipelines that handle peak traffic without breaking.",
@@ -692,7 +712,8 @@ export default function Home() {
         </div>
       </Modal>
 
-      {/* Theme Toggle Button */}
+      {/* Floating Actions */}
+      <SocialBar />
       <ThemeSwitch />
       </main>
   )
