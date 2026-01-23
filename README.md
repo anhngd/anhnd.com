@@ -11,13 +11,18 @@ PERSONAL PAGE OF ANHND - Full-stack Developer, Solo Founder, and MSc. in Applied
 
 ## ✨ Features
 
-- Minimalist design with smooth animations
+- Minimalist, professional design with smooth animations
 - Responsive layout (mobile, tablet, desktop optimized)
-- SEO optimized with structured data
-- Custom 404 page
-- Blog/Notes section with pagination
-- About Me modal
-- Dark theme footer
+- SEO optimized with structured data (JSON-LD)
+- Accessibility-focused (WCAG AA+, keyboard navigation, ARIA labels)
+- Blog/Notes section with:
+  - Category grouping with interactive cards
+  - Category filtering
+  - Pagination
+  - Dynamic table of contents (TOC)
+  - Two-column layout on blog posts
+- About Me modal with education background
+- Hardware-accelerated animations for smooth performance
 
 ## 🛠️ Development
 
@@ -39,19 +44,19 @@ npm run export
 
 ```
 app/
-├── components/          # Reusable components
+├── components/         # Reusable components
 │   ├── Modal.tsx       # About Me modal
-│   ├── ThemeProvider.tsx & ThemeSwitch.tsx
-│   └── StructuredData.tsx  # SEO structured data
+│   ├── SocialBar.tsx   # Social icons (fixed position)
+│   └── StructuredData.tsx  # SEO structured data (JSON-LD)
 ├── notes/              # Blog/Notes pages
 │   └── [id]/           # Dynamic blog post routes
 │       ├── page.tsx    # Blog post page (Server Component)
-│       └── NoteContent.tsx  # Blog content & layout (Client Component)
+│       └── NoteContent.tsx  # Two-column layout with TOC (Client)
 ├── page.tsx            # Home page (Server Component - data fetching)
-├── HomeClient.tsx      # Home page UI (Client Component)
-├── layout.tsx          # Root layout with metadata
+├── HomeClient.tsx      # Home page UI with categories & blog list
+├── layout.tsx          # Root layout with SEO metadata
 ├── not-found.tsx       # 404 page
-└── globals.css         # Global styles
+└── globals.css         # Global styles and animations
 content/
 └── notes/              # Markdown blog posts
     ├── welcome-to-my-blog.md
@@ -62,18 +67,26 @@ lib/
 
 ## 🎨 Key Components
 
-- **Hero Section**: Professional introduction with smooth fade-in animations
-- **Blog List**: Paginated blog posts with category display
-- **About Modal**: Full-screen modal with education background and experience
-- **Two-Column Blog Layout**: Left sidebar with TOC and other articles, right content area
-- **Responsive Design**: Mobile-first approach with adaptive layouts
+- **Hero Section**: Professional introduction with expertise tags and smooth animations
+- **Category Cards**: Large, interactive cards grouping posts by topic with hover effects
+- **Blog List**: Filterable, paginated blog posts with category badges
+- **About Modal**: Full-screen modal with education (MSc. + Engineer) and experience
+- **Two-Column Blog Layout**: 
+  - Left sidebar: Back link, article title, dynamic TOC with active tracking, other articles
+  - Right content: Optimized prose styling for readability
+- **SocialBar**: Fixed bottom-right position with email link
+- **Responsive Design**: Mobile-first with optimized layouts for all screen sizes
 
 ## 📝 Content Updates
 
 - **Personal info**: Update in `app/HomeClient.tsx` (Hero section and About Me modal)
-- **Blog posts**: Add markdown files in `content/notes/` directory
+- **Blog posts**: Add markdown files in `content/notes/` directory (see `BLOG-GUIDE.md`)
 - **Metadata**: Update in `app/layout.tsx` for SEO
 - **Styling**: Customize in `tailwind.config.ts` and `globals.css`
+
+## 📚 Documentation
+
+- **BLOG-GUIDE.md**: Complete guide for writing blog posts with Markdown
 
 ## 🌐 Deployment
 

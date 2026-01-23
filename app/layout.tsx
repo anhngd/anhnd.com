@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from 'next'
 import { Space_Grotesk } from 'next/font/google'
 import './globals.css'
 import 'katex/dist/katex.min.css'
-import { ThemeProvider } from './components/ThemeProvider'
 
 const spaceGrotesk = Space_Grotesk({ 
   subsets: ['latin'],
@@ -95,9 +94,8 @@ export const metadata: Metadata = {
 }
 
 // Viewport metadata
-// Enhance viewport settings for better mobile experience
 export const viewport: Viewport = {
-  themeColor: [{ media: '(prefers-color-scheme: light)', color: '#ffffff' }, { media: '(prefers-color-scheme: dark)', color: '#0f172a' }],
+  themeColor: '#ffffff',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
@@ -109,7 +107,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${spaceGrotesk.className} ${spaceGrotesk.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${spaceGrotesk.className} ${spaceGrotesk.variable}`}>
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
@@ -118,9 +116,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className="antialiased">
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
+        {children}
       </body>
     </html>
   )

@@ -8,9 +8,6 @@ import StructuredData from './components/StructuredData'
 import Modal from './components/Modal'
 
 // Load components only on client-side to avoid SSR issues
-const ThemeSwitch = dynamic(() => import('./components/ThemeSwitch'), {
-  ssr: false,
-})
 const SocialBar = dynamic(() => import('./components/SocialBar'), {
   ssr: false,
 })
@@ -128,8 +125,7 @@ export default function HomeClient({ notesData }: HomeClientProps) {
           jobTitle: 'Software Engineer',
           description: 'Full-stack Developer, Solo Founder with expertise in Big Data, AI, and Digital Transformation',
           sameAs: [
-            'https://github.com/anhnd',
-            'https://linkedin.com/in/anhnd'
+            'https://github.com/anhnd'
           ]
         }}
       />
@@ -254,21 +250,6 @@ export default function HomeClient({ notesData }: HomeClientProps) {
               </motion.div>
             )}
 
-            {/* Social Links */}
-            {showContent && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.5 }}
-                className="flex items-center justify-center gap-4 sm:gap-6"
-                role="complementary"
-                aria-label="Theme and social links"
-              >
-                <ThemeSwitch />
-                <div className="h-6 w-px bg-[#E1DFDD]" aria-hidden="true"></div>
-                <SocialBar />
-              </motion.div>
-            )}
           </div>
         </header>
       </section>
@@ -507,7 +488,7 @@ export default function HomeClient({ notesData }: HomeClientProps) {
       {/* Footer */}
       <footer 
         role="contentinfo"
-        className="bg-[#201F1E] text-white py-8 sm:py-12 px-4 sm:px-6 md:px-8"
+        className="bg-[#201F1E] text-white py-8 sm:py-12 px-4 sm:px-6 md:px-8 border-t border-[#323130]"
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 text-center">
           <p className="text-xl sm:text-2xl font-light mb-2" style={{ fontWeight: 300 }}>
@@ -611,6 +592,9 @@ export default function HomeClient({ notesData }: HomeClientProps) {
           </div>
         </div>
       </Modal>
+
+      {/* Social Bar with Theme Switch - Fixed Position */}
+      <SocialBar />
     </main>
   )
 }
