@@ -57,6 +57,32 @@ body {
   opacity: 1;
 }
 
+/* Performance Optimizations */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hardware acceleration for animations */
+.hw-accelerate {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 .bg-section {
   background-color: var(--section-bg);
 }
@@ -192,4 +218,43 @@ html {
 
 .card-shadow:hover {
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.15), 0 10px 10px rgba(0, 0, 0, 0.12);
+}
+
+/* Dark mode specific styles */
+[data-theme="dark"] {
+  /* Category cards */
+  --category-bg: #2a2a2a;
+  --category-bg-hover: #333333;
+  
+  /* Blog section */
+  --blog-bg: #1a1a1a;
+  
+  /* Modal */
+  --modal-bg: #1f1f1f;
+  --modal-border: #3B3A39;
+}
+
+[data-theme="light"] {
+  /* Category cards */
+  --category-bg: #F5F3F0;
+  --category-bg-hover: #ECEAE6;
+  
+  /* Blog section */
+  --blog-bg: #ffffff;
+  
+  /* Modal */
+  --modal-bg: #ffffff;
+  --modal-border: #E1DFDD;
+}
+
+/* Optimize scroll performance */
+html {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+@supports (scrollbar-gutter: stable) {
+  html {
+    scrollbar-gutter: stable;
+  }
 } 

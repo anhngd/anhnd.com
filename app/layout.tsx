@@ -14,11 +14,24 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   metadataBase: new URL('https://anhnd.com'),
   title: {
-    template: '%s | AnhND',
-    default: `AnhND - a developer. | Big Data & AI Lead`,
+    template: '%s | AnhND - Developer & Engineer',
+    default: `AnhND - Developer, Engineer & MSc. in Applied Mathematics`,
   },
-  description: 'Engineer & Master of Applied Mathematics from HUST. 10+ years in IT: from government digital transformation, enterprise solutions, gaming, Web3, to Big Data & AI. Based in Vietnam.',
-  keywords: 'AnhND, Applied Mathematics, HUST, Big Data, AI, Machine Learning, Digital Transformation, Web3, Blockchain, Gaming, System Architecture, Data Engineering, Management, Vietnam, Software Engineer, Tech Lead',
+  description: 'AnhND - Professional Software Engineer and MSc. in Applied Mathematics from HUST with 10+ years of experience in enterprise digital transformation, gaming systems, Big Data, and AI. Specialized in full-stack development, system architecture, and technical leadership.',
+  keywords: [
+    // Core Identity
+    'AnhND', 'Anh Nguyen', 'Software Engineer', 'Full-stack Developer',
+    // Education
+    'MSc Applied Mathematics', 'HUST', 'Hanoi University of Science and Technology',
+    // Technical Skills
+    'Big Data', 'Artificial Intelligence', 'Machine Learning', 'Data Engineering',
+    'System Architecture', 'Full-stack Development', 'Software Development',
+    // Domain Expertise  
+    'Digital Transformation', 'Enterprise Solutions', 'Gaming Development',
+    'Technical Leadership', 'Engineering Management',
+    // Location
+    'Vietnam', 'Hanoi', 'Southeast Asia'
+  ],
   authors: [{ name: 'AnhND', url: 'https://anhnd.com' }],
   creator: 'AnhND',
   publisher: 'AnhND',
@@ -26,27 +39,30 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: `AnhND - a developer. | Big Data & AI Lead`,
-    description: 'Engineer & Master of Applied Mathematics from HUST. 10+ years: Digital Transformation → Gaming → Web3 → Big Data & AI. Building intelligent systems at scale.',
+    title: 'AnhND - Software Engineer & MSc. in Applied Mathematics',
+    description: 'Professional Software Engineer with MSc. in Applied Mathematics from HUST. 10+ years of expertise in enterprise digital transformation, gaming systems, Big Data, and AI development. Specialized in building scalable, intelligent systems.',
     url: 'https://anhnd.com',
-    siteName: 'AnhND',
+    siteName: 'AnhND - Developer & Engineer',
     images: [
       {
-        url: 'https://anhnd.com/og-image.png', // Optimized social sharing image
+        url: 'https://anhnd.com/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'AnhND - Big Data & AI Lead | 10+ Years in Tech',
+        alt: 'AnhND - Software Engineer & MSc. in Applied Mathematics | 10+ Years in Tech',
+        type: 'image/png',
       },
     ],
     locale: 'en_US',
     type: 'website',
+    countryName: 'Vietnam',
   },
   twitter: {
     card: 'summary_large_image',
-    title: `AnhND - a developer.`,
-    description: '10+ years: Gov DX → Enterprise → Gaming → Web3 → Big Data & AI. Math background, tech execution, strategic thinking.',
+    title: 'AnhND - Software Engineer & Applied Mathematics Expert',
+    description: '10+ years: Enterprise Digital Transformation → Gaming Systems → Big Data & AI. MSc. in Applied Mathematics from HUST. Building intelligent, scalable systems.',
     creator: '@anhnd',
     images: ['https://anhnd.com/og-image.png'],
+    site: '@anhnd',
   },
   robots: {
     index: true,
@@ -59,25 +75,22 @@ export const metadata: Metadata = {
       'max-video-preview': -1
     },
   },
-  verification: {
-    google: 'your-google-site-verification',
-  },
   category: 'technology',
-  applicationName: 'AnhND Personal Website',
+  applicationName: 'AnhND - Developer & Engineer',
   appleWebApp: {
     title: 'AnhND',
-    statusBarStyle: 'black-translucent',
+    statusBarStyle: 'default',
+    capable: true,
   },
   formatDetection: {
     telephone: false,
+    email: false,
+    address: false,
   },
   manifest: '/site.webmanifest',
-  archives: ['https://anhnd.com/notes'],
-  assets: ['https://anhnd.com/assets'],
-  bookmarks: ['https://anhnd.com/notes'],
-  itunes: {
-    appId: 'myAppStoreID',
-    appArgument: 'https://anhnd.com',
+  other: {
+    'mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-capable': 'yes',
   },
 }
 
@@ -98,13 +111,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${spaceGrotesk.className} ${spaceGrotesk.variable}`} suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="canonical" href="https://anhnd.com" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <meta name="theme-color" content="#FF5F00" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
       </head>
-      <body>
+      <body className="antialiased">
         <ThemeProvider>
           {children}
         </ThemeProvider>

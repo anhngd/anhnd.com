@@ -17,7 +17,7 @@ This blog is my space to write about:
 
 - **Technology & Engineering**: Deep dives into Big Data, AI, and system architecture
 - **Mathematics**: Applied mathematics in real-world scenarios
-- **Gaming Industry**: Insights from years in gaming and Web3 gaming
+- **Gaming Industry**: Insights from years in gaming development and analytics
 - **Digital Transformation**: Lessons from enterprise and government projects
 - **Management**: Thoughts on tech leadership and team building
 
