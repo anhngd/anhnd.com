@@ -1,7 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
-
 export default function SocialBar() {
   const socialLinks = [
     {
@@ -18,48 +16,28 @@ export default function SocialBar() {
 
   return (
     <div className="fixed bottom-6 right-6 z-40 sm:bottom-8 sm:right-8">
-      <motion.div
-        className="flex flex-col gap-3"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.2 }}
-      >
+      <div className="flex flex-col gap-3">
         {/* Email Link */}
-        {socialLinks.map((link, index) => (
-          <motion.a
+        {socialLinks.map((link) => (
+          <a
             key={link.name}
             href={link.href}
             target={link.href.startsWith('http') ? '_blank' : undefined}
             rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-            className="group flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#323130] shadow-md ring-1 ring-[#E1DFDD] transition-all duration-300 hover:shadow-lg hover:ring-2 sm:h-14 sm:w-14"
-            whileHover={{ 
-              scale: 1.1, 
-              y: -4,
-              boxShadow: `0 10px 30px -10px ${link.color}50`
-            }}
-            whileTap={{ scale: 0.95 }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ 
-              duration: 0.3, 
-              delay: 0.2 + index * 0.1,
-              type: "spring",
-              stiffness: 260,
-              damping: 20
-            }}
+            className="group flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#323130] shadow-md ring-1 ring-[#E1DFDD] transition-colors hover:ring-[#FF5F00] sm:h-14 sm:w-14"
             aria-label={link.name}
           >
             <div 
-              className="transition-all duration-300 group-hover:scale-110"
+              className="transition-colors"
               style={{
                 color: `${link.color}`
               }}
             >
               {link.icon}
             </div>
-          </motion.a>
+          </a>
         ))}
-      </motion.div>
+      </div>
     </div>
   )
 }

@@ -1,70 +1,22 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
 
 export default function NotFound() {
-  const [mounted, setMounted] = useState(false)
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-
-  useEffect(() => {
-    setMounted(true)
-
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth - 0.5) * 20,
-        y: (e.clientY / window.innerHeight - 0.5) * 20,
-      })
-    }
-
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
-
-  if (!mounted) return null
-
   return (
     <main 
       className="min-h-screen bg-white flex items-center justify-center p-4 sm:p-6 md:p-8 overflow-hidden relative"
       style={{ fontFamily: 'var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif' }}
     >
-      {/* Animated background gradient */}
-      <motion.div
+      <div
         className="absolute inset-0 opacity-5"
-        animate={{
-          background: [
-            'radial-gradient(circle at 20% 50%, #FF5F00 0%, transparent 50%)',
-            'radial-gradient(circle at 80% 50%, #EB001B 0%, transparent 50%)',
-            'radial-gradient(circle at 50% 80%, #FF5F00 0%, transparent 50%)',
-            'radial-gradient(circle at 20% 50%, #EB001B 0%, transparent 50%)',
-          ],
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: 'linear',
+        style={{
+          background: 'radial-gradient(circle at 20% 50%, #FF5F00 0%, transparent 50%), radial-gradient(circle at 80% 50%, #EB001B 0%, transparent 50%)',
         }}
       />
 
       <div className="max-w-4xl mx-auto text-center relative z-10 px-4">
-        {/* 404 Number with parallax effect */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ 
-            opacity: 1, 
-            scale: 1,
-            x: mousePosition.x,
-            y: mousePosition.y,
-          }}
-          transition={{ 
-            opacity: { duration: 0.6 },
-            scale: { duration: 0.6 },
-            x: { duration: 0.3 },
-            y: { duration: 0.3 },
-          }}
-          className="mb-6 sm:mb-8 md:mb-12"
-        >
+        <div className="mb-6 sm:mb-8 md:mb-12">
           <h1 
             className="text-[100px] sm:text-[140px] md:text-[200px] lg:text-[280px] font-light leading-none tracking-tight"
             style={{ 
@@ -77,15 +29,10 @@ export default function NotFound() {
           >
             404
           </h1>
-        </motion.div>
+        </div>
 
         {/* Text content */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="mb-6 sm:mb-8 md:mb-12"
-        >
+        <div className="mb-6 sm:mb-8 md:mb-12">
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-[#323130] mb-3 sm:mb-4 md:mb-6 font-light" style={{ fontWeight: 300 }}>
             Page Not Found
           </h2>
@@ -94,18 +41,13 @@ export default function NotFound() {
             <br className="hidden sm:block" />
             Perhaps it's exploring the metaverse? 🚀
           </p>
-        </motion.div>
+        </div>
 
         {/* Action buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center max-w-md sm:max-w-none mx-auto"
-        >
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center max-w-md sm:max-w-none mx-auto">
           <Link
             href="/"
-            className="bg-[#FF5F00] text-white hover:bg-[#EB001B] active:bg-[#D10019] transition-all duration-150 flex items-center justify-center gap-2 font-light rounded-lg shadow-sm hover:shadow-md px-6 sm:px-8 py-3 text-sm sm:text-base"
+            className="bg-[#FF5F00] text-white hover:bg-[#EB001B] active:bg-[#D10019] transition-colors flex items-center justify-center gap-2 font-light rounded-lg shadow-sm px-6 sm:px-8 py-3 text-sm sm:text-base"
             style={{ 
               boxShadow: '0 1.6px 3.6px rgba(0,0,0,.132), 0 .3px .9px rgba(0,0,0,.108)',
               fontWeight: 300
@@ -119,7 +61,7 @@ export default function NotFound() {
 
           <Link
             href="/#blog-section"
-            className="bg-white border border-[#8A8886] text-[#323130] hover:bg-[#F3F2F1] active:bg-[#EDEBE9] transition-all duration-150 flex items-center justify-center gap-2 font-light rounded-lg px-6 sm:px-8 py-3 text-sm sm:text-base"
+            className="bg-white border border-[#8A8886] text-[#323130] hover:bg-[#F3F2F1] active:bg-[#EDEBE9] transition-colors flex items-center justify-center gap-2 font-light rounded-lg px-6 sm:px-8 py-3 text-sm sm:text-base"
             style={{ fontWeight: 300 }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5">
@@ -127,31 +69,6 @@ export default function NotFound() {
             </svg>
             <span>Browse Notes</span>
           </Link>
-        </motion.div>
-
-        {/* Fun floating elements */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {[...Array(5)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-2 h-2 rounded-full hidden sm:block"
-              style={{
-                background: i % 2 === 0 ? '#FF5F00' : '#EB001B',
-                left: `${20 + i * 15}%`,
-                top: `${30 + i * 10}%`,
-              }}
-              animate={{
-                y: [0, -30, 0],
-                opacity: [0.3, 0.6, 0.3],
-              }}
-              transition={{
-                duration: 3 + i * 0.5,
-                repeat: Infinity,
-                ease: 'easeInOut',
-                delay: i * 0.2,
-              }}
-            />
-          ))}
         </div>
       </div>
     </main>

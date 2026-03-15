@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Space_Grotesk } from 'next/font/google'
 import './globals.css'
-import 'katex/dist/katex.min.css'
 
 const spaceGrotesk = Space_Grotesk({ 
   subsets: ['latin'],

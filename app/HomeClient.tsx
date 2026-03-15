@@ -1,16 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
-import dynamic from 'next/dynamic'
 import StructuredData from './components/StructuredData'
 import Modal from './components/Modal'
-
-// Load components only on client-side to avoid SSR issues
-const SocialBar = dynamic(() => import('./components/SocialBar'), {
-  ssr: false,
-})
+import SocialBar from './components/SocialBar'
 
 interface NoteData {
   id: string
@@ -25,7 +19,6 @@ interface HomeClientProps {
 }
 
 export default function HomeClient({ notesData }: HomeClientProps) {
-  const [showContent, setShowContent] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
   const [isAboutOpen, setIsAboutOpen] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
@@ -35,9 +28,15 @@ export default function HomeClient({ notesData }: HomeClientProps) {
 
   // Track scroll position
   useEffect(() => {
+    let ticking = false
     const handleScroll = () => {
-      const scrollPosition = window.scrollY
-      setIsScrolled(scrollPosition > 100)
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 100)
+          ticking = false
+        })
+        ticking = true
+      }
     }
 
     handleScroll()
@@ -60,39 +59,35 @@ export default function HomeClient({ notesData }: HomeClientProps) {
     }
   }
 
-  // Show content after initial animation
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowContent(true)
-    }, 500)
-    return () => clearTimeout(timer)
-  }, [])
-
-  // Filter posts by selected category
-  const filteredPosts = selectedCategory 
-    ? notesData.filter(post => post.category === selectedCategory)
-    : notesData
+  const filteredPosts = useMemo(
+    () => (selectedCategory ? notesData.filter(post => post.category === selectedCategory) : notesData),
+    [notesData, selectedCategory]
+  )
 
   const totalPosts = filteredPosts.length
   const totalPages = Math.ceil(totalPosts / postsPerPage)
-  const startIndex = (currentPage - 1) * postsPerPage
-  const endIndex = startIndex + postsPerPage
-  const currentPosts = filteredPosts.slice(startIndex, endIndex)
 
-  // Group posts by category
-  const categoriesMap = notesData.reduce((acc, post) => {
-    if (!acc[post.category]) {
-      acc[post.category] = []
-    }
-    acc[post.category].push(post)
-    return acc
-  }, {} as Record<string, NoteData[]>)
-  
-  const categories = Object.entries(categoriesMap).map(([name, posts]) => ({
-    name,
-    count: posts.length,
-    posts
-  })).sort((a, b) => b.count - a.count) // Sort by count descending
+  const currentPosts = useMemo(() => {
+    const startIndex = (currentPage - 1) * postsPerPage
+    return filteredPosts.slice(startIndex, startIndex + postsPerPage)
+  }, [currentPage, filteredPosts])
+
+  const categories = useMemo(() => {
+    const categoriesMap = notesData.reduce((acc, post) => {
+      if (!acc[post.category]) {
+        acc[post.category] = []
+      }
+      acc[post.category].push(post)
+      return acc
+    }, {} as Record<string, NoteData[]>)
+
+    return Object.entries(categoriesMap)
+      .map(([name, posts]) => ({
+        name,
+        count: posts.length,
+      }))
+      .sort((a, b) => b.count - a.count)
+  }, [notesData])
 
   return (
     <main className="min-h-screen flex flex-col"
@@ -133,34 +128,24 @@ export default function HomeClient({ notesData }: HomeClientProps) {
       {/* Hero Section - Professional Layout */}
       <section 
         aria-label="Introduction"
-        className={`flex flex-col items-center justify-center transition-all duration-500 px-4 sm:px-6 md:px-8 ${
+        className={`flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 ${
           isScrolled 
             ? 'min-h-0 py-6 sm:py-8' 
             : 'min-h-screen py-12 sm:py-16 md:py-20'
         }`}
       >
-        <header className={`max-w-5xl mx-auto w-full transition-all duration-500 ${
-          isScrolled ? 'scale-95 opacity-90' : 'scale-100 opacity-100'
-        }`}>
+        <header className="max-w-5xl mx-auto w-full">
           <div className="text-center">
             {/* Greeting */}
-            <motion.p
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className={`transition-all duration-500 mb-3 ${isScrolled ? 'text-sm' : 'text-base sm:text-lg'}`}
-            >
+            <p className={`mb-3 ${isScrolled ? 'text-sm' : 'text-base sm:text-lg'}`}>
               <span className="text-[#484644] font-light" style={{ fontWeight: 300 }}>
                 Hello, I'm
               </span>
-            </motion.p>
+            </p>
 
             {/* Name - Large and Bold */}
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className={`font-light text-[#201F1E] leading-tight mb-4 transition-all duration-500 ${
+            <h1
+              className={`font-light text-[#201F1E] leading-tight mb-4 ${
                 isScrolled 
                   ? 'text-3xl sm:text-4xl' 
                   : 'text-5xl sm:text-6xl md:text-7xl lg:text-8xl'
@@ -168,86 +153,73 @@ export default function HomeClient({ notesData }: HomeClientProps) {
               style={{ fontWeight: 300, letterSpacing: '-0.03em' }}
             >
               Anh <span className="text-[#FF5F00]" aria-label="Nguyen">Nguyen</span>
-            </motion.h1>
+            </h1>
 
             {/* Description/Tagline */}
             {!isScrolled && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-base sm:text-lg md:text-xl text-[#484644] font-light max-w-3xl mx-auto mb-8 sm:mb-10 leading-relaxed"
-                style={{ fontWeight: 300 }}
-              >
+              <div className="text-base sm:text-lg md:text-xl text-[#484644] font-light max-w-3xl mx-auto mb-8 sm:mb-10 leading-relaxed"
+                   style={{ fontWeight: 300 }}>
                 <p className="mb-2">
                   Full-stack Developer, Solo Founder, and MSc. in Applied Mathematics
                 </p>
                 <p className="text-sm sm:text-base text-[#6F6C6A] mt-2">
                   Building scalable systems in Big Data, AI, and Digital Transformation
                 </p>
-              </motion.div>
+              </div>
             )}
 
             {/* Expertise Tags */}
-            {!isScrolled && showContent && (
-              <motion.nav
+            {!isScrolled && (
+              <nav
                 aria-label="Areas of expertise"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
                 className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-10 sm:mb-12"
               >
                 {['Big Data', 'AI/ML', 'Gaming', 'Digital Transformation', 'Applied Mathematics'].map((tag) => (
                   <span
                     key={tag}
-                    className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-light bg-white border border-[#D1D0CE] text-[#484644] rounded-full hover:border-[#FF5F00] hover:text-[#FF5F00] hover:shadow-sm transition-all duration-200"
+                    className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-light bg-white border border-[#D1D0CE] text-[#484644] rounded-full hover:border-[#FF5F00] hover:text-[#FF5F00] transition-colors"
                     style={{ fontWeight: 400 }}
                     role="listitem"
                   >
                     {tag}
                   </span>
                 ))}
-              </motion.nav>
+              </nav>
             )}
 
             {/* CTA Buttons */}
-            {!isScrolled && showContent && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-center mb-10 sm:mb-12"
-                role="group"
-                aria-label="Call to action buttons"
-              >
+            {!isScrolled && (
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-center mb-10 sm:mb-12"
+                   role="group"
+                   aria-label="Call to action buttons">
                 <a
                   href="#blog-section"
                   onClick={(e) => {
                     setSelectedCategory(null) // Clear category filter
                     scrollToBlog(e)
                   }}
-                  className="group inline-flex items-center gap-2 px-8 sm:px-10 py-3.5 sm:py-4 bg-[#FF5F00] text-white hover:bg-[#E55500] focus:outline-none focus:ring-4 focus:ring-[#FF5F00]/30 shadow-md hover:shadow-lg transition-all duration-300 text-base sm:text-lg font-medium rounded-xl w-full sm:w-auto justify-center"
+                  className="group inline-flex items-center gap-2 px-8 sm:px-10 py-3.5 sm:py-4 bg-[#FF5F00] text-white hover:bg-[#E55500] focus:outline-none focus:ring-4 focus:ring-[#FF5F00]/30 shadow-md transition-colors text-base sm:text-lg font-medium rounded-xl w-full sm:w-auto justify-center"
                   style={{ fontWeight: 500 }}
                   aria-label="View my notes and articles"
                 >
                   My Notes
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 group-hover:translate-x-1 transition-transform" aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                   </svg>
                 </a>
 
                 <button
                   onClick={() => setIsAboutOpen(true)}
-                  className="group inline-flex items-center gap-2 px-8 sm:px-10 py-3.5 sm:py-4 bg-transparent border-2 border-[#201F1E] text-[#201F1E] hover:bg-[#201F1E] hover:text-white focus:outline-none focus:ring-4 focus:ring-[#201F1E]/20 transition-all duration-300 text-base sm:text-lg font-medium rounded-xl w-full sm:w-auto justify-center"
+                  className="group inline-flex items-center gap-2 px-8 sm:px-10 py-3.5 sm:py-4 bg-transparent border-2 border-[#201F1E] text-[#201F1E] hover:bg-[#201F1E] hover:text-white focus:outline-none focus:ring-4 focus:ring-[#201F1E]/20 transition-colors text-base sm:text-lg font-medium rounded-xl w-full sm:w-auto justify-center"
                   style={{ fontWeight: 500 }}
                   aria-label="Learn more about me"
                 >
                   About Me
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 opacity-60 group-hover:opacity-100 transition-opacity" aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 opacity-60" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
                   </svg>
                 </button>
-              </motion.div>
+              </div>
             )}
 
           </div>
@@ -255,73 +227,69 @@ export default function HomeClient({ notesData }: HomeClientProps) {
       </section>
 
       {/* Categories Section */}
-      <section 
-        aria-labelledby="categories-heading"
-        className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 bg-white"
-      >
-        <div className="max-w-7xl mx-auto">
-          <h2 id="categories-heading" className="sr-only">Article Categories</h2>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-            {categories.map((category, index) => (
-              <motion.article
-                key={category.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <button
-                  onClick={(e) => {
-                    e.preventDefault()
-                    setSelectedCategory(category.name)
-                    setCurrentPage(1)
-                    
-                    const blogSection = document.getElementById('blog-section')
-                    if (blogSection) {
-                      const offset = 80
-                      const elementPosition = blogSection.getBoundingClientRect().top + window.scrollY
-                      window.scrollTo({
-                        top: elementPosition - offset,
-                        behavior: 'smooth'
-                      })
-                    }
-                  }}
-                  className="group w-full h-full text-left bg-[#F5F3F0] hover:bg-[#ECEAE6] rounded-3xl p-6 sm:p-8 lg:p-10 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-[#201F1E]/10 relative overflow-hidden min-h-[200px] sm:min-h-[240px]"
-                >
-                  {/* Decorative Icon - Subtle/Faded */}
-                  <div className="absolute top-4 right-4 sm:top-6 sm:right-6 opacity-[0.08] group-hover:opacity-[0.12] transition-opacity duration-300">
-                    <svg 
-                      xmlns="http://www.w3.org/2000/svg" 
-                      fill="none" 
-                      viewBox="0 0 24 24" 
-                      strokeWidth={1} 
-                      stroke="currentColor" 
-                      className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 text-[#1A1A1A]"
-                      aria-hidden="true"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h.008v.008H6V6z" />
-                    </svg>
-                  </div>
+      {categories.length > 0 && (
+        <section 
+          aria-labelledby="categories-heading"
+          className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 bg-white"
+        >
+          <div className="max-w-7xl mx-auto">
+            <h2 id="categories-heading" className="sr-only">Article Categories</h2>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+              {categories.map((category) => (
+                <article key={category.name}>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault()
+                      setSelectedCategory(category.name)
+                      setCurrentPage(1)
+                      
+                      const blogSection = document.getElementById('blog-section')
+                      if (blogSection) {
+                        const offset = 80
+                        const elementPosition = blogSection.getBoundingClientRect().top + window.scrollY
+                        window.scrollTo({
+                          top: elementPosition - offset,
+                          behavior: 'smooth'
+                        })
+                      }
+                    }}
+                    className="group w-full h-full text-left bg-[#F5F3F0] hover:bg-[#ECEAE6] rounded-3xl p-6 sm:p-8 lg:p-10 transition-colors focus:outline-none focus:ring-4 focus:ring-[#201F1E]/10 relative overflow-hidden min-h-[200px] sm:min-h-[240px]"
+                  >
+                    {/* Decorative Icon - Subtle/Faded */}
+                    <div className="absolute top-4 right-4 sm:top-6 sm:right-6 opacity-[0.08]">
+                      <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        fill="none" 
+                        viewBox="0 0 24 24" 
+                        strokeWidth={1} 
+                        stroke="currentColor" 
+                        className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 text-[#1A1A1A]"
+                        aria-hidden="true"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h.008v.008H6V6z" />
+                      </svg>
+                    </div>
 
-                  {/* Category Title */}
-                  <h3 className="text-3xl sm:text-4xl lg:text-5xl font-normal text-[#1A1A1A] mb-3 sm:mb-4 relative z-10 group-hover:text-[#FF5F00] transition-colors duration-300"
-                      style={{ fontWeight: 400, letterSpacing: '-0.02em', lineHeight: 1.1 }}>
-                    {category.name}
-                  </h3>
-                  
-                  {/* Category Description */}
-                  <p className="text-sm sm:text-base lg:text-lg text-[#4A4A4A] font-light leading-relaxed relative z-10" 
-                     style={{ fontWeight: 300 }}>
-                    {category.count} {category.count === 1 ? 'article' : 'articles'}
-                  </p>
-                </button>
-              </motion.article>
-            ))}
+                    {/* Category Title */}
+                    <h3 className="text-3xl sm:text-4xl lg:text-5xl font-normal text-[#1A1A1A] mb-3 sm:mb-4 relative z-10 group-hover:text-[#FF5F00] transition-colors"
+                        style={{ fontWeight: 400, letterSpacing: '-0.02em', lineHeight: 1.1 }}>
+                      {category.name}
+                    </h3>
+                    
+                    {/* Category Description */}
+                    <p className="text-sm sm:text-base lg:text-lg text-[#4A4A4A] font-light leading-relaxed relative z-10" 
+                       style={{ fontWeight: 300 }}>
+                      {category.count} {category.count === 1 ? 'article' : 'articles'}
+                    </p>
+                  </button>
+                </article>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Blog Section */}
       <section 
@@ -334,12 +302,7 @@ export default function HomeClient({ notesData }: HomeClientProps) {
           
           {/* Category Filter Indicator */}
           {selectedCategory && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="mb-8 sm:mb-10 flex items-center justify-between bg-[#FFF4ED] border border-[#FF5F00]/20 rounded-xl p-4 sm:p-5"
-            >
+            <div className="mb-8 sm:mb-10 flex items-center justify-between bg-[#FFF4ED] border border-[#FF5F00]/20 rounded-xl p-4 sm:p-5">
               <div className="flex items-center gap-3">
                 <svg 
                   xmlns="http://www.w3.org/2000/svg" 
@@ -376,18 +339,20 @@ export default function HomeClient({ notesData }: HomeClientProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
-            </motion.div>
+            </div>
           )}
           
           {/* Blog posts list */}
           <div className="space-y-8 sm:space-y-10">
-            {currentPosts.map((post, index) => (
-              <motion.article
+            {currentPosts.length === 0 && (
+              <p className="text-sm sm:text-base text-[#605E5C] font-light leading-relaxed">
+                No notes published yet.
+              </p>
+            )}
+
+            {currentPosts.map((post) => (
+              <article
                 key={post.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
                 className="group border-b border-[#E1DFDD] pb-6 sm:pb-8 last:border-b-0 hover:border-[#C8C6C4] transition-colors"
               >
                 <Link href={`/notes/${post.id}`} className="block focus:outline-none focus:ring-4 focus:ring-[#FF5F00]/20 rounded-lg -m-2 p-2">
@@ -422,14 +387,14 @@ export default function HomeClient({ notesData }: HomeClientProps) {
                   </p>
                   
                   {/* Read more indicator */}
-                  <span className="inline-flex items-center mt-4 text-sm text-[#FF5F00] font-medium group-hover:gap-2 transition-all">
+                  <span className="inline-flex items-center mt-4 text-sm text-[#FF5F00] font-medium">
                     Read article
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 ml-1" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                     </svg>
                   </span>
                 </Link>
-              </motion.article>
+              </article>
             ))}
           </div>
           
@@ -443,7 +408,7 @@ export default function HomeClient({ notesData }: HomeClientProps) {
               <button
                 onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                 disabled={currentPage === 1}
-                className="p-2 rounded-lg border border-[#D1D0CE] text-[#201F1E] hover:bg-[#F3F2F1] focus:ring-4 focus:ring-[#201F1E]/10 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200"
+                className="p-2 rounded-lg border border-[#D1D0CE] text-[#201F1E] hover:bg-[#F3F2F1] focus:ring-4 focus:ring-[#201F1E]/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 aria-label="Go to previous page"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5" aria-hidden="true">
@@ -456,7 +421,7 @@ export default function HomeClient({ notesData }: HomeClientProps) {
                 <button
                   key={page}
                   onClick={() => setCurrentPage(page)}
-                  className={`min-w-[40px] h-10 px-4 rounded-lg font-medium text-sm transition-all duration-200 focus:ring-4 ${
+                  className={`min-w-[40px] h-10 px-4 rounded-lg font-medium text-sm transition-colors focus:ring-4 ${
                     currentPage === page
                       ? 'bg-[#FF5F00] text-white shadow-md focus:ring-[#FF5F00]/30'
                       : 'border border-[#D1D0CE] text-[#201F1E] hover:bg-[#F3F2F1] focus:ring-[#201F1E]/10'
@@ -473,7 +438,7 @@ export default function HomeClient({ notesData }: HomeClientProps) {
               <button
                 onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                 disabled={currentPage === totalPages}
-                className="p-2 rounded-lg border border-[#D1D0CE] text-[#201F1E] hover:bg-[#F3F2F1] focus:ring-4 focus:ring-[#201F1E]/10 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200"
+                className="p-2 rounded-lg border border-[#D1D0CE] text-[#201F1E] hover:bg-[#F3F2F1] focus:ring-4 focus:ring-[#201F1E]/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 aria-label="Go to next page"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5" aria-hidden="true">

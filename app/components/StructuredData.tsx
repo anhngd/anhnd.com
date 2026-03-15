@@ -1,5 +1,3 @@
-'use client'
-
 interface StructuredDataProps {
   type: 'Person' | 'Article' | 'WebSite'
   data: Record<string, any>

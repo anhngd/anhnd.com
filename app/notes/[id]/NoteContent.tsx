@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import type { NoteMetadata } from '@/lib/markdown'
 
 type Note = {
   id: string
@@ -12,7 +12,6 @@ type Note = {
   category: string
   content: string
   contentHtml: string
-  segments?: string[]
 }
 
 type Heading = {
@@ -51,7 +50,7 @@ function NotFoundUI() {
           style={{ fontFamily: 'var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif' }}>
       <div className="max-w-3xl mx-auto text-center">
         <Link href="/" className="inline-flex items-center mb-8 sm:mb-12 text-[#605E5C] hover:text-[#323130] transition-colors group">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-2">
             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
           </svg>
           <span className="text-sm font-light" style={{ fontWeight: 300 }}>Home</span>
@@ -71,42 +70,40 @@ function NotFoundUI() {
   )
 }
 
-export default function NoteContent({ note, allNotes: notesData }: { note: Note | null, allNotes: any[] }) {
-  const [mounted, setMounted] = useState(false)
-  const [allNotes, setAllNotes] = useState<any[]>([])
+export default function NoteContent({ note, allNotes }: { note: Note | null, allNotes: NoteMetadata[] }) {
   const [headings, setHeadings] = useState<Heading[]>([])
   const [contentHtml, setContentHtml] = useState<string>('')
   const [activeHeading, setActiveHeading] = useState<string>('')
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  // Initialize navigation data and extract headings
-  useEffect(() => {
-    setAllNotes(notesData)
-    
-    // Extract headings from content
     if (note?.contentHtml && typeof window !== 'undefined') {
       const { headings: extractedHeadings, modifiedHtml } = extractHeadings(note.contentHtml)
       setHeadings(extractedHeadings)
       setContentHtml(modifiedHtml)
     }
-  }, [notesData, note])
+  }, [note])
 
   // Track active heading on scroll
   useEffect(() => {
     if (typeof window === 'undefined' || headings.length === 0) return
 
+    let ticking = false
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 100
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const scrollPosition = window.scrollY + 100
 
-      for (let i = headings.length - 1; i >= 0; i--) {
-        const heading = document.getElementById(headings[i].id)
-        if (heading && heading.offsetTop <= scrollPosition) {
-          setActiveHeading(headings[i].id)
-          break
-        }
+          for (let i = headings.length - 1; i >= 0; i--) {
+            const heading = document.getElementById(headings[i].id)
+            if (heading && heading.offsetTop <= scrollPosition) {
+              setActiveHeading(headings[i].id)
+              break
+            }
+          }
+
+          ticking = false
+        })
+        ticking = true
       }
     }
 
@@ -128,23 +125,11 @@ export default function NoteContent({ note, allNotes: notesData }: { note: Note 
       })
     }
   }
-  
-  // Show loading state until mounted
-  if (!mounted) {
-    return (
-      <main className="min-h-screen bg-white"
-            style={{ fontFamily: 'var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif' }}>
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-12 md:py-16 lg:py-20">
-          <div className="animate-pulse">
-            <div className="h-3 bg-[#E1DFDD] rounded w-20 sm:w-24 mb-4 sm:mb-6"></div>
-            <div className="h-10 sm:h-12 bg-[#E1DFDD] rounded w-full mb-3 sm:mb-4"></div>
-            <div className="h-10 sm:h-12 bg-[#E1DFDD] rounded w-3/4 mb-6 sm:mb-8"></div>
-            <div className="h-4 bg-[#E1DFDD] rounded w-1/3"></div>
-          </div>
-        </div>
-      </main>
-    )
-  }
+
+  const relatedNotes = useMemo(
+    () => allNotes.filter(otherNote => otherNote.id !== note?.id).slice(0, 5),
+    [allNotes, note?.id]
+  )
   
   // Show not found if note doesn't exist
   if (!note) {
@@ -162,12 +147,7 @@ export default function NoteContent({ note, allNotes: notesData }: { note: Note 
             className="lg:col-span-4 lg:sticky lg:top-8 lg:self-start"
             aria-label="Article navigation"
           >
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              className="space-y-8"
-            >
+            <div className="space-y-8">
               {/* Back Link */}
               <Link 
                 href="/" 
@@ -175,10 +155,10 @@ export default function NoteContent({ note, allNotes: notesData }: { note: Note 
                 style={{ fontWeight: 400 }}
                 aria-label="Go back to home page"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-2" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
                 </svg>
-                Trở về trước
+                Back
               </Link>
 
               {/* Article Title */}
@@ -243,7 +223,7 @@ export default function NoteContent({ note, allNotes: notesData }: { note: Note 
               )}
 
               {/* Other Articles */}
-              {allNotes.length > 0 && (
+              {relatedNotes.length > 0 && (
                 <nav 
                   aria-label="Related articles"
                   className="border-t border-[#D1D0CE] pt-6"
@@ -253,10 +233,7 @@ export default function NoteContent({ note, allNotes: notesData }: { note: Note 
                     Bài viết khác
                   </h2>
                   <ul className="space-y-3" role="list">
-                    {allNotes
-                      .filter(n => n.id !== note.id)
-                      .slice(0, 5)
-                      .map((otherNote) => (
+                    {relatedNotes.map((otherNote) => (
                         <li key={otherNote.id} role="listitem">
                           <Link
                             href={`/notes/${otherNote.id}`}
@@ -270,15 +247,12 @@ export default function NoteContent({ note, allNotes: notesData }: { note: Note 
                   </ul>
                 </nav>
               )}
-            </motion.div>
+            </div>
           </aside>
 
           {/* Main Content */}
           <article className="lg:col-span-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+            <div
               className="prose prose-lg max-w-none
                 prose-headings:font-light prose-headings:text-[#201F1E] prose-headings:scroll-mt-20
                 prose-h1:text-3xl prose-h1:mb-6 prose-h1:font-normal
