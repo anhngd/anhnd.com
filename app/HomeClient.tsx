@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import StructuredData from './components/StructuredData'
 import Modal from './components/Modal'
@@ -18,46 +18,55 @@ interface HomeClientProps {
   notesData: NoteData[]
 }
 
+// Fade in on scroll hook
+function useFadeIn() {
+  const ref = useRef<HTMLDivElement>(null)
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          observer.unobserve(el)
+        }
+      },
+      { threshold: 0.1 }
+    )
+
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  return { ref, isVisible }
+}
+
+function FadeIn({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
+  const { ref, isVisible } = useFadeIn()
+  return (
+    <div
+      ref={ref}
+      className={className}
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+        transition: `opacity 0.6s ease ${delay}s, transform 0.6s ease ${delay}s`,
+      }}
+    >
+      {children}
+    </div>
+  )
+}
+
 export default function HomeClient({ notesData }: HomeClientProps) {
-  const [isScrolled, setIsScrolled] = useState(false)
   const [isAboutOpen, setIsAboutOpen] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
 
   const postsPerPage = 5
-
-  // Track scroll position
-  useEffect(() => {
-    let ticking = false
-    const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          setIsScrolled(window.scrollY > 100)
-          ticking = false
-        })
-        ticking = true
-      }
-    }
-
-    handleScroll()
-    
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  // Handle scroll to blog section
-  const scrollToBlog = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault()
-    const blogSection = document.getElementById('blog-section')
-    if (blogSection) {
-      const offset = 80
-      const elementPosition = blogSection.getBoundingClientRect().top + window.scrollY
-      window.scrollTo({
-        top: elementPosition - offset,
-        behavior: 'smooth'
-      })
-    }
-  }
 
   const filteredPosts = useMemo(
     () => (selectedCategory ? notesData.filter(post => post.category === selectedCategory) : notesData),
@@ -90,358 +99,272 @@ export default function HomeClient({ notesData }: HomeClientProps) {
   }, [notesData])
 
   return (
-    <main className="min-h-screen flex flex-col"
+    <main className="min-h-screen flex flex-col bg-[#FAFAF9]"
           style={{ fontFamily: 'var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif' }}>
       {/* Structured Data */}
-      <StructuredData 
+      <StructuredData
         type="WebSite"
         data={{
           '@id': 'https://anhnd.com/#website',
-          name: 'AnhND',
-          description: 'PERSONAL PAGE OF ANHND - Full-stack Developer, Solo Founder, MSc. in Applied Mathematics',
+          name: 'Anh Nguyen',
+          description: 'Personal site of Anh Nguyen — engineer, builder, and writer. Notes on engineering, management, and building things.',
           url: 'https://anhnd.com',
-          author: {
-            '@id': 'https://anhnd.com/#person'
-          },
-          potentialAction: {
-            '@type': 'SearchAction',
-            target: 'https://anhnd.com/search?q={search_term_string}',
-            'query-input': 'required name=search_term_string'
-          }
+          author: { '@id': 'https://anhnd.com/#person' },
         }}
       />
-      
-      <StructuredData 
+      <StructuredData
         type="Person"
         data={{
           '@id': 'https://anhnd.com/#person',
-          name: 'AnhND',
+          name: 'Anh Nguyen',
           url: 'https://anhnd.com',
-          jobTitle: 'Software Engineer',
-          description: 'Full-stack Developer, Solo Founder with expertise in Big Data, AI, and Digital Transformation',
-          sameAs: [
-            'https://github.com/anhnd'
-          ]
+          jobTitle: 'Software Engineer & Solo Founder',
+          description: 'Engineer and builder. I build products, lead small teams, and write about what I learn along the way.',
+          alumniOf: 'Hanoi University of Science and Technology',
+          sameAs: ['https://github.com/anhnd']
         }}
       />
 
-      {/* Hero Section - Professional Layout */}
-      <section 
+      {/* Hero Section */}
+      <section
         aria-label="Introduction"
-        className={`flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 ${
-          isScrolled 
-            ? 'min-h-0 py-6 sm:py-8' 
-            : 'min-h-screen py-12 sm:py-16 md:py-20'
-        }`}
+        className="relative min-h-[85vh] flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 overflow-hidden"
       >
-        <header className="max-w-5xl mx-auto w-full">
-          <div className="text-center">
-            {/* Greeting */}
-            <p className={`mb-3 ${isScrolled ? 'text-sm' : 'text-base sm:text-lg'}`}>
-              <span className="text-[#484644] font-light" style={{ fontWeight: 300 }}>
-                Hello, I'm
-              </span>
+        {/* Subtle background dot pattern */}
+        <div className="absolute inset-0 dot-pattern opacity-[0.4]" aria-hidden="true" />
+
+        {/* Subtle gradient orb */}
+        <div
+          className="absolute top-1/4 -right-32 w-[500px] h-[500px] rounded-full opacity-[0.06] blur-3xl pointer-events-none"
+          style={{ background: 'radial-gradient(circle, #FF5F00 0%, transparent 70%)' }}
+          aria-hidden="true"
+        />
+
+        <header className="max-w-3xl mx-auto w-full relative z-10">
+          <FadeIn className="text-center">
+            {/* Small greeting */}
+            <p className="text-sm sm:text-base text-[#8A8886] font-light tracking-wide mb-6" style={{ fontWeight: 300 }}>
+              Hello, I'm
             </p>
 
-            {/* Name - Large and Bold */}
+            {/* Name */}
             <h1
-              className={`font-light text-[#201F1E] leading-tight mb-4 ${
-                isScrolled 
-                  ? 'text-3xl sm:text-4xl' 
-                  : 'text-5xl sm:text-6xl md:text-7xl lg:text-8xl'
-              }`}
-              style={{ fontWeight: 300, letterSpacing: '-0.03em' }}
+              className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light text-[#1A1A1A] leading-[0.95] mb-6"
+              style={{ fontWeight: 300, letterSpacing: '-0.04em' }}
             >
-              Anh <span className="text-[#FF5F00]" aria-label="Nguyen">Nguyen</span>
+              Anh<br />
+              <span className="text-[#FF5F00]">Nguyen</span>
             </h1>
+          </FadeIn>
 
-            {/* Description/Tagline */}
-            {!isScrolled && (
-              <div className="text-base sm:text-lg md:text-xl text-[#484644] font-light max-w-3xl mx-auto mb-8 sm:mb-10 leading-relaxed"
-                   style={{ fontWeight: 300 }}>
-                <p className="mb-2">
-                  Full-stack Developer, Solo Founder, and MSc. in Applied Mathematics
-                </p>
-                <p className="text-sm sm:text-base text-[#6F6C6A] mt-2">
-                  Building scalable systems in Big Data, AI, and Digital Transformation
-                </p>
-              </div>
-            )}
+          <FadeIn delay={0.15} className="text-center">
+            {/* Tagline */}
+            <p className="text-base sm:text-lg text-[#605E5C] font-light max-w-xl mx-auto mb-8 leading-relaxed" style={{ fontWeight: 300 }}>
+              I build products, lead small teams, and write about
+              <br className="hidden sm:block" />
+              {' '}what I learn along the way.
+            </p>
 
-            {/* Expertise Tags */}
-            {!isScrolled && (
-              <nav
-                aria-label="Areas of expertise"
-                className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-10 sm:mb-12"
+            {/* Minimal tags */}
+            <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
+              {['Big Data', 'AI/ML', 'Full-stack', 'Applied Math'].map((tag) => (
+                <span
+                  key={tag}
+                  className="px-3 py-1.5 text-xs font-light text-[#605E5C] border border-[#E1DFDD] rounded-full hover:border-[#FF5F00] hover:text-[#FF5F00] transition-colors"
+                  style={{ fontWeight: 400 }}
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </FadeIn>
+
+          <FadeIn delay={0.3} className="text-center">
+            {/* CTA */}
+            <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
+              <a
+                href="#writings"
+                onClick={(e) => {
+                  e.preventDefault()
+                  setSelectedCategory(null)
+                  document.getElementById('writings')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                }}
+                className="inline-flex items-center gap-2 px-7 py-3 bg-[#1A1A1A] text-white text-sm hover:bg-[#333] transition-colors rounded-lg"
+                style={{ fontWeight: 500 }}
               >
-                {['Big Data', 'AI/ML', 'Gaming', 'Digital Transformation', 'Applied Mathematics'].map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-light bg-white border border-[#D1D0CE] text-[#484644] rounded-full hover:border-[#FF5F00] hover:text-[#FF5F00] transition-colors"
-                    style={{ fontWeight: 400 }}
-                    role="listitem"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </nav>
-            )}
+                Read my notes
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
+                </svg>
+              </a>
 
-            {/* CTA Buttons */}
-            {!isScrolled && (
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-center mb-10 sm:mb-12"
-                   role="group"
-                   aria-label="Call to action buttons">
-                <a
-                  href="#blog-section"
-                  onClick={(e) => {
-                    setSelectedCategory(null) // Clear category filter
-                    scrollToBlog(e)
-                  }}
-                  className="group inline-flex items-center gap-2 px-8 sm:px-10 py-3.5 sm:py-4 bg-[#FF5F00] text-white hover:bg-[#E55500] focus:outline-none focus:ring-4 focus:ring-[#FF5F00]/30 shadow-md transition-colors text-base sm:text-lg font-medium rounded-xl w-full sm:w-auto justify-center"
-                  style={{ fontWeight: 500 }}
-                  aria-label="View my notes and articles"
-                >
-                  My Notes
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                  </svg>
-                </a>
-
-                <button
-                  onClick={() => setIsAboutOpen(true)}
-                  className="group inline-flex items-center gap-2 px-8 sm:px-10 py-3.5 sm:py-4 bg-transparent border-2 border-[#201F1E] text-[#201F1E] hover:bg-[#201F1E] hover:text-white focus:outline-none focus:ring-4 focus:ring-[#201F1E]/20 transition-colors text-base sm:text-lg font-medium rounded-xl w-full sm:w-auto justify-center"
-                  style={{ fontWeight: 500 }}
-                  aria-label="Learn more about me"
-                >
-                  About Me
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 opacity-60" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                  </svg>
-                </button>
-              </div>
-            )}
-
-          </div>
+              <button
+                onClick={() => setIsAboutOpen(true)}
+                className="inline-flex items-center gap-2 px-7 py-3 text-sm text-[#605E5C] hover:text-[#1A1A1A] transition-colors"
+                style={{ fontWeight: 400 }}
+              >
+                About me
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                </svg>
+              </button>
+            </div>
+          </FadeIn>
         </header>
       </section>
 
-      {/* Categories Section */}
-      {categories.length > 0 && (
-        <section 
-          aria-labelledby="categories-heading"
-          className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 md:px-8 bg-white"
-        >
-          <div className="max-w-7xl mx-auto">
-            <h2 id="categories-heading" className="sr-only">Article Categories</h2>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-              {categories.map((category) => (
-                <article key={category.name}>
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault()
-                      setSelectedCategory(category.name)
-                      setCurrentPage(1)
-                      
-                      const blogSection = document.getElementById('blog-section')
-                      if (blogSection) {
-                        const offset = 80
-                        const elementPosition = blogSection.getBoundingClientRect().top + window.scrollY
-                        window.scrollTo({
-                          top: elementPosition - offset,
-                          behavior: 'smooth'
-                        })
-                      }
-                    }}
-                    className="group w-full h-full text-left bg-[#F5F3F0] hover:bg-[#ECEAE6] rounded-3xl p-6 sm:p-8 lg:p-10 transition-colors focus:outline-none focus:ring-4 focus:ring-[#201F1E]/10 relative overflow-hidden min-h-[200px] sm:min-h-[240px]"
-                  >
-                    {/* Decorative Icon - Subtle/Faded */}
-                    <div className="absolute top-4 right-4 sm:top-6 sm:right-6 opacity-[0.08]">
-                      <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        fill="none" 
-                        viewBox="0 0 24 24" 
-                        strokeWidth={1} 
-                        stroke="currentColor" 
-                        className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 text-[#1A1A1A]"
-                        aria-hidden="true"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h.008v.008H6V6z" />
-                      </svg>
-                    </div>
-
-                    {/* Category Title */}
-                    <h3 className="text-3xl sm:text-4xl lg:text-5xl font-normal text-[#1A1A1A] mb-3 sm:mb-4 relative z-10 group-hover:text-[#FF5F00] transition-colors"
-                        style={{ fontWeight: 400, letterSpacing: '-0.02em', lineHeight: 1.1 }}>
-                      {category.name}
-                    </h3>
-                    
-                    {/* Category Description */}
-                    <p className="text-sm sm:text-base lg:text-lg text-[#4A4A4A] font-light leading-relaxed relative z-10" 
-                       style={{ fontWeight: 300 }}>
-                      {category.count} {category.count === 1 ? 'article' : 'articles'}
-                    </p>
-                  </button>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Blog Section */}
-      <section 
-        id="blog-section" 
-        aria-labelledby="blog-heading"
-        className="min-h-screen flex flex-col items-center justify-start py-8 sm:py-12 md:py-16 lg:py-20 px-4 sm:px-6 md:px-8 bg-white"
+      {/* Writings Section */}
+      <section
+        id="writings"
+        aria-labelledby="writings-heading"
+        className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-8 bg-white scroll-mt-8"
       >
-        <div className="max-w-3xl w-full">
-          <h2 id="blog-heading" className="sr-only">Blog Posts</h2>
-          
-          {/* Category Filter Indicator */}
-          {selectedCategory && (
-            <div className="mb-8 sm:mb-10 flex items-center justify-between bg-[#FFF4ED] border border-[#FF5F00]/20 rounded-xl p-4 sm:p-5">
-              <div className="flex items-center gap-3">
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  fill="none" 
-                  viewBox="0 0 24 24" 
-                  strokeWidth={1.5} 
-                  stroke="currentColor" 
-                  className="w-5 h-5 text-[#FF5F00] flex-shrink-0"
-                  aria-hidden="true"
+        <div className="max-w-3xl mx-auto">
+          <FadeIn>
+            <h2
+              id="writings-heading"
+              className="text-2xl sm:text-3xl font-light text-[#1A1A1A] mb-2"
+              style={{ fontWeight: 400, letterSpacing: '-0.02em' }}
+            >
+              Notes & Writings
+            </h2>
+            <p className="text-sm text-[#8A8886] font-light mb-10" style={{ fontWeight: 300 }}>
+              Thoughts on engineering, management, and building things.
+            </p>
+          </FadeIn>
+
+          {/* Category pills */}
+          {categories.length > 0 && (
+            <FadeIn delay={0.1}>
+              <div className="flex flex-wrap gap-2 mb-10">
+                <button
+                  onClick={() => { setSelectedCategory(null); setCurrentPage(1) }}
+                  className={`px-3 py-1.5 text-xs rounded-full transition-colors ${
+                    !selectedCategory
+                      ? 'bg-[#1A1A1A] text-white'
+                      : 'bg-[#F3F2F1] text-[#605E5C] hover:bg-[#E8E6E3]'
+                  }`}
+                  style={{ fontWeight: 500 }}
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h.008v.008H6V6z" />
-                </svg>
-                <div>
-                  <p className="text-sm font-light text-[#6F6C6A]" style={{ fontWeight: 300 }}>
-                    Showing articles in
-                  </p>
-                  <p className="text-base sm:text-lg font-medium text-[#FF5F00]" style={{ fontWeight: 500 }}>
-                    {selectedCategory}
-                  </p>
-                </div>
+                  All ({notesData.length})
+                </button>
+                {categories.map((cat) => (
+                  <button
+                    key={cat.name}
+                    onClick={() => { setSelectedCategory(cat.name); setCurrentPage(1) }}
+                    className={`px-3 py-1.5 text-xs rounded-full transition-colors ${
+                      selectedCategory === cat.name
+                        ? 'bg-[#FF5F00] text-white'
+                        : 'bg-[#F3F2F1] text-[#605E5C] hover:bg-[#E8E6E3]'
+                    }`}
+                    style={{ fontWeight: 500 }}
+                  >
+                    {cat.name} ({cat.count})
+                  </button>
+                ))}
               </div>
-              <button
-                onClick={() => {
-                  setSelectedCategory(null)
-                  setCurrentPage(1)
-                }}
-                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-[#FF5F00] hover:bg-white rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-[#FF5F00]/30"
-                style={{ fontWeight: 500 }}
-                aria-label="Clear category filter"
-              >
-                Clear
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
+            </FadeIn>
           )}
-          
-          {/* Blog posts list */}
-          <div className="space-y-8 sm:space-y-10">
+
+          {/* Blog posts */}
+          <div className="space-y-0">
             {currentPosts.length === 0 && (
-              <p className="text-sm sm:text-base text-[#605E5C] font-light leading-relaxed">
-                No notes published yet.
+              <p className="text-sm text-[#8A8886] font-light py-12 text-center">
+                No notes yet. Stay tuned.
               </p>
             )}
 
-            {currentPosts.map((post) => (
-              <article
-                key={post.id}
-                className="group border-b border-[#E1DFDD] pb-6 sm:pb-8 last:border-b-0 hover:border-[#C8C6C4] transition-colors"
-              >
-                <Link href={`/notes/${post.id}`} className="block focus:outline-none focus:ring-4 focus:ring-[#FF5F00]/20 rounded-lg -m-2 p-2">
-                  {/* Category and Date */}
-                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                    <span className="text-xs font-medium text-[#FF5F00] uppercase tracking-wider bg-[#FFF4ED] px-2 py-1 rounded">
-                      {post.category}
-                    </span>
-                    <time 
+            {currentPosts.map((post, index) => (
+              <FadeIn key={post.id} delay={index * 0.05}>
+                <article className="group border-b border-[#F0EEEC] last:border-b-0">
+                  <Link
+                    href={`/notes/${post.id}`}
+                    className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-6 py-6 sm:py-5 hover:bg-[#FAFAF9] -mx-4 px-4 rounded-lg transition-colors"
+                  >
+                    {/* Date */}
+                    <time
                       dateTime={post.date}
-                      className="text-xs text-[#6F6C6A] font-light"
+                      className="text-xs text-[#B4B2AF] font-light shrink-0 sm:w-28 tabular-nums"
                       style={{ fontWeight: 300 }}
                     >
-                      {new Date(post.date).toLocaleDateString('en-US', { 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric' 
+                      {new Date(post.date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
                       })}
                     </time>
-                  </div>
 
-                  {/* Title */}
-                  <h3 className="text-xl sm:text-2xl md:text-3xl font-light text-[#201F1E] mb-3 sm:mb-4 group-hover:text-[#FF5F00] transition-colors duration-200 leading-tight"
-                      style={{ fontWeight: 400, letterSpacing: '-0.01em' }}>
-                    {post.title}
-                  </h3>
+                    <div className="flex-1 min-w-0">
+                      {/* Title */}
+                      <h3 className="text-base sm:text-lg text-[#1A1A1A] group-hover:text-[#FF5F00] transition-colors leading-snug mb-1.5"
+                          style={{ fontWeight: 400 }}>
+                        {post.title}
+                      </h3>
 
-                  {/* Excerpt */}
-                  <p className="text-sm sm:text-base text-[#484644] font-light leading-relaxed" 
-                     style={{ fontWeight: 300 }}>
-                    {post.excerpt}
-                  </p>
-                  
-                  {/* Read more indicator */}
-                  <span className="inline-flex items-center mt-4 text-sm text-[#FF5F00] font-medium">
-                    Read article
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 ml-1" aria-hidden="true">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                      {/* Excerpt */}
+                      <p className="text-sm text-[#8A8886] font-light leading-relaxed line-clamp-2"
+                         style={{ fontWeight: 300 }}>
+                        {post.excerpt}
+                      </p>
+
+                      {/* Category tag */}
+                      <span className="inline-block mt-2 text-[10px] font-medium text-[#FF5F00] uppercase tracking-wider">
+                        {post.category}
+                      </span>
+                    </div>
+
+                    {/* Arrow */}
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
+                         className="w-4 h-4 text-[#D1D0CE] group-hover:text-[#FF5F00] transition-colors shrink-0 hidden sm:block self-center" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                     </svg>
-                  </span>
-                </Link>
-              </article>
+                  </Link>
+                </article>
+              </FadeIn>
             ))}
           </div>
-          
+
           {/* Pagination */}
           {totalPages > 1 && (
-            <nav 
-              aria-label="Blog posts pagination"
-              className="mt-12 flex items-center justify-center gap-2"
+            <nav
+              aria-label="Pagination"
+              className="mt-10 flex items-center justify-center gap-1"
             >
-              {/* Previous button */}
               <button
                 onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                 disabled={currentPage === 1}
-                className="p-2 rounded-lg border border-[#D1D0CE] text-[#201F1E] hover:bg-[#F3F2F1] focus:ring-4 focus:ring-[#201F1E]/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                aria-label="Go to previous page"
+                className="p-2 text-[#8A8886] hover:text-[#1A1A1A] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                aria-label="Previous page"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                 </svg>
               </button>
-              
-              {/* Page numbers */}
+
               {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                 <button
                   key={page}
                   onClick={() => setCurrentPage(page)}
-                  className={`min-w-[40px] h-10 px-4 rounded-lg font-medium text-sm transition-colors focus:ring-4 ${
+                  className={`w-8 h-8 text-xs rounded-md transition-colors ${
                     currentPage === page
-                      ? 'bg-[#FF5F00] text-white shadow-md focus:ring-[#FF5F00]/30'
-                      : 'border border-[#D1D0CE] text-[#201F1E] hover:bg-[#F3F2F1] focus:ring-[#201F1E]/10'
+                      ? 'bg-[#1A1A1A] text-white'
+                      : 'text-[#8A8886] hover:text-[#1A1A1A] hover:bg-[#F3F2F1]'
                   }`}
                   style={{ fontWeight: currentPage === page ? 500 : 400 }}
-                  aria-label={`Go to page ${page}`}
+                  aria-label={`Page ${page}`}
                   aria-current={currentPage === page ? 'page' : undefined}
                 >
                   {page}
                 </button>
               ))}
-              
-              {/* Next button */}
+
               <button
                 onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                 disabled={currentPage === totalPages}
-                className="p-2 rounded-lg border border-[#D1D0CE] text-[#201F1E] hover:bg-[#F3F2F1] focus:ring-4 focus:ring-[#201F1E]/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                aria-label="Go to next page"
+                className="p-2 text-[#8A8886] hover:text-[#1A1A1A] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                aria-label="Next page"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                 </svg>
               </button>
@@ -451,19 +374,13 @@ export default function HomeClient({ notesData }: HomeClientProps) {
       </section>
 
       {/* Footer */}
-      <footer 
+      <footer
         role="contentinfo"
-        className="bg-[#201F1E] text-white py-8 sm:py-12 px-4 sm:px-6 md:px-8 border-t border-[#323130]"
+        className="py-12 px-4 sm:px-6 md:px-8 border-t border-[#F0EEEC] bg-[#FAFAF9]"
       >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 text-center">
-          <p className="text-xl sm:text-2xl font-light mb-2" style={{ fontWeight: 300 }}>
-            anhnd.com
-          </p>
-          <p className="text-[#C8C6C4] font-light text-sm sm:text-base mb-4" style={{ fontWeight: 300 }}>
-            PERSONAL PAGE OF ANHND
-          </p>
-          <p className="text-[#8A8886] text-xs sm:text-sm">
-            © {new Date().getFullYear()} AnhND. All rights reserved.
+        <div className="max-w-3xl mx-auto text-center">
+          <p className="text-sm text-[#B4B2AF] font-light" style={{ fontWeight: 300 }}>
+            © {new Date().getFullYear()} anhnd.com
           </p>
         </div>
       </footer>
@@ -474,91 +391,62 @@ export default function HomeClient({ notesData }: HomeClientProps) {
         onClose={() => setIsAboutOpen(false)}
         title="About Me"
       >
-        <div className="space-y-6 text-[#323130]">
+        <div className="space-y-8 text-[#323130]">
           <p className="text-base sm:text-lg leading-relaxed font-light" style={{ fontWeight: 300 }}>
-            Hi, I'm <strong style={{ fontWeight: 500 }}>AnhND</strong> - a passionate technologist with expertise in Big Data, AI, and Full-stack Development.
+            Hi, I'm <strong style={{ fontWeight: 500 }}>Anh Nguyen</strong> — a software engineer and solo founder based in Vietnam. I build products, write about management and engineering, and think a lot about how small teams can do big things.
           </p>
 
-          <div>
-            <h3 className="font-medium text-lg sm:text-xl mb-3 text-[#201F1E]" style={{ fontWeight: 500 }}>Education</h3>
-            <div className="space-y-3">
-              <div className="pl-4 border-l-2 border-[#FF5F00]">
-                <p className="font-medium text-base text-[#201F1E]" style={{ fontWeight: 500 }}>
-                  MSc. in Applied Mathematics
-                </p>
-                <p className="text-sm text-[#605E5C] font-light mt-1" style={{ fontWeight: 300 }}>
-                  Hanoi University of Science and Technology (HUST)
-                </p>
-                <p className="text-xs text-[#8A8886] font-light mt-1" style={{ fontWeight: 300 }}>
-                  Focus: Mathematical modeling, optimization, and computational methods
-                </p>
-              </div>
-              <div className="pl-4 border-l-2 border-[#D1D0CE]">
-                <p className="font-medium text-base text-[#201F1E]" style={{ fontWeight: 500 }}>
-                  Engineer in Computer Science
-                </p>
-                <p className="text-sm text-[#605E5C] font-light mt-1" style={{ fontWeight: 300 }}>
-                  Hanoi University of Science and Technology (HUST)
-                </p>
-                <p className="text-xs text-[#8A8886] font-light mt-1" style={{ fontWeight: 300 }}>
-                  Foundation in software engineering and algorithm design
-                </p>
-              </div>
-            </div>
-          </div>
-          
-          <div>
-            <h3 className="font-medium text-lg sm:text-xl mb-3 text-[#201F1E]" style={{ fontWeight: 500 }}>What I Do</h3>
-            <ul className="space-y-2" role="list">
-              <li className="flex items-start text-sm sm:text-base font-light" style={{ fontWeight: 300 }}>
-                <span className="text-[#FF5F00] mr-3 flex-shrink-0" aria-hidden="true">▪</span>
-                <span>Big Data & AI Engineering</span>
-              </li>
-              <li className="flex items-start text-sm sm:text-base font-light" style={{ fontWeight: 300 }}>
-                <span className="text-[#FF5F00] mr-3 flex-shrink-0" aria-hidden="true">▪</span>
-                <span>Full-stack Web Development</span>
-              </li>
-              <li className="flex items-start text-sm sm:text-base font-light" style={{ fontWeight: 300 }}>
-                <span className="text-[#FF5F00] mr-3 flex-shrink-0" aria-hidden="true">▪</span>
-                <span>Digital Transformation Consulting</span>
-              </li>
-              <li className="flex items-start text-sm sm:text-base font-light" style={{ fontWeight: 300 }}>
-                <span className="text-[#FF5F00] mr-3 flex-shrink-0" aria-hidden="true">▪</span>
-                <span>Gaming Industry Innovation</span>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="font-medium text-lg sm:text-xl mb-3 text-[#201F1E]" style={{ fontWeight: 500 }}>Experience</h3>
-            <p className="text-sm sm:text-base leading-relaxed font-light" style={{ fontWeight: 300 }}>
-              With <strong style={{ fontWeight: 500 }}>10+ years of experience</strong>, I've worked across various industries including gaming, government tech, and enterprise systems. 
-              As a solo founder and developer, I enjoy building products that solve real problems and deliver meaningful impact.
-            </p>
-          </div>
-
-          <div className="pt-4 border-t border-[#E1DFDD] space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
-              <h3 className="font-medium text-base sm:text-lg mb-2 text-[#201F1E]" style={{ fontWeight: 500 }}>Get in Touch</h3>
-              <a 
-                href="mailto:me@anhnd.com" 
-                className="inline-flex items-center gap-2 text-sm sm:text-base text-[#FF5F00] hover:text-[#E55500] font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#FF5F00]/30 rounded px-1 -ml-1"
-                style={{ fontWeight: 500 }}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                </svg>
-                me@anhnd.com
-              </a>
+              <h3 className="text-xs uppercase tracking-wider text-[#8A8886] mb-3" style={{ fontWeight: 500 }}>Education</h3>
+              <div className="space-y-3">
+                <div>
+                  <p className="text-sm font-medium text-[#1A1A1A]" style={{ fontWeight: 500 }}>MSc. Applied Mathematics</p>
+                  <p className="text-xs text-[#8A8886]" style={{ fontWeight: 300 }}>HUST, Hanoi</p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-[#1A1A1A]" style={{ fontWeight: 500 }}>Engineer, Applied Mathematics and Informatics</p>
+                  <p className="text-xs text-[#8A8886]" style={{ fontWeight: 300 }}>HUST, Hanoi</p>
+                </div>
+              </div>
             </div>
-            <p className="text-sm text-[#605E5C] font-light" style={{ fontWeight: 300 }}>
-              Feel free to connect with me through email or the social links above!
+
+            <div>
+              <h3 className="text-xs uppercase tracking-wider text-[#8A8886] mb-3" style={{ fontWeight: 500 }}>Focus Areas</h3>
+              <ul className="space-y-1.5">
+                {['Big Data & AI Engineering', 'Full-stack Development', 'Digital Transformation', 'Product & Team Building'].map(item => (
+                  <li key={item} className="text-sm font-light text-[#484644] flex items-center gap-2" style={{ fontWeight: 300 }}>
+                    <span className="w-1 h-1 rounded-full bg-[#FF5F00] shrink-0" aria-hidden="true" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-xs uppercase tracking-wider text-[#8A8886] mb-3" style={{ fontWeight: 500 }}>Background</h3>
+            <p className="text-sm leading-relaxed font-light text-[#484644]" style={{ fontWeight: 300 }}>
+              10+ years across gaming, government tech, and enterprise systems. I enjoy building products that solve real problems — from mobile apps to data platforms. As a solo founder, I wear every hat and learn something new daily.
             </p>
+          </div>
+
+          <div className="pt-4 border-t border-[#F0EEEC]">
+            <a
+              href="mailto:me@anhnd.com"
+              className="inline-flex items-center gap-2 text-sm text-[#FF5F00] hover:text-[#E55500] transition-colors"
+              style={{ fontWeight: 500 }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+              </svg>
+              me@anhnd.com
+            </a>
           </div>
         </div>
       </Modal>
 
-      {/* Social Bar with Theme Switch - Fixed Position */}
+      {/* Social Bar */}
       <SocialBar />
     </main>
   )

@@ -20,50 +20,33 @@ type Heading = {
   level: number
 }
 
-// Extract headings from HTML content and add IDs
 function extractHeadings(html: string): { headings: Heading[], modifiedHtml: string } {
   const headings: Heading[] = []
   const parser = new DOMParser()
   const doc = parser.parseFromString(html, 'text/html')
   const headingElements = doc.querySelectorAll('h1, h2, h3, h4')
-  
+
   headingElements.forEach((heading, index) => {
     const level = parseInt(heading.tagName.substring(1))
     const text = heading.textContent || ''
     const id = `heading-${index}`
-    
-    // Add id to heading for scroll linking
     heading.id = id
-    
     headings.push({ id, text, level })
   })
-  
-  // Return modified HTML with IDs
-  const modifiedHtml = doc.body.innerHTML
-  
-  return { headings, modifiedHtml }
+
+  return { headings, modifiedHtml: doc.body.innerHTML }
 }
 
 function NotFoundUI() {
   return (
-    <main className="min-h-screen py-12 sm:py-16 px-4 sm:px-6 md:px-8 bg-white"
+    <main className="min-h-screen flex items-center justify-center px-4 bg-[#FAFAF9]"
           style={{ fontFamily: 'var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif' }}>
-      <div className="max-w-3xl mx-auto text-center">
-        <Link href="/" className="inline-flex items-center mb-8 sm:mb-12 text-[#605E5C] hover:text-[#323130] transition-colors group">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-          </svg>
-          <span className="text-sm font-light" style={{ fontWeight: 300 }}>Home</span>
-        </Link>
-        
-        <h1 className="text-3xl sm:text-4xl md:text-5xl text-[#323130] mb-4 sm:mb-6 font-light" style={{ fontWeight: 300 }}>
-          Note Not Found
-        </h1>
-        <p className="text-base sm:text-lg text-[#605E5C] mb-6 sm:mb-8 leading-relaxed font-light px-4" style={{ fontWeight: 300 }}>
-          This note doesn't exist or hasn't been published yet.
-        </p>
-        <Link href="/" className="inline-flex items-center px-6 py-3 border border-[#E1DFDD] text-[#323130] text-sm hover:bg-[#F3F2F1] transition-colors font-light" style={{ fontWeight: 300 }}>
-          Return to Home
+      <div className="text-center">
+        <p className="text-6xl text-[#E1DFDD] font-light mb-4" style={{ fontWeight: 300 }}>404</p>
+        <h1 className="text-lg text-[#1A1A1A] mb-2" style={{ fontWeight: 400 }}>Note not found</h1>
+        <p className="text-sm text-[#8A8886] mb-6" style={{ fontWeight: 300 }}>This note doesn't exist or hasn't been published yet.</p>
+        <Link href="/" className="text-sm text-[#FF5F00] hover:text-[#E55500] transition-colors" style={{ fontWeight: 500 }}>
+          Back to home
         </Link>
       </div>
     </main>
@@ -74,6 +57,7 @@ export default function NoteContent({ note, allNotes }: { note: Note | null, all
   const [headings, setHeadings] = useState<Heading[]>([])
   const [contentHtml, setContentHtml] = useState<string>('')
   const [activeHeading, setActiveHeading] = useState<string>('')
+  const [showToc, setShowToc] = useState(false)
 
   useEffect(() => {
     if (note?.contentHtml && typeof window !== 'undefined') {
@@ -91,7 +75,7 @@ export default function NoteContent({ note, allNotes }: { note: Note | null, all
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
-          const scrollPosition = window.scrollY + 100
+          const scrollPosition = window.scrollY + 120
 
           for (let i = headings.length - 1; i >= 0; i--) {
             const heading = document.getElementById(headings[i].id)
@@ -100,7 +84,6 @@ export default function NoteContent({ note, allNotes }: { note: Note | null, all
               break
             }
           }
-
           ticking = false
         })
         ticking = true
@@ -109,175 +92,198 @@ export default function NoteContent({ note, allNotes }: { note: Note | null, all
 
     window.addEventListener('scroll', handleScroll, { passive: true })
     handleScroll()
-    
     return () => window.removeEventListener('scroll', handleScroll)
   }, [headings])
 
-  // Scroll to heading
   const scrollToHeading = (id: string) => {
     const element = document.getElementById(id)
     if (element) {
-      const offset = 80
+      const offset = 100
       const elementPosition = element.getBoundingClientRect().top + window.scrollY
-      window.scrollTo({
-        top: elementPosition - offset,
-        behavior: 'smooth'
-      })
+      window.scrollTo({ top: elementPosition - offset, behavior: 'smooth' })
     }
+    setShowToc(false)
   }
 
   const relatedNotes = useMemo(
-    () => allNotes.filter(otherNote => otherNote.id !== note?.id).slice(0, 5),
-    [allNotes, note?.id]
+    () => allNotes
+      .filter(n => n.id !== note?.id)
+      .filter(n => n.category === note?.category)
+      .slice(0, 3),
+    [allNotes, note?.id, note?.category]
   )
-  
-  // Show not found if note doesn't exist
-  if (!note) {
-    return <NotFoundUI />
-  }
+
+  const otherNotes = useMemo(
+    () => relatedNotes.length < 3
+      ? [...relatedNotes, ...allNotes.filter(n => n.id !== note?.id && n.category !== note?.category).slice(0, 3 - relatedNotes.length)]
+      : relatedNotes,
+    [allNotes, relatedNotes, note?.id, note?.category]
+  )
+
+  if (!note) return <NotFoundUI />
 
   return (
-    <main className="min-h-screen bg-white"
-          style={{ fontFamily: 'var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif' }}
-          role="main">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-          {/* Left Sidebar */}
-          <aside 
-            className="lg:col-span-4 lg:sticky lg:top-8 lg:self-start"
-            aria-label="Article navigation"
+    <main className="min-h-screen bg-[#FAFAF9]"
+          style={{ fontFamily: 'var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif' }}>
+
+      {/* Top bar */}
+      <nav className="sticky top-0 z-30 bg-[#FAFAF9]/80 backdrop-blur-md border-b border-[#F0EEEC]">
+        <div className="max-w-[720px] mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+          <Link
+            href="/"
+            className="inline-flex items-center text-sm text-[#8A8886] hover:text-[#1A1A1A] transition-colors gap-1.5"
+            style={{ fontWeight: 400 }}
           >
-            <div className="space-y-8">
-              {/* Back Link */}
-              <Link 
-                href="/" 
-                className="inline-flex items-center text-[#484644] hover:text-[#201F1E] focus:ring-4 focus:ring-[#201F1E]/10 rounded-lg -ml-2 pl-2 pr-3 py-1 transition-colors group text-sm font-light"
-                style={{ fontWeight: 400 }}
-                aria-label="Go back to home page"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-2" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-                </svg>
-                Back
-              </Link>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+            </svg>
+            Home
+          </Link>
 
-              {/* Article Title */}
-              <header>
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl text-[#201F1E] font-light leading-tight mb-4"
-                    style={{ fontWeight: 400, letterSpacing: '-0.01em' }}>
-                  {note.title}
-                </h1>
-                
-                {/* Category and Date */}
-                <div className="space-y-2">
-                  <span className="inline-block text-xs font-medium text-[#FF5F00] uppercase tracking-wider bg-[#FFF4ED] px-2 py-1 rounded">
-                    {note.category}
-                  </span>
-                  <div className="text-xs text-[#6F6C6A] font-light" style={{ fontWeight: 300 }}>
-                    <time dateTime={note.date}>
-                      {new Date(note.date).toLocaleDateString('en-US', { 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric' 
-                      })}
-                    </time>
-                  </div>
-                </div>
-              </header>
-
-              {/* Table of Contents / Outline */}
-              {headings.length > 0 && (
-                <nav 
-                  aria-label="Table of contents"
-                  className="border-t border-[#D1D0CE] pt-6"
-                >
-                  <h2 className="text-lg font-light text-[#201F1E] mb-4"
-                      style={{ fontWeight: 400 }}>
-                    Nội dung bài viết
-                  </h2>
-                  <ul className="space-y-2" role="list">
-                    {headings.map((heading) => (
-                      <li key={heading.id} role="listitem">
-                        <button
-                          onClick={() => scrollToHeading(heading.id)}
-                          className={`flex items-start text-left text-sm font-light transition-colors w-full group focus:outline-none focus:ring-2 focus:ring-[#FF5F00]/30 rounded -ml-2 pl-2 pr-2 py-1 ${
-                            activeHeading === heading.id
-                              ? 'text-[#FF5F00] font-medium'
-                              : 'text-[#484644] hover:text-[#FF5F00]'
-                          }`}
-                          style={{ 
-                            fontWeight: activeHeading === heading.id ? 500 : 300,
-                            paddingLeft: `${8 + (heading.level - 2) * 12}px`
-                          }}
-                          aria-current={activeHeading === heading.id ? 'location' : undefined}
-                        >
-                          <span className={`mr-2 text-xs ${
-                            activeHeading === heading.id ? 'text-[#FF5F00]' : 'text-[#8A8886] group-hover:text-[#FF5F00]'
-                          }`} aria-hidden="true">•</span>
-                          <span className="flex-1">{heading.text}</span>
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </nav>
-              )}
-
-              {/* Other Articles */}
-              {relatedNotes.length > 0 && (
-                <nav 
-                  aria-label="Related articles"
-                  className="border-t border-[#D1D0CE] pt-6"
-                >
-                  <h2 className="text-lg font-light text-[#201F1E] mb-4"
-                      style={{ fontWeight: 400 }}>
-                    Bài viết khác
-                  </h2>
-                  <ul className="space-y-3" role="list">
-                    {relatedNotes.map((otherNote) => (
-                        <li key={otherNote.id} role="listitem">
-                          <Link
-                            href={`/notes/${otherNote.id}`}
-                            className="text-sm text-[#484644] hover:text-[#FF5F00] focus:ring-2 focus:ring-[#FF5F00]/30 rounded transition-colors font-light block -ml-2 pl-2 pr-2 py-1"
-                            style={{ fontWeight: 300 }}
-                          >
-                            <span className="hover:underline">{otherNote.title}</span>
-                          </Link>
-                        </li>
-                      ))}
-                  </ul>
-                </nav>
-              )}
-            </div>
-          </aside>
-
-          {/* Main Content */}
-          <article className="lg:col-span-8">
-            <div
-              className="prose prose-lg max-w-none
-                prose-headings:font-light prose-headings:text-[#201F1E] prose-headings:scroll-mt-20
-                prose-h1:text-3xl prose-h1:mb-6 prose-h1:font-normal
-                prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-5 prose-h2:font-normal prose-h2:border-b prose-h2:border-[#E1DFDD] prose-h2:pb-3
-                prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-4 prose-h3:font-normal
-                prose-p:text-[#201F1E] prose-p:leading-[1.75] prose-p:mb-6 prose-p:text-base
-                prose-a:text-[#FF5F00] prose-a:no-underline prose-a:font-medium hover:prose-a:underline prose-a:transition-colors
-                prose-strong:text-[#201F1E] prose-strong:font-semibold
-                prose-ul:my-6 prose-ul:list-disc prose-ul:pl-6 prose-ul:space-y-2
-                prose-ol:my-6 prose-ol:list-decimal prose-ol:pl-6 prose-ol:space-y-2
-                prose-li:text-[#201F1E] prose-li:leading-relaxed
-                prose-blockquote:border-l-4 prose-blockquote:border-[#FF5F00] prose-blockquote:pl-6 prose-blockquote:py-1 prose-blockquote:my-6 prose-blockquote:italic prose-blockquote:text-[#484644] prose-blockquote:bg-[#FFF4ED]/30
-                prose-code:text-[#FF5F00] prose-code:bg-[#FFF4ED] prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:font-medium prose-code:before:content-[''] prose-code:after:content-['']
-                prose-pre:bg-[#201F1E] prose-pre:text-white prose-pre:rounded-lg prose-pre:shadow-lg prose-pre:my-6
-                prose-img:rounded-xl prose-img:shadow-lg prose-img:my-8
-                prose-hr:border-[#E1DFDD] prose-hr:my-12
-                prose-table:border-collapse prose-table:w-full prose-table:my-6
-                prose-th:border prose-th:border-[#E1DFDD] prose-th:bg-[#F3F2F1] prose-th:px-4 prose-th:py-2 prose-th:text-left prose-th:font-semibold
-                prose-td:border prose-td:border-[#E1DFDD] prose-td:px-4 prose-td:py-2"
-              dangerouslySetInnerHTML={{ __html: contentHtml || note.contentHtml }}
-            />
-          </article>
+          {/* TOC toggle for mobile + desktop */}
+          {headings.length > 0 && (
+            <button
+              onClick={() => setShowToc(!showToc)}
+              className="inline-flex items-center text-xs text-[#8A8886] hover:text-[#1A1A1A] transition-colors gap-1.5 px-2.5 py-1.5 rounded-md hover:bg-[#F3F2F1]"
+              style={{ fontWeight: 400 }}
+              aria-label="Toggle table of contents"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-3.5 h-3.5" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+              </svg>
+              Contents
+            </button>
+          )}
         </div>
-      </div>
+
+        {/* TOC dropdown */}
+        {showToc && headings.length > 0 && (
+          <>
+            <div className="fixed inset-0 z-20" onClick={() => setShowToc(false)} />
+            <div className="absolute right-0 top-14 w-full sm:w-80 max-h-[60vh] overflow-y-auto bg-white border border-[#F0EEEC] shadow-lg sm:rounded-bl-lg z-30">
+              <div className="p-4">
+                <p className="text-xs text-[#B4B2AF] uppercase tracking-wider mb-3" style={{ fontWeight: 500 }}>On this page</p>
+                <ul className="space-y-1">
+                  {headings.map((heading) => (
+                    <li key={heading.id}>
+                      <button
+                        onClick={() => scrollToHeading(heading.id)}
+                        className={`w-full text-left text-sm py-1.5 px-2 rounded transition-colors ${
+                          activeHeading === heading.id
+                            ? 'text-[#FF5F00] bg-[#FFF4ED]'
+                            : 'text-[#605E5C] hover:text-[#1A1A1A] hover:bg-[#F3F2F1]'
+                        }`}
+                        style={{
+                          fontWeight: activeHeading === heading.id ? 500 : 300,
+                          paddingLeft: `${8 + (heading.level - 2) * 16}px`
+                        }}
+                      >
+                        {heading.text}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </>
+        )}
+      </nav>
+
+      {/* Article header */}
+      <header className="bg-white border-b border-[#F0EEEC]">
+        <div className="max-w-[680px] mx-auto px-4 sm:px-6 pt-12 sm:pt-16 pb-10 sm:pb-12">
+          {/* Category + Date */}
+          <div className="flex items-center gap-3 mb-5">
+            <span className="text-[10px] font-medium text-[#FF5F00] uppercase tracking-wider bg-[#FFF4ED] px-2 py-0.5 rounded">
+              {note.category}
+            </span>
+            <time
+              dateTime={note.date}
+              className="text-xs text-[#B4B2AF]"
+              style={{ fontWeight: 300 }}
+            >
+              {new Date(note.date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}
+            </time>
+          </div>
+
+          {/* Title */}
+          <h1
+            className="text-3xl sm:text-4xl md:text-5xl text-[#1A1A1A] leading-[1.15] mb-4"
+            style={{ fontWeight: 400, letterSpacing: '-0.02em' }}
+          >
+            {note.title}
+          </h1>
+
+          {/* Excerpt */}
+          <p className="text-base sm:text-lg text-[#8A8886] leading-relaxed max-w-2xl" style={{ fontWeight: 300 }}>
+            {note.excerpt}
+          </p>
+        </div>
+      </header>
+
+      {/* Article body */}
+      <article className="bg-white">
+        <div className="max-w-[680px] mx-auto px-4 sm:px-6 py-10 sm:py-14">
+          <div
+            className="article-body"
+            dangerouslySetInnerHTML={{ __html: contentHtml || note.contentHtml }}
+          />
+        </div>
+      </article>
+
+      {/* Related notes */}
+      {otherNotes.length > 0 && (
+        <section className="border-t border-[#F0EEEC] bg-[#FAFAF9]">
+          <div className="max-w-[680px] mx-auto px-4 sm:px-6 py-12 sm:py-16">
+            <h2 className="text-lg text-[#1A1A1A] mb-6" style={{ fontWeight: 400 }}>
+              More notes
+            </h2>
+            <div className="space-y-0">
+              {otherNotes.map((otherNote) => (
+                <Link
+                  key={otherNote.id}
+                  href={`/notes/${otherNote.id}`}
+                  className="group flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-6 py-4 border-b border-[#F0EEEC] last:border-b-0 hover:bg-white -mx-3 px-3 rounded-lg transition-colors"
+                >
+                  <time
+                    dateTime={otherNote.date}
+                    className="text-xs text-[#B4B2AF] shrink-0 sm:w-24 tabular-nums"
+                    style={{ fontWeight: 300 }}
+                  >
+                    {new Date(otherNote.date).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric'
+                    })}
+                  </time>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-[#1A1A1A] group-hover:text-[#FF5F00] transition-colors" style={{ fontWeight: 400 }}>
+                      {otherNote.title}
+                    </p>
+                    <span className="text-[10px] text-[#B4B2AF] uppercase tracking-wider">{otherNote.category}</span>
+                  </div>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"
+                       className="w-3.5 h-3.5 text-[#D1D0CE] group-hover:text-[#FF5F00] transition-colors shrink-0 hidden sm:block self-center" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                  </svg>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Footer */}
+      <footer className="py-8 px-4 sm:px-6 border-t border-[#F0EEEC] bg-[#FAFAF9]">
+        <div className="max-w-[680px] mx-auto text-center">
+          <p className="text-xs text-[#B4B2AF]" style={{ fontWeight: 300 }}>
+            © {new Date().getFullYear()} anhnd.com
+          </p>
+        </div>
+      </footer>
     </main>
   )
 }
-

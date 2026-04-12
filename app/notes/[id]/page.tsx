@@ -14,10 +14,11 @@ export async function generateStaticParams() {
   }))
 }
 
-export default async function NotePage({ params }: { params: { id: string } }) {
+export default async function NotePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const allNotes = getSortedNotesData()
   const noteData =
-    params.id === PLACEHOLDER_NOTE_ID ? null : await getNoteData(params.id)
+    id === PLACEHOLDER_NOTE_ID ? null : await getNoteData(id)
 
   return <NoteContent note={noteData} allNotes={allNotes} />
 }

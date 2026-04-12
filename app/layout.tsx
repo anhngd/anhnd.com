@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Space_Grotesk } from 'next/font/google'
+import Script from 'next/script'
 import './globals.css'
 
 const spaceGrotesk = Space_Grotesk({ 
@@ -12,52 +13,43 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   metadataBase: new URL('https://anhnd.com'),
   title: {
-    template: '%s | AnhND - Developer & Engineer',
-    default: `AnhND - Developer, Engineer & MSc. in Applied Mathematics`,
+    template: '%s | Anh Nguyen',
+    default: 'Anh Nguyen — Engineer, Builder, Writer',
   },
-  description: 'AnhND - Professional Software Engineer and MSc. in Applied Mathematics from HUST with 10+ years of experience in enterprise digital transformation, gaming systems, Big Data, and AI. Specialized in full-stack development, system architecture, and technical leadership.',
+  description: 'Personal site of Anh Nguyen — software engineer, solo founder, and writer. I build products, lead small teams, and write about engineering, management, and the craft of making things.',
   keywords: [
-    // Core Identity
-    'AnhND', 'Anh Nguyen', 'Software Engineer', 'Full-stack Developer',
-    // Education
-    'MSc Applied Mathematics', 'HUST', 'Hanoi University of Science and Technology',
-    // Technical Skills
-    'Big Data', 'Artificial Intelligence', 'Machine Learning', 'Data Engineering',
-    'System Architecture', 'Full-stack Development', 'Software Development',
-    // Domain Expertise  
-    'Digital Transformation', 'Enterprise Solutions', 'Gaming Development',
-    'Technical Leadership', 'Engineering Management',
-    // Location
-    'Vietnam', 'Hanoi', 'Southeast Asia'
+    'Anh Nguyen', 'AnhND', 'Software Engineer', 'Solo Founder',
+    'Big Data', 'AI', 'Machine Learning', 'Full-stack Developer',
+    'Engineering Management', 'Leadership', 'Digital Transformation',
+    'Vietnam', 'HUST', 'Applied Mathematics',
   ],
-  authors: [{ name: 'AnhND', url: 'https://anhnd.com' }],
-  creator: 'AnhND',
-  publisher: 'AnhND',
+  authors: [{ name: 'Anh Nguyen', url: 'https://anhnd.com' }],
+  creator: 'Anh Nguyen',
+  publisher: 'Anh Nguyen',
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    title: 'AnhND - Software Engineer & MSc. in Applied Mathematics',
-    description: 'Professional Software Engineer with MSc. in Applied Mathematics from HUST. 10+ years of expertise in enterprise digital transformation, gaming systems, Big Data, and AI development. Specialized in building scalable, intelligent systems.',
+    title: 'Anh Nguyen — Engineer, Builder, Writer',
+    description: 'I build products, lead small teams, and write about what I learn along the way. Notes on engineering, management, and building things that matter.',
     url: 'https://anhnd.com',
-    siteName: 'AnhND - Developer & Engineer',
+    siteName: 'Anh Nguyen',
     images: [
       {
         url: 'https://anhnd.com/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'AnhND - Software Engineer & MSc. in Applied Mathematics | 10+ Years in Tech',
+        alt: 'Anh Nguyen — Engineer, Builder, Writer',
         type: 'image/png',
       },
     ],
     locale: 'en_US',
     type: 'website',
-    countryName: 'Vietnam',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AnhND - Software Engineer & Applied Mathematics Expert',
-    description: '10+ years: Enterprise Digital Transformation → Gaming Systems → Big Data & AI. MSc. in Applied Mathematics from HUST. Building intelligent, scalable systems.',
+    title: 'Anh Nguyen — Engineer, Builder, Writer',
+    description: 'I build products, lead small teams, and write about what I learn along the way.',
     creator: '@anhnd',
     images: ['https://anhnd.com/og-image.png'],
     site: '@anhnd',
@@ -74,9 +66,9 @@ export const metadata: Metadata = {
     },
   },
   category: 'technology',
-  applicationName: 'AnhND - Developer & Engineer',
+  applicationName: 'Anh Nguyen',
   appleWebApp: {
-    title: 'AnhND',
+    title: 'Anh Nguyen',
     statusBarStyle: 'default',
     capable: true,
   },
@@ -113,6 +105,21 @@ export default function RootLayout({
         <meta name="theme-color" content="#FF5F00" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-E9EETHCYCL"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('consent', 'default', {
+              analytics_storage: 'granted'
+            });
+            gtag('config', 'G-E9EETHCYCL');
+          `}
+        </Script>
       </head>
       <body className="antialiased">
         {children}

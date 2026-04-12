@@ -1,10 +1,10 @@
 {
-  "name": "AnhND - Personal Website",
-  "short_name": "AnhND",
-  "description": "PERSONAL PAGE OF ANHND - Full-stack Developer, MSc. in Applied Mathematics from HUST, with 10+ years of experience in Big Data, AI, and Digital Transformation.",
+  "name": "Anh Nguyen — Engineer, Builder, Writer",
+  "short_name": "Anh Nguyen",
+  "description": "Personal site of Anh Nguyen. Notes on engineering, management, and building things.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#FAFAF9",
   "theme_color": "#FF5F00",
   "icons": [
     {
