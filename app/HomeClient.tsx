@@ -6,6 +6,10 @@ import StructuredData from './components/StructuredData'
 import Modal from './components/Modal'
 import SocialBar from './components/SocialBar'
 
+// Temporarily hide the blog (Notes & Writings section + hero CTA).
+// Set back to true to restore. No content is deleted.
+const SHOW_BLOG = false
+
 interface NoteData {
   id: string
   title: string
@@ -118,7 +122,7 @@ export default function HomeClient({ notesData }: HomeClientProps) {
           '@id': 'https://anhnd.com/#person',
           name: 'Anh Nguyen',
           url: 'https://anhnd.com',
-          jobTitle: 'Software Engineer & Solo Founder',
+          jobTitle: 'Technical Manager & Solo Founder',
           description: 'Engineer and builder. I build products, lead small teams, and write about what I learn along the way.',
           alumniOf: 'Hanoi University of Science and Technology',
           sameAs: ['https://github.com/anhnd']
@@ -182,21 +186,23 @@ export default function HomeClient({ notesData }: HomeClientProps) {
           <FadeIn delay={0.3} className="text-center">
             {/* CTA */}
             <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
-              <a
-                href="#writings"
-                onClick={(e) => {
-                  e.preventDefault()
-                  setSelectedCategory(null)
-                  document.getElementById('writings')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-                }}
-                className="inline-flex items-center gap-2 px-7 py-3 bg-[#1A1A1A] text-white text-sm hover:bg-[#333] transition-colors rounded-lg"
-                style={{ fontWeight: 500 }}
-              >
-                Read my notes
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
-                </svg>
-              </a>
+              {SHOW_BLOG && (
+                <a
+                  href="#writings"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setSelectedCategory(null)
+                    document.getElementById('writings')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                  }}
+                  className="inline-flex items-center gap-2 px-7 py-3 bg-[#1A1A1A] text-white text-sm hover:bg-[#333] transition-colors rounded-lg"
+                  style={{ fontWeight: 500 }}
+                >
+                  Read my notes
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
+                  </svg>
+                </a>
+              )}
 
               <button
                 onClick={() => setIsAboutOpen(true)}
@@ -214,6 +220,7 @@ export default function HomeClient({ notesData }: HomeClientProps) {
       </section>
 
       {/* Writings Section */}
+      {SHOW_BLOG && (
       <section
         id="writings"
         aria-labelledby="writings-heading"
@@ -372,6 +379,7 @@ export default function HomeClient({ notesData }: HomeClientProps) {
           )}
         </div>
       </section>
+      )}
 
       {/* Footer */}
       <footer
@@ -392,9 +400,20 @@ export default function HomeClient({ notesData }: HomeClientProps) {
         title="About Me"
       >
         <div className="space-y-8 text-[#323130]">
-          <p className="text-base sm:text-lg leading-relaxed font-light" style={{ fontWeight: 300 }}>
-            Hi, I'm <strong style={{ fontWeight: 500 }}>Anh Nguyen</strong> — a software engineer and solo founder based in Vietnam. I build products, write about management and engineering, and think a lot about how small teams can do big things.
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-5 sm:gap-6">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/avatar.png"
+              alt="Anh Nguyen"
+              width={112}
+              height={112}
+              loading="lazy"
+              className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border border-[#F0EEEC] shrink-0 mx-auto sm:mx-0"
+            />
+            <p className="text-base sm:text-lg leading-relaxed font-light" style={{ fontWeight: 300 }}>
+              Hi, I'm <strong style={{ fontWeight: 500 }}>Anh Nguyen</strong> — a Technical Manager and solo founder based in Vietnam. I build products, write about management and engineering, and think a lot about how small teams can do big things.
+            </p>
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
