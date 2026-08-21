@@ -3,12 +3,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import StructuredData from './components/StructuredData'
-import Modal from './components/Modal'
+import Nav from './components/Nav'
 import SocialBar from './components/SocialBar'
 
 // Temporarily hide the blog (Notes & Writings section + hero CTA).
 // Set back to true to restore. No content is deleted.
-const SHOW_BLOG = false
+const SHOW_BLOG = true
 
 interface NoteData {
   id: string
@@ -66,7 +66,6 @@ function FadeIn({ children, delay = 0, className = '' }: { children: React.React
 }
 
 export default function HomeClient({ notesData }: HomeClientProps) {
-  const [isAboutOpen, setIsAboutOpen] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
 
@@ -129,10 +128,12 @@ export default function HomeClient({ notesData }: HomeClientProps) {
         }}
       />
 
+      <Nav />
+
       {/* Hero Section */}
       <section
         aria-label="Introduction"
-        className="relative min-h-[85vh] flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 overflow-hidden"
+        className="relative min-h-[calc(85vh-3.5rem)] flex flex-col items-center justify-center px-4 sm:px-6 md:px-8 overflow-hidden"
       >
         {/* Subtle background dot pattern */}
         <div className="absolute inset-0 dot-pattern opacity-[0.4]" aria-hidden="true" />
@@ -204,8 +205,8 @@ export default function HomeClient({ notesData }: HomeClientProps) {
                 </a>
               )}
 
-              <button
-                onClick={() => setIsAboutOpen(true)}
+              <Link
+                href="/about"
                 className="inline-flex items-center gap-2 px-7 py-3 text-sm text-[#605E5C] hover:text-[#1A1A1A] transition-colors"
                 style={{ fontWeight: 400 }}
               >
@@ -213,7 +214,7 @@ export default function HomeClient({ notesData }: HomeClientProps) {
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
                 </svg>
-              </button>
+              </Link>
             </div>
           </FadeIn>
         </header>
@@ -392,78 +393,6 @@ export default function HomeClient({ notesData }: HomeClientProps) {
           </p>
         </div>
       </footer>
-
-      {/* About Modal */}
-      <Modal
-        isOpen={isAboutOpen}
-        onClose={() => setIsAboutOpen(false)}
-        title="About Me"
-      >
-        <div className="space-y-8 text-[#323130]">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-5 sm:gap-6">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/avatar.png"
-              alt="Anh Nguyen"
-              width={112}
-              height={112}
-              loading="lazy"
-              className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border border-[#F0EEEC] shrink-0 mx-auto sm:mx-0"
-            />
-            <p className="text-base sm:text-lg leading-relaxed font-light" style={{ fontWeight: 300 }}>
-              Hi, I'm <strong style={{ fontWeight: 500 }}>Anh Nguyen</strong> — a Technical Manager and solo founder based in Vietnam. I build products, write about management and engineering, and think a lot about how small teams can do big things.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div>
-              <h3 className="text-xs uppercase tracking-wider text-[#8A8886] mb-3" style={{ fontWeight: 500 }}>Education</h3>
-              <div className="space-y-3">
-                <div>
-                  <p className="text-sm font-medium text-[#1A1A1A]" style={{ fontWeight: 500 }}>MSc. Applied Mathematics</p>
-                  <p className="text-xs text-[#8A8886]" style={{ fontWeight: 300 }}>HUST, Hanoi</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-[#1A1A1A]" style={{ fontWeight: 500 }}>Engineer, Applied Mathematics and Informatics</p>
-                  <p className="text-xs text-[#8A8886]" style={{ fontWeight: 300 }}>HUST, Hanoi</p>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-xs uppercase tracking-wider text-[#8A8886] mb-3" style={{ fontWeight: 500 }}>Focus Areas</h3>
-              <ul className="space-y-1.5">
-                {['Big Data & AI Engineering', 'Full-stack Development', 'Digital Transformation', 'Product & Team Building'].map(item => (
-                  <li key={item} className="text-sm font-light text-[#484644] flex items-center gap-2" style={{ fontWeight: 300 }}>
-                    <span className="w-1 h-1 rounded-full bg-[#FF5F00] shrink-0" aria-hidden="true" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <div>
-            <h3 className="text-xs uppercase tracking-wider text-[#8A8886] mb-3" style={{ fontWeight: 500 }}>Background</h3>
-            <p className="text-sm leading-relaxed font-light text-[#484644]" style={{ fontWeight: 300 }}>
-              10+ years across gaming, government tech, and enterprise systems. I enjoy building products that solve real problems — from mobile apps to data platforms. As a solo founder, I wear every hat and learn something new daily.
-            </p>
-          </div>
-
-          <div className="pt-4 border-t border-[#F0EEEC]">
-            <a
-              href="mailto:me@anhnd.com"
-              className="inline-flex items-center gap-2 text-sm text-[#FF5F00] hover:text-[#E55500] transition-colors"
-              style={{ fontWeight: 500 }}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-              </svg>
-              me@anhnd.com
-            </a>
-          </div>
-        </div>
-      </Modal>
 
       {/* Social Bar */}
       <SocialBar />

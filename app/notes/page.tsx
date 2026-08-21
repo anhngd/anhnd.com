@@ -1,26 +1,35 @@
 import Link from 'next/link'
+import Nav from '../components/Nav'
 import { getSortedNotesData } from '@/lib/markdown'
 
 export default function NotesPage() {
   const notes = getSortedNotesData()
 
   return (
-    <main className="min-h-screen bg-[#FAFAF9] py-12 sm:py-16 px-4 sm:px-6"
+    <main className="min-h-screen bg-[#FAFAF9]"
           style={{ fontFamily: 'var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif' }}>
-      <div className="max-w-3xl mx-auto">
-        <header className="mb-10">
-          <Link href="/" className="inline-flex items-center mb-6 text-sm text-[#8A8886] hover:text-[#1A1A1A] transition-colors gap-1.5">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+      <Nav />
+      <div className="max-w-3xl mx-auto py-12 sm:py-16 px-4 sm:px-6">
+        <header className="mb-10 flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-2xl sm:text-3xl text-[#1A1A1A] mb-2" style={{ fontWeight: 400, letterSpacing: '-0.02em' }}>
+              Notes
+            </h1>
+            <p className="text-sm text-[#8A8886]" style={{ fontWeight: 300 }}>
+              Thoughts on engineering, management, and building things.
+            </p>
+          </div>
+          <a
+            href="/feed.xml"
+            className="inline-flex items-center gap-1.5 text-xs text-[#8A8886] hover:text-[#FF5F00] transition-colors shrink-0 mt-1"
+            style={{ fontWeight: 400 }}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-3.5 h-3.5" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 4.5v3.75a11.25 11.25 0 0111.25 11.25H19.5a15.75 15.75 0 00-15-15zM4.5 12v3.75a3.75 3.75 0 013.75 3.75h3.75c0-4.142-3.358-7.5-7.5-7.5z" />
+              <circle cx="6" cy="18" r="1.5" fill="currentColor" stroke="none" />
             </svg>
-            Home
-          </Link>
-          <h1 className="text-2xl sm:text-3xl text-[#1A1A1A] mb-2" style={{ fontWeight: 400, letterSpacing: '-0.02em' }}>
-            Notes
-          </h1>
-          <p className="text-sm text-[#8A8886]" style={{ fontWeight: 300 }}>
-            Thoughts on engineering, management, and building things.
-          </p>
+            RSS
+          </a>
         </header>
 
         {notes.length === 0 ? (

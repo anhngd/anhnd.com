@@ -102,6 +102,7 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <link rel="alternate" type="application/rss+xml" title="Anh Nguyen — Notes" href="/feed.xml" />
         <meta name="theme-color" content="#FF5F00" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
