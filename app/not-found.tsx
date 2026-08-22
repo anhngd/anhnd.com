@@ -16,7 +16,7 @@ export default function NotFound() {
           Page not found
         </h1>
         <p className="text-sm text-[#8A8886] mb-8 font-light" style={{ fontWeight: 300 }}>
-          This page doesn't exist or has been moved.
+          This page doesn&apos;t exist or has been moved.
         </p>
         <Link
           href="/"

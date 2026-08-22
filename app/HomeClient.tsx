@@ -149,7 +149,7 @@ export default function HomeClient({ notesData }: HomeClientProps) {
           <FadeIn className="text-center">
             {/* Small greeting */}
             <p className="text-sm sm:text-base text-[#8A8886] font-light tracking-wide mb-6" style={{ fontWeight: 300 }}>
-              Hello, I'm
+              Hello, I&apos;m
             </p>
 
             {/* Name */}

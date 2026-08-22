@@ -47,31 +47,19 @@ export default function AboutPage() {
           aria-hidden="true"
         />
 
-        <div className="max-w-3xl mx-auto relative z-10">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-6 sm:gap-8">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/avatar.png"
-              alt="Anh Nguyen"
-              width={128}
-              height={128}
-              className="w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover border border-[#F0EEEC] shrink-0 mx-auto sm:mx-0"
-            />
-            <div className="text-center sm:text-left">
-              <p className="text-sm text-[#8A8886] font-light mb-2" style={{ fontWeight: 300 }}>
-                About
-              </p>
-              <h1
-                className="text-3xl sm:text-4xl md:text-5xl text-[#1A1A1A] leading-[1.05] mb-3"
-                style={{ fontWeight: 300, letterSpacing: '-0.03em' }}
-              >
-                Anh <span className="text-[#FF5F00]">Nguyen</span>
-              </h1>
-              <p className="text-base sm:text-lg text-[#605E5C] font-light leading-relaxed max-w-xl" style={{ fontWeight: 300 }}>
-                Technical Manager and solo founder based in Vietnam. I build products, lead small teams, and think a lot about how small teams can do big things.
-              </p>
-            </div>
-          </div>
+        <div className="max-w-3xl mx-auto relative z-10 text-center sm:text-left">
+          <p className="text-sm text-[#8A8886] font-light mb-2" style={{ fontWeight: 300 }}>
+            About
+          </p>
+          <h1
+            className="text-3xl sm:text-4xl md:text-5xl text-[#1A1A1A] leading-[1.05] mb-3"
+            style={{ fontWeight: 300, letterSpacing: '-0.03em' }}
+          >
+            Anh <span className="text-[#FF5F00]">Nguyen</span>
+          </h1>
+          <p className="text-base sm:text-lg text-[#605E5C] font-light leading-relaxed max-w-xl mx-auto sm:mx-0" style={{ fontWeight: 300 }}>
+            Technical Manager and solo founder based in Vietnam. I build products, lead small teams, and think a lot about how small teams can do big things.
+          </p>
         </div>
       </section>
 
@@ -113,7 +101,7 @@ export default function AboutPage() {
               Background
             </h2>
             <p className="text-sm sm:text-base leading-relaxed text-[#484644] max-w-2xl" style={{ fontWeight: 300 }}>
-              10+ years across gaming, government tech, and enterprise systems. I enjoy building products that solve real problems — from mobile apps to data platforms. As a solo founder, I wear every hat and learn something new daily.
+              15+ years building across gaming, government tech, and enterprise systems — turning real problems into products, from mobile apps to data platforms. As a solo founder, I wear every hat and learn something new every day.
             </p>
           </div>
 

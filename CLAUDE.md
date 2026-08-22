@@ -6,8 +6,8 @@ Personal website and blog for Anh Nguyen (anhnd.com). Static site built with Nex
 
 ## Tech Stack
 
-- **Framework:** Next.js 14 (App Router, static export)
-- **Styling:** Tailwind CSS 3.4 with custom config
+- **Framework:** Next.js 16 (App Router, static export)
+- **Styling:** Tailwind CSS 4 with custom config
 - **Content:** Markdown files in `content/notes/` with gray-matter frontmatter
 - **Font:** Space Grotesk (via next/font)
 - **Package manager:** Yarn 4.9

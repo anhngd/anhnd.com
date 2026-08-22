@@ -44,7 +44,7 @@ function NotFoundUI() {
       <div className="text-center">
         <p className="text-6xl text-[#E1DFDD] font-light mb-4" style={{ fontWeight: 300 }}>404</p>
         <h1 className="text-lg text-[#1A1A1A] mb-2" style={{ fontWeight: 400 }}>Note not found</h1>
-        <p className="text-sm text-[#8A8886] mb-6" style={{ fontWeight: 300 }}>This note doesn't exist or hasn't been published yet.</p>
+        <p className="text-sm text-[#8A8886] mb-6" style={{ fontWeight: 300 }}>This note doesn&apos;t exist or hasn&apos;t been published yet.</p>
         <Link href="/" className="text-sm text-[#FF5F00] hover:text-[#E55500] transition-colors" style={{ fontWeight: 500 }}>
           Back to home
         </Link>
@@ -62,6 +62,10 @@ export default function NoteContent({ note, allNotes }: { note: Note | null, all
   useEffect(() => {
     if (note?.contentHtml && typeof window !== 'undefined') {
       const { headings: extractedHeadings, modifiedHtml } = extractHeadings(note.contentHtml)
+      // extractHeadings relies on DOMParser (browser-only). Computing this during
+      // render would make the client's first render diverge from the static HTML
+      // and break hydration, so it intentionally runs post-hydration in an effect.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setHeadings(extractedHeadings)
       setContentHtml(modifiedHtml)
     }
