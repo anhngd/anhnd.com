@@ -13,17 +13,10 @@ import {
   lengthBounds,
   resolveOptions,
   type GeneratorOptions,
-  type PlatformCategory,
   type RuleBasis,
 } from '@/lib/passwords'
 
-const CATEGORY_ORDER: PlatformCategory[] = [
-  'Universal',
-  'Accounts',
-  'Social',
-  'Shopping & Media',
-  'Developer & Network',
-]
+const AUTO_COPY_KEY = 'anhnd.password-generator.auto-copy'
 
 const BASIS: Record<RuleBasis, { label: string; description: string; className: string }> = {
   official: {
@@ -50,7 +43,7 @@ const iconProps = {
   viewBox: '0 0 24 24',
   strokeWidth: 1.5,
   stroke: 'currentColor',
-  className: 'w-4 h-4',
+  className: 'w-4 h-4 shrink-0',
   'aria-hidden': true,
 } as const
 
@@ -59,23 +52,35 @@ function CharView({ char }: { char: string }) {
   return <span className={tone}>{char}</span>
 }
 
+const chevron = (
+  <svg {...iconProps} className="w-4 h-4 text-[#8A8886] transition-transform group-open:rotate-180">
+    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+  </svg>
+)
+
 export default function PasswordGenerator() {
   const [platformId, setPlatformId] = useState(DEFAULT_PLATFORM_ID)
   const [options, setOptions] = useState<GeneratorOptions>(() => defaultOptions(getPlatform(DEFAULT_PLATFORM_ID)))
   const [password, setPassword] = useState('')
   const [revealed, setRevealed] = useState(true)
+  const [autoCopy, setAutoCopy] = useState(false)
   const [copyState, setCopyState] = useState<'idle' | 'copied' | 'failed'>('idle')
   const copyTimer = useRef<number | undefined>(undefined)
 
   const policy = getPlatform(platformId)
   const { min, max } = lengthBounds(policy)
 
-  // The first password is generated after hydration: randomness during render would make the
-  // client differ from the statically exported HTML.
+  // Randomness and stored preferences are only touched after hydration, so the client render
+  // matches the statically exported HTML.
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
       const initial = getPlatform(DEFAULT_PLATFORM_ID)
       setPassword(generatePassword(initial, defaultOptions(initial)))
+      try {
+        setAutoCopy(window.localStorage.getItem(AUTO_COPY_KEY) === '1')
+      } catch {
+        // Storage can be blocked (private mode); the toggle simply starts off.
+      }
     })
     return () => cancelAnimationFrame(frame)
   }, [])
@@ -84,29 +89,12 @@ export default function PasswordGenerator() {
 
   const strength = assessStrength(policy, options)
   const checks = password ? checkPassword(password, policy) : []
+  const passedChecks = checks.filter((check) => check.ok).length
 
-  function regenerate(nextPlatformId: string, nextOptions: GeneratorOptions) {
-    const nextPolicy = getPlatform(nextPlatformId)
-    const resolved = resolveOptions(nextPolicy, nextOptions)
-    setPlatformId(nextPlatformId)
-    setOptions(resolved)
-    setPassword(generatePassword(nextPolicy, resolved))
-    setCopyState('idle')
-  }
-
-  function selectPlatform(id: string) {
-    // Keep the user's toggles, but start at the new platform's recommended length.
-    regenerate(id, { ...options, length: getPlatform(id).recommendedLength })
-  }
-
-  function updateOptions(patch: Partial<GeneratorOptions>) {
-    regenerate(platformId, { ...options, ...patch })
-  }
-
-  async function copy() {
-    if (!password) return
+  async function copyToClipboard(text: string) {
+    if (!text) return
     try {
-      await navigator.clipboard.writeText(password)
+      await navigator.clipboard.writeText(text)
       setCopyState('copied')
     } catch {
       setCopyState('failed')
@@ -115,79 +103,117 @@ export default function PasswordGenerator() {
     copyTimer.current = window.setTimeout(() => setCopyState('idle'), 2000)
   }
 
+  /** Generates a new password. `fromClick` is true only for direct clicks, the one case where auto-copy is allowed. */
+  function generate(nextPlatformId: string, nextOptions: GeneratorOptions, fromClick = false) {
+    const nextPolicy = getPlatform(nextPlatformId)
+    const resolved = resolveOptions(nextPolicy, nextOptions)
+    const next = generatePassword(nextPolicy, resolved)
+
+    setPlatformId(nextPlatformId)
+    setOptions(resolved)
+    setPassword(next)
+    setCopyState('idle')
+    if (fromClick && autoCopy) void copyToClipboard(next)
+  }
+
+  function selectPlatform(id: string) {
+    // Keep the user's toggles, but start at the new platform's recommended length.
+    generate(id, { ...options, length: getPlatform(id).recommendedLength }, true)
+  }
+
+  function updateOptions(patch: Partial<GeneratorOptions>) {
+    generate(platformId, { ...options, ...patch })
+  }
+
+  function toggleAutoCopy(enabled: boolean) {
+    setAutoCopy(enabled)
+    try {
+      window.localStorage.setItem(AUTO_COPY_KEY, enabled ? '1' : '0')
+    } catch {
+      // Not persisted; still applies for this visit.
+    }
+  }
+
   const symbolsForced = policy.required.includes('symbol')
   const symbolsUnavailable = policy.symbols.length === 0
   const lengthPresets = [
-    { label: 'Minimum', value: min },
+    { label: 'Min', value: min },
     { label: 'Recommended', value: Math.min(max, policy.recommendedLength) },
-    { label: 'Maximum', value: max },
+    { label: 'Max', value: max },
   ].filter((preset, index, all) => all.findIndex((other) => other.value === preset.value) === index)
 
+  const toggleChip =
+    'flex items-center gap-2 px-3 py-1.5 text-xs text-[#605E5C] bg-white border border-[#E1DFDD] rounded-full cursor-pointer select-none transition-colors ' +
+    'peer-checked:bg-[#FFF1E8] peer-checked:border-[#FF5F00] peer-checked:text-[#B84400] peer-checked:[&_.dot]:bg-[#FF5F00] ' +
+    'peer-disabled:opacity-50 peer-disabled:cursor-not-allowed peer-focus-visible:ring-2 peer-focus-visible:ring-[#FF5F00] peer-focus-visible:ring-offset-2'
+
   return (
-    <div className="space-y-10">
-      {/* 1. Platform */}
-      <section aria-labelledby="platform-heading">
-        <h2 id="platform-heading" className="text-xs uppercase tracking-wider text-[#8A8886] mb-4" style={{ fontWeight: 500 }}>
-          1 · Where will you use it?
-        </h2>
-
-        <div className="space-y-5">
-          {CATEGORY_ORDER.map((category) => (
-            <fieldset key={category}>
-              <legend className="text-xs text-[#B4B2AF] mb-2" style={{ fontWeight: 400 }}>{category}</legend>
-              <div className="flex flex-wrap gap-2">
-                {PLATFORMS.filter((platform) => platform.category === category).map((platform) => (
-                  <div key={platform.id}>
-                    <input
-                      type="radio"
-                      name="platform"
-                      id={`platform-${platform.id}`}
-                      value={platform.id}
-                      checked={platformId === platform.id}
-                      onChange={() => selectPlatform(platform.id)}
-                      className="peer sr-only"
-                    />
-                    <label
-                      htmlFor={`platform-${platform.id}`}
-                      className="block px-3.5 py-2 text-sm text-[#484644] bg-white border border-[#E1DFDD] rounded-lg cursor-pointer transition-colors hover:border-[#1A1A1A] peer-checked:bg-[#1A1A1A] peer-checked:border-[#1A1A1A] peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-[#FF5F00] peer-focus-visible:ring-offset-2"
-                      style={{ fontWeight: 400 }}
-                    >
-                      {platform.name}
-                    </label>
-                  </div>
-                ))}
-              </div>
-            </fieldset>
-          ))}
-        </div>
-      </section>
-
-      {/* 2. Result */}
-      <section aria-labelledby="result-heading">
-        <h2 id="result-heading" className="text-xs uppercase tracking-wider text-[#8A8886] mb-4" style={{ fontWeight: 500 }}>
-          2 · Your password
-        </h2>
-
-        <div className="bg-white border border-[#F0EEEC] rounded-2xl p-5 sm:p-7">
-          <p className="text-sm text-[#8A8886] mb-3" style={{ fontWeight: 300 }}>
-            For <span className="text-[#1A1A1A]" style={{ fontWeight: 500 }}>{policy.name}</span>
+    <div className="space-y-4">
+      <div className="bg-white border border-[#F0EEEC] rounded-2xl divide-y divide-[#F0EEEC]">
+        {/* Platform */}
+        <fieldset className="p-5 sm:p-6">
+          <legend className="sr-only">Platform</legend>
+          <p className="text-xs text-[#8A8886] mb-3" style={{ fontWeight: 500 }} aria-hidden="true">
+            Where will you use it?
           </p>
+          <div className="flex flex-wrap gap-1.5">
+            {PLATFORMS.map((platform) => (
+              <div key={platform.id}>
+                <input
+                  type="radio"
+                  name="platform"
+                  id={`platform-${platform.id}`}
+                  value={platform.id}
+                  checked={platformId === platform.id}
+                  onChange={() => selectPlatform(platform.id)}
+                  className="peer sr-only"
+                />
+                <label
+                  htmlFor={`platform-${platform.id}`}
+                  className="block px-3 py-1.5 text-[13px] text-[#484644] bg-[#FAFAF9] border border-[#F0EEEC] rounded-lg cursor-pointer transition-colors hover:border-[#1A1A1A] peer-checked:bg-[#1A1A1A] peer-checked:border-[#1A1A1A] peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-[#FF5F00] peer-focus-visible:ring-offset-2"
+                  style={{ fontWeight: 400 }}
+                >
+                  {platform.name}
+                </label>
+              </div>
+            ))}
+          </div>
+        </fieldset>
 
-          <p
-            className="min-h-[3.5rem] px-4 py-3.5 bg-[#FAFAF9] border border-[#F0EEEC] rounded-xl font-mono text-lg sm:text-2xl leading-snug tracking-wide break-all select-all"
-            aria-label={revealed ? undefined : 'Password hidden'}
+        {/* Password */}
+        <div className="p-5 sm:p-6">
+          <button
+            type="button"
+            onClick={() => copyToClipboard(password)}
+            disabled={!password}
+            title="Click to copy"
+            className="relative block w-full min-h-[4rem] px-4 py-4 pr-20 text-left bg-[#FAFAF9] border border-[#F0EEEC] rounded-xl font-mono text-lg sm:text-2xl leading-snug tracking-wide break-all hover:border-[#E1DFDD] focus-visible:ring-2 focus-visible:ring-[#FF5F00] focus-visible:outline-none transition-colors"
+            aria-label={password ? (revealed ? `Copy password ${password}` : 'Copy hidden password') : 'Generating password'}
           >
             {!password && <span className="text-[#B4B2AF]">Generating…</span>}
             {password && revealed && [...password].map((char, index) => <CharView key={index} char={char} />)}
             {password && !revealed && <span className="text-[#8A8886]">{'•'.repeat(password.length)}</span>}
-          </p>
+            <span
+              className={`absolute top-3 right-3 px-2 py-1 text-[11px] rounded-md font-sans ${
+                copyState === 'copied'
+                  ? 'bg-[#E6F4EA] text-[#1E6B3A]'
+                  : copyState === 'failed'
+                    ? 'bg-[#FDE7E9] text-[#A4262C]'
+                    : 'bg-[#F3F2F1] text-[#8A8886]'
+              }`}
+              style={{ fontWeight: 500, letterSpacing: 0 }}
+              aria-hidden="true"
+            >
+              {copyState === 'copied' ? 'Copied' : copyState === 'failed' ? 'Failed' : 'Click to copy'}
+            </span>
+          </button>
 
-          <div className="flex flex-wrap gap-2 mt-4">
+          <div className="flex gap-2 mt-3">
             <button
               type="button"
-              onClick={copy}
+              onClick={() => copyToClipboard(password)}
               disabled={!password}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#1A1A1A] text-white text-sm rounded-lg hover:bg-[#333] disabled:opacity-40 transition-colors"
+              className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-[#FF5F00] text-white text-sm rounded-lg hover:bg-[#E55500] disabled:opacity-40 transition-colors"
               style={{ fontWeight: 500 }}
             >
               <svg {...iconProps}>
@@ -197,27 +223,26 @@ export default function PasswordGenerator() {
             </button>
             <button
               type="button"
-              onClick={() => regenerate(platformId, options)}
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-sm text-[#484644] border border-[#E1DFDD] rounded-lg hover:border-[#1A1A1A] transition-colors"
+              onClick={() => generate(platformId, options, true)}
+              className="inline-flex items-center gap-2 px-4 py-2.5 text-sm text-[#484644] border border-[#E1DFDD] rounded-lg hover:border-[#1A1A1A] transition-colors"
               style={{ fontWeight: 400 }}
             >
               <svg {...iconProps}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
               </svg>
-              Regenerate
+              <span className="hidden sm:inline">Regenerate</span>
+              <span className="sr-only sm:hidden">Regenerate</span>
             </button>
             <button
               type="button"
               onClick={() => setRevealed((value) => !value)}
               aria-pressed={!revealed}
-              className="inline-flex items-center gap-2 px-4 py-2.5 text-sm text-[#605E5C] rounded-lg hover:text-[#1A1A1A] transition-colors"
+              className="inline-flex items-center gap-2 px-3 py-2.5 text-sm text-[#605E5C] rounded-lg hover:text-[#1A1A1A] transition-colors"
               style={{ fontWeight: 400 }}
             >
               <svg {...iconProps}>
                 {revealed ? (
-                  <>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
-                  </>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
                 ) : (
                   <>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
@@ -225,7 +250,8 @@ export default function PasswordGenerator() {
                   </>
                 )}
               </svg>
-              {revealed ? 'Hide' : 'Show'}
+              <span className="hidden sm:inline">{revealed ? 'Hide' : 'Show'}</span>
+              <span className="sr-only sm:hidden">{revealed ? 'Hide' : 'Show'}</span>
             </button>
           </div>
           <p role="status" aria-live="polite" className="sr-only">
@@ -233,14 +259,8 @@ export default function PasswordGenerator() {
           </p>
 
           {/* Strength */}
-          <div className="mt-7 pt-6 border-t border-[#F0EEEC]">
-            <div className="flex items-baseline justify-between gap-4 mb-3">
-              <p className="text-sm text-[#8A8886]" style={{ fontWeight: 300 }}>Strength</p>
-              <p className="text-base" style={{ fontWeight: 500, color: strength.tier.color }}>
-                {strength.tier.label}
-              </p>
-            </div>
-            <div className="grid grid-cols-5 gap-1.5" aria-hidden="true">
+          <div className="mt-5">
+            <div className="grid grid-cols-5 gap-1" aria-hidden="true">
               {STRENGTH_TIERS.map((tier, index) => (
                 <span
                   key={tier.level}
@@ -249,113 +269,139 @@ export default function PasswordGenerator() {
                 />
               ))}
             </div>
-            <p className="mt-3 text-xs text-[#8A8886] leading-relaxed" style={{ fontWeight: 300 }}>
-              About {Math.round(strength.bits)} bits of entropy. An offline attacker guessing 10 billion passwords per
-              second would need roughly <span className="text-[#484644]" style={{ fontWeight: 400 }}>{strength.crackTime}</span> on
-              average.
+            <p className="mt-2.5 flex flex-wrap items-baseline gap-x-2 text-xs text-[#8A8886]" style={{ fontWeight: 300 }}>
+              <span className="text-sm" style={{ fontWeight: 500, color: strength.tier.color }}>{strength.tier.label}</span>
+              <span aria-hidden="true">·</span>
+              <span>~{Math.round(strength.bits)} bits</span>
+              <span aria-hidden="true">·</span>
+              <span>offline crack time ≈ {strength.crackTime}</span>
             </p>
           </div>
+        </div>
 
-          {/* Options */}
-          <div className="mt-7 pt-6 border-t border-[#F0EEEC] space-y-6">
-            <div>
-              <div className="flex items-baseline justify-between mb-3">
-                <label htmlFor="length" className="text-sm text-[#484644]" style={{ fontWeight: 400 }}>Length</label>
-                <span className="text-sm text-[#1A1A1A] tabular-nums" style={{ fontWeight: 500 }}>{options.length}</span>
-              </div>
-              <input
-                id="length"
-                type="range"
-                min={min}
-                max={max}
-                step={1}
-                value={options.length}
-                onChange={(event) => updateOptions({ length: Number(event.target.value) })}
-                className="w-full accent-[#FF5F00]"
-                aria-valuetext={`${options.length} characters`}
-              />
-              <div className="flex flex-wrap gap-2 mt-3">
+        {/* Settings */}
+        <div className="p-5 sm:p-6 space-y-4">
+          <div>
+            <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 mb-2">
+              <label htmlFor="length" className="text-xs text-[#8A8886]" style={{ fontWeight: 500 }}>
+                Length · <span className="text-[#1A1A1A] tabular-nums">{options.length}</span>
+              </label>
+              <div className="flex flex-wrap gap-1">
                 {lengthPresets.map((preset) => (
                   <button
                     key={preset.label}
                     type="button"
                     onClick={() => updateOptions({ length: preset.value })}
                     aria-pressed={options.length === preset.value}
-                    className={`px-3 py-1.5 text-xs rounded-full transition-colors ${
+                    className={`px-2.5 py-1 text-[11px] rounded-full transition-colors ${
                       options.length === preset.value
                         ? 'bg-[#1A1A1A] text-white'
                         : 'bg-[#F3F2F1] text-[#605E5C] hover:bg-[#E8E6E3]'
                     }`}
                     style={{ fontWeight: 500 }}
                   >
-                    {preset.label} · {preset.value}
+                    {preset.label} {preset.value}
                   </button>
                 ))}
               </div>
             </div>
+            <input
+              id="length"
+              type="range"
+              min={min}
+              max={max}
+              step={1}
+              value={options.length}
+              onChange={(event) => updateOptions({ length: Number(event.target.value) })}
+              className="w-full accent-[#FF5F00]"
+              aria-valuetext={`${options.length} characters`}
+            />
+          </div>
 
-            <div className="space-y-3">
-              <label className="flex items-start gap-3 text-sm text-[#484644] cursor-pointer has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-60">
-                <input
-                  type="checkbox"
-                  checked={options.includeSymbols}
-                  disabled={symbolsForced || symbolsUnavailable}
-                  onChange={(event) => updateOptions({ includeSymbols: event.target.checked })}
-                  className="mt-0.5 w-4 h-4 accent-[#FF5F00]"
-                />
-                <span>
-                  Include symbols
-                  {symbolsForced && <span className="block text-xs text-[#8A8886]">Required by {policy.name}.</span>}
-                  {symbolsUnavailable && <span className="block text-xs text-[#8A8886]">Not accepted by {policy.name}.</span>}
-                </span>
+          <div className="flex flex-wrap gap-2">
+            <div>
+              <input
+                type="checkbox"
+                id="opt-symbols"
+                checked={options.includeSymbols}
+                disabled={symbolsForced || symbolsUnavailable}
+                onChange={(event) => updateOptions({ includeSymbols: event.target.checked })}
+                className="peer sr-only"
+              />
+              <label
+                htmlFor="opt-symbols"
+                className={toggleChip}
+                title={symbolsForced ? `Required by ${policy.name}` : symbolsUnavailable ? `Not accepted by ${policy.name}` : undefined}
+              >
+                <span className="dot w-1.5 h-1.5 rounded-full bg-[#D1D0CE]" aria-hidden="true" />
+                Symbols{symbolsForced ? ' (required)' : symbolsUnavailable ? ' (not allowed)' : ''}
               </label>
-
-              <label className="flex items-start gap-3 text-sm text-[#484644] cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={options.avoidAmbiguous}
-                  onChange={(event) => updateOptions({ avoidAmbiguous: event.target.checked })}
-                  className="mt-0.5 w-4 h-4 accent-[#FF5F00]"
-                />
-                <span>
-                  Avoid look-alike characters
-                  <span className="block text-xs text-[#8A8886]">Skips 0 O 1 l I — easier to read aloud or type by hand.</span>
-                </span>
+            </div>
+            <div>
+              <input
+                type="checkbox"
+                id="opt-ambiguous"
+                checked={options.avoidAmbiguous}
+                onChange={(event) => updateOptions({ avoidAmbiguous: event.target.checked })}
+                className="peer sr-only"
+              />
+              <label htmlFor="opt-ambiguous" className={toggleChip} title="Skips 0 O 1 l I">
+                <span className="dot w-1.5 h-1.5 rounded-full bg-[#D1D0CE]" aria-hidden="true" />
+                No look-alikes (0 O 1 l I)
+              </label>
+            </div>
+            <div>
+              <input
+                type="checkbox"
+                id="opt-autocopy"
+                checked={autoCopy}
+                onChange={(event) => toggleAutoCopy(event.target.checked)}
+                className="peer sr-only"
+              />
+              <label htmlFor="opt-autocopy" className={toggleChip} title="Copy each new password when you pick a platform or press Regenerate">
+                <span className="dot w-1.5 h-1.5 rounded-full bg-[#D1D0CE]" aria-hidden="true" />
+                Auto-copy
               </label>
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* 3. Rules */}
-      <section aria-labelledby="rules-heading">
-        <h2 id="rules-heading" className="text-xs uppercase tracking-wider text-[#8A8886] mb-4" style={{ fontWeight: 500 }}>
-          3 · Rules for {policy.name}
-        </h2>
-
-        <div className="bg-white border border-[#F0EEEC] rounded-2xl p-5 sm:p-7">
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mb-5">
-            <span className={`px-2.5 py-1 text-[11px] rounded-full ${BASIS[policy.basis].className}`} style={{ fontWeight: 500 }}>
+      {/* Rules */}
+      <details className="group bg-white border border-[#F0EEEC] rounded-2xl">
+        <summary className="cursor-pointer list-none px-5 sm:px-6 py-4 flex items-center justify-between gap-3 rounded-2xl focus-visible:ring-2 focus-visible:ring-[#FF5F00] focus-visible:outline-none">
+          <span className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm text-[#484644]" style={{ fontWeight: 400 }}>
+            Rules for {policy.name}
+            <span className={`px-2 py-0.5 text-[11px] rounded-full ${BASIS[policy.basis].className}`} style={{ fontWeight: 500 }}>
               {BASIS[policy.basis].label}
             </span>
+            {checks.length > 0 && (
+              <span className={`text-xs ${passedChecks === checks.length ? 'text-[#3E9B5F]' : 'text-[#C4314B]'}`} style={{ fontWeight: 500 }}>
+                {passedChecks}/{checks.length} met
+              </span>
+            )}
+          </span>
+          {chevron}
+        </summary>
+
+        <div className="px-5 sm:px-6 pb-6">
+          <p className="text-xs text-[#8A8886] leading-relaxed mb-4" style={{ fontWeight: 300 }}>
+            {BASIS[policy.basis].description}{' '}
             {policy.sourceUrl && (
               <a
                 href={policy.sourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-[#8A8886] hover:text-[#FF5F00] underline underline-offset-2 transition-colors"
+                className="underline underline-offset-2 hover:text-[#FF5F00] transition-colors"
               >
                 Source
               </a>
             )}
-          </div>
-          <p className="text-xs text-[#8A8886] leading-relaxed mb-6" style={{ fontWeight: 300 }}>
-            {BASIS[policy.basis].description}
           </p>
 
-          <ul className="space-y-2.5 mb-6">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 mb-5">
             {checks.map((check) => (
-              <li key={check.label} className="flex items-start gap-2.5 text-sm text-[#484644]">
+              <li key={check.label} className="flex items-start gap-2 text-sm text-[#484644]">
                 <svg
                   {...iconProps}
                   strokeWidth={2}
@@ -372,9 +418,9 @@ export default function PasswordGenerator() {
           </ul>
 
           {policy.notes.length > 0 && (
-            <ul className="space-y-2 pt-5 border-t border-[#F0EEEC]">
+            <ul className="space-y-1.5 pt-4 border-t border-[#F0EEEC]">
               {policy.notes.map((note) => (
-                <li key={note} className="flex items-start gap-2.5 text-sm text-[#605E5C] leading-relaxed" style={{ fontWeight: 300 }}>
+                <li key={note} className="flex items-start gap-2.5 text-[13px] text-[#605E5C] leading-relaxed" style={{ fontWeight: 300 }}>
                   <span className="w-1 h-1 mt-2 rounded-full bg-[#B4B2AF] shrink-0" aria-hidden="true" />
                   {note}
                 </li>
@@ -382,57 +428,53 @@ export default function PasswordGenerator() {
             </ul>
           )}
         </div>
-      </section>
+      </details>
 
-      {/* Grading + privacy */}
-      <section className="space-y-4">
-        <details className="group bg-white border border-[#F0EEEC] rounded-2xl">
-          <summary className="cursor-pointer list-none px-5 sm:px-7 py-4 text-sm text-[#484644] flex items-center justify-between" style={{ fontWeight: 400 }}>
-            How strength is graded
-            <svg {...iconProps} className="w-4 h-4 text-[#8A8886] transition-transform group-open:rotate-180">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-            </svg>
-          </summary>
-          <div className="px-5 sm:px-7 pb-6">
-            <p className="text-sm text-[#605E5C] leading-relaxed mb-4" style={{ fontWeight: 300 }}>
-              Strength is the entropy of the way the password was generated: how many equally likely passwords could
-              have come out of the same settings. More bits means exponentially more guesses.
-            </p>
-            <table className="w-full text-sm">
-              <caption className="sr-only">Strength tiers by entropy</caption>
-              <thead>
-                <tr className="text-left text-xs text-[#8A8886]">
-                  <th scope="col" className="pb-2 pr-4" style={{ fontWeight: 400 }}>Tier</th>
-                  <th scope="col" className="pb-2" style={{ fontWeight: 400 }}>Entropy</th>
-                </tr>
-              </thead>
-              <tbody>
-                {STRENGTH_TIERS.map((tier, index) => {
-                  const next = STRENGTH_TIERS[index + 1]
-                  return (
-                    <tr key={tier.level} className="border-t border-[#F0EEEC]">
-                      <th scope="row" className="py-2 pr-4 text-left" style={{ fontWeight: 500, color: tier.color }}>{tier.label}</th>
-                      <td className="py-2 text-[#605E5C] tabular-nums" style={{ fontWeight: 300 }}>
-                        {next ? `${tier.minBits}–${next.minBits - 1} bits` : `${tier.minBits}+ bits`}
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-            <p className="text-xs text-[#8A8886] leading-relaxed mt-4" style={{ fontWeight: 300 }}>
-              The crack-time figure assumes a fast offline attack on a leaked password database. Online logins are
-              rate-limited, so real-world attacks against a good password are far slower. Reusing a password across
-              sites is what actually gets people breached, so use a different one everywhere.
-            </p>
-          </div>
-        </details>
+      {/* Grading */}
+      <details className="group bg-white border border-[#F0EEEC] rounded-2xl">
+        <summary className="cursor-pointer list-none px-5 sm:px-6 py-4 text-sm text-[#484644] flex items-center justify-between rounded-2xl focus-visible:ring-2 focus-visible:ring-[#FF5F00] focus-visible:outline-none" style={{ fontWeight: 400 }}>
+          How strength is graded
+          {chevron}
+        </summary>
+        <div className="px-5 sm:px-6 pb-6">
+          <p className="text-sm text-[#605E5C] leading-relaxed mb-4" style={{ fontWeight: 300 }}>
+            Strength is the entropy of the way the password was generated: how many equally likely passwords could
+            have come out of the same settings. More bits means exponentially more guesses.
+          </p>
+          <table className="w-full text-sm">
+            <caption className="sr-only">Strength tiers by entropy</caption>
+            <thead>
+              <tr className="text-left text-xs text-[#8A8886]">
+                <th scope="col" className="pb-2 pr-4" style={{ fontWeight: 400 }}>Tier</th>
+                <th scope="col" className="pb-2" style={{ fontWeight: 400 }}>Entropy</th>
+              </tr>
+            </thead>
+            <tbody>
+              {STRENGTH_TIERS.map((tier, index) => {
+                const next = STRENGTH_TIERS[index + 1]
+                return (
+                  <tr key={tier.level} className="border-t border-[#F0EEEC]">
+                    <th scope="row" className="py-2 pr-4 text-left" style={{ fontWeight: 500, color: tier.color }}>{tier.label}</th>
+                    <td className="py-2 text-[#605E5C] tabular-nums" style={{ fontWeight: 300 }}>
+                      {next ? `${tier.minBits}–${next.minBits - 1} bits` : `${tier.minBits}+ bits`}
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+          <p className="text-xs text-[#8A8886] leading-relaxed mt-4" style={{ fontWeight: 300 }}>
+            The crack-time figure assumes a fast offline attack (10 billion guesses per second) on a leaked password
+            database. Online logins are rate-limited, so real attacks against a good password are far slower. Reusing
+            a password across sites is what actually gets people breached, so use a different one everywhere.
+          </p>
+        </div>
+      </details>
 
-        <p className="text-xs text-[#8A8886] leading-relaxed px-1" style={{ fontWeight: 300 }}>
-          Passwords are generated in your browser with the Web Crypto API. Nothing is sent to a server, saved, or logged.
-          Platform rules change without notice; if a site rejects a password, follow the message on its form.
-        </p>
-      </section>
+      <p className="text-xs text-[#8A8886] leading-relaxed px-1" style={{ fontWeight: 300 }}>
+        Generated in your browser with the Web Crypto API. Nothing is sent to a server, saved, or logged. Platform rules
+        change without notice; if a site rejects a password, follow the message on its form.
+      </p>
     </div>
   )
 }

@@ -52,7 +52,7 @@ Content in `content/notes/` is untouched. Set it to `true` to restore everything
 Add a tool: create `app/tools/<slug>/page.tsx`, then add it to `tools` in `lib/site.ts`
 (that feeds the Tools page, home teaser and sitemap).
 
-Password generator: every preset in `lib/passwords.ts` has a `basis` — `official` (platform docs),
+1Click Password Generation (`/tools/password-generator`): every preset in `lib/passwords.ts` has a `basis` — `official` (platform docs),
 `typical` (platform only publishes recommendations) or `guidance` (ours). Only mark a preset
 `official` if the rule is on the platform's own page, and keep `sourceUrl` current. Generation uses
 Web Crypto with rejection sampling; keep it that way (no `Math.random`).
@@ -101,3 +101,13 @@ author: "AnhND"
 - Blog posts in English
 - Accessibility: proper aria labels, reduced-motion support, semantic HTML
 - Run `yarn build` before marking work as done to verify static export works
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

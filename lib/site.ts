@@ -47,8 +47,8 @@ export const education = [
 export const tools = [
   {
     href: '/tools/password-generator',
-    name: 'Password Generator',
+    name: '1Click Password Generation',
     description:
-      'Pick a platform and get a password that follows its rules, graded from Weak to Very strong.',
+      'Pick a platform, get a password that follows its rules — graded from Weak to Very strong, copied in one click.',
   },
 ] as const
