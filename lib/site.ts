@@ -44,7 +44,7 @@ export const education = [
   { degree: 'Engineer, Applied Mathematics and Informatics', school: 'HUST, Hanoi' },
 ] as const
 
-export type ToolCategory = 'Security' | 'Developer'
+export type ToolCategory = 'Security' | 'Network' | 'Developer'
 
 export interface ToolInfo {
   href: string
@@ -55,7 +55,7 @@ export interface ToolInfo {
   featured?: boolean
 }
 
-export const toolCategories: ToolCategory[] = ['Security', 'Developer']
+export const toolCategories: ToolCategory[] = ['Security', 'Network', 'Developer']
 
 export const tools: readonly ToolInfo[] = [
   {
@@ -77,6 +77,12 @@ export const tools: readonly ToolInfo[] = [
     name: 'Base64 & URL Encoder',
     description: 'Encode and decode Base64 (with a URL-safe mode) and percent-encoded URLs. Safe for any language.',
     category: 'Developer',
+  },
+  {
+    href: '/tools/my-ip',
+    name: 'My IP',
+    description: 'See your public IPv4 and IPv6 address, approximate location, ISP and browser details — or look up any IP.',
+    category: 'Network',
   },
   {
     href: '/tools/jwt-decoder',

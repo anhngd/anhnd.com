@@ -54,7 +54,7 @@ Content in `content/notes/` is untouched. Set it to `true` to restore everything
 Add a tool: create `app/tools/<slug>/page.tsx` using `ToolPage` + `toolMetadata`, put the UI in a
 `'use client'` component beside it, keep the logic in `lib/tools/` (no React, so it can be tested in
 plain Node), then add the tool to `tools` in `lib/site.ts` (feeds the Tools page, home page and sitemap).
-Tools must run entirely in the browser and never send or store what the user enters.
+Tools must run entirely in the browser and never send or store what the user enters. The only exception is a tool whose purpose is a public lookup (My IP asks ipify.org and ipwho.is): it must disclose that through ToolPage's `note` prop, send no cookies or referrer, and store nothing.
 
 Regex Tester runs patterns in a Blob Web Worker with a timeout, so catastrophic backtracking cannot
 freeze the page. The worker source lives in `lib/tools/regex.ts` as a plain JS string.

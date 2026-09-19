@@ -4,7 +4,7 @@ import Nav from '../components/Nav'
 import Footer from '../components/Footer'
 import { SITE, toolCategories, tools } from '@/lib/site'
 
-const description = 'Small free developer and security utilities by Anh Nguyen. Everything runs in your browser.'
+const description = 'Small free developer, network and security utilities by Anh Nguyen. Nearly everything runs in your browser.'
 
 export const metadata: Metadata = {
   title: 'Tools',
@@ -28,7 +28,7 @@ export default function ToolsPage() {
             Tools
           </h1>
           <p className="text-base sm:text-lg text-[#605E5C] leading-relaxed max-w-xl" style={{ fontWeight: 300 }}>
-            Small utilities I built because I wanted them. Free, no sign-up, and everything runs in your browser.
+            Small utilities I built because I wanted them. Free, no sign-up, and nearly everything runs in your browser — My IP is the exception, since it has to ask a lookup service.
           </p>
         </header>
 

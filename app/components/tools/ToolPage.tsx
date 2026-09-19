@@ -23,6 +23,7 @@ export default function ToolPage({
   description,
   path,
   category = 'DeveloperApplication',
+  note,
   children,
 }: {
   name: string
@@ -32,6 +33,8 @@ export default function ToolPage({
   description: string
   path: string
   category?: 'DeveloperApplication' | 'SecurityApplication' | 'UtilitiesApplication'
+  /** Replaces the default privacy line, for tools that must contact an outside service. */
+  note?: React.ReactNode
   children: React.ReactNode
 }) {
   return (
@@ -72,7 +75,7 @@ export default function ToolPage({
         {children}
 
         <p className="mt-8 text-xs text-[#8A8886] leading-relaxed px-1" style={{ fontWeight: 300 }}>
-          Runs entirely in your browser. Nothing you enter is sent to a server, saved, or logged.
+          {note ?? 'Runs entirely in your browser. Nothing you enter is sent to a server, saved, or logged.'}
         </p>
       </div>
 

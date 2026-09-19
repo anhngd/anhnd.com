@@ -143,7 +143,7 @@ export default function Home() {
                   Tools
                 </h2>
                 <p className="text-sm text-[#8A8886]" style={{ fontWeight: 300 }}>
-                  Small developer and security utilities I built for myself. Free, and everything runs in your browser.
+                  Small developer, network and security utilities I built for myself. Free, and nearly everything runs in your browser.
                 </p>
               </div>
               <Link href="/tools" className="hidden sm:inline-flex items-center gap-1.5 text-sm text-[#605E5C] hover:text-[#FF5F00] transition-colors shrink-0">
