@@ -16,26 +16,46 @@ Personal website and blog for Anh Nguyen (anhnd.com). Static site built with Nex
 
 ```
 app/
-├── page.tsx              ← Home (server component, loads notes)
-├── HomeClient.tsx        ← Home UI (client component, hero + blog list)
+├── page.tsx              ← Home (hero, facts, what I do, tools, contact)
 ├── layout.tsx            ← Root layout, metadata, fonts
 ├── globals.css           ← Global styles, CSS variables
 ├── not-found.tsx         ← 404 page
 ├── components/
-│   ├── Modal.tsx         ← Full-screen modal (About Me)
-│   ├── SocialBar.tsx     ← Fixed email icon bottom-right
+│   ├── Nav.tsx           ← Sticky top nav (Notes link only when SHOW_BLOG)
+│   ├── Footer.tsx        ← Shared footer
+│   ├── FadeIn.tsx        ← Fade-in-on-scroll wrapper (client)
 │   └── StructuredData.tsx← JSON-LD for SEO
-└── notes/
-    ├── page.tsx          ← Notes listing
-    ├── layout.tsx        ← Notes metadata
-    └── [id]/
-        ├── page.tsx      ← Note detail (SSG with generateStaticParams)
-        └── NoteContent.tsx← Note UI (client, TOC, sidebar, article)
+├── about/                ← About page
+├── tools/
+│   ├── page.tsx          ← Tools index
+│   └── password-generator/
+│       ├── page.tsx      ← Server page + metadata
+│       └── PasswordGenerator.tsx ← Client UI
+├── notes/                ← Blog (hidden, see below)
+└── status/               ← Server status dashboard (unlisted)
 
 content/notes/            ← Markdown blog posts (frontmatter + body)
+lib/site.ts               ← Site constants, SHOW_BLOG flag, shared copy, tools list
+lib/passwords.ts          ← Platform presets, generator, rule checks, strength grading
 lib/markdown.ts           ← Markdown processing (gray-matter + remark)
 public/                   ← Static assets (og-image, icons, manifest)
 ```
+
+## Blog (currently hidden)
+
+`SHOW_BLOG` in `lib/site.ts` is `false`. While off: no Notes link, no home section, notes are
+left out of the sitemap, RSS serves an empty feed, and `/notes` and `/notes/[id]` redirect to `/`.
+Content in `content/notes/` is untouched. Set it to `true` to restore everything.
+
+## Tools
+
+Add a tool: create `app/tools/<slug>/page.tsx`, then add it to `tools` in `lib/site.ts`
+(that feeds the Tools page, home teaser and sitemap).
+
+Password generator: every preset in `lib/passwords.ts` has a `basis` — `official` (platform docs),
+`typical` (platform only publishes recommendations) or `guidance` (ours). Only mark a preset
+`official` if the rule is on the platform's own page, and keep `sourceUrl` current. Generation uses
+Web Crypto with rejection sampling; keep it that way (no `Math.random`).
 
 ## Commands
 
@@ -75,7 +95,7 @@ author: "AnhND"
 
 ## Rules
 
-- Static export only — no server-side features (API routes, SSR, middleware)
+- Static export only — no server-side features (API routes, SSR, middleware). Tools run fully client-side; never send or store user input
 - No dark mode — single light theme
 - Keep dependencies minimal — avoid adding new packages unless necessary
 - Blog posts in English

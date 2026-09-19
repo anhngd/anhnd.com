@@ -1,6 +1,8 @@
 import { Metadata } from 'next'
+import { redirect } from 'next/navigation'
 import NoteContent from './NoteContent'
 import { getAllNoteIds, getNoteData, getSortedNotesData } from '@/lib/markdown'
+import { SHOW_BLOG } from '@/lib/site'
 
 const PLACEHOLDER_NOTE_ID = '__placeholder__'
 
@@ -20,6 +22,8 @@ export async function generateMetadata({
 }: {
   params: Promise<{ id: string }>
 }): Promise<Metadata> {
+  if (!SHOW_BLOG) return { robots: { index: false, follow: false } }
+
   const { id } = await params
   const note = id === PLACEHOLDER_NOTE_ID ? null : await getNoteData(id)
 
@@ -68,6 +72,8 @@ export async function generateMetadata({
 }
 
 export default async function NotePage({ params }: { params: Promise<{ id: string }> }) {
+  if (!SHOW_BLOG) redirect('/')
+
   const { id } = await params
   const allNotes = getSortedNotesData()
   const noteData =

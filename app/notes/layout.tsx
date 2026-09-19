@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
+import { SHOW_BLOG } from '@/lib/site'
 
-export const metadata: Metadata = {
+const visibleMetadata: Metadata = {
   title: 'Notes',
   description: 'Thoughts on engineering, management, and the craft of building things — by Anh Nguyen.',
   openGraph: {
@@ -19,6 +20,10 @@ export const metadata: Metadata = {
     canonical: 'https://anhnd.com/notes',
   }
 }
+
+export const metadata: Metadata = SHOW_BLOG
+  ? visibleMetadata
+  : { robots: { index: false, follow: false } }
 
 export default function NotesLayout({
   children,

@@ -1,4 +1,5 @@
 import { getSortedNotesData } from '@/lib/markdown'
+import { SHOW_BLOG } from '@/lib/site'
 
 export const dynamic = 'force-static'
 
@@ -14,7 +15,8 @@ function escapeXml(value: string): string {
 }
 
 export async function GET() {
-  const notes = getSortedNotesData()
+  // Hidden blog: serve a valid but empty feed so existing subscribers don't get an error.
+  const notes = SHOW_BLOG ? getSortedNotesData() : []
 
   const items = notes
     .map(

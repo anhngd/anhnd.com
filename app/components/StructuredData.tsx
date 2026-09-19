@@ -1,5 +1,5 @@
 interface StructuredDataProps {
-  type: 'Person' | 'Article' | 'WebSite'
+  type: 'Person' | 'Article' | 'WebSite' | 'WebApplication'
   data: Record<string, any>
 }
 

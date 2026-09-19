@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Space_Grotesk } from 'next/font/google'
 import Script from 'next/script'
 import './globals.css'
+import { SHOW_BLOG } from '@/lib/site'
 
 const spaceGrotesk = Space_Grotesk({ 
   subsets: ['latin'],
@@ -14,13 +15,13 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://anhnd.com'),
   title: {
     template: '%s | Anh Nguyen',
-    default: 'Anh Nguyen — Engineer, Builder, Writer',
+    default: 'Anh Nguyen — Technical Manager & Builder',
   },
-  description: 'Personal site of Anh Nguyen — software engineer, solo founder, and writer. I build products, lead small teams, and write about engineering, management, and the craft of making things.',
+  description: 'Personal site of Anh Nguyen — technical manager and solo founder based in Vietnam. I build products, lead small teams, and make small useful tools.',
   keywords: [
-    'Anh Nguyen', 'AnhND', 'Software Engineer', 'Solo Founder',
+    'Anh Nguyen', 'AnhND', 'Technical Manager', 'Solo Founder',
     'Big Data', 'AI', 'Machine Learning', 'Full-stack Developer',
-    'Engineering Management', 'Leadership', 'Digital Transformation',
+    'Engineering Management', 'Leadership', 'Digital Transformation', 'Password Generator',
     'Vietnam', 'HUST', 'Applied Mathematics',
   ],
   authors: [{ name: 'Anh Nguyen', url: 'https://anhnd.com' }],
@@ -30,8 +31,8 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: 'Anh Nguyen — Engineer, Builder, Writer',
-    description: 'I build products, lead small teams, and write about what I learn along the way. Notes on engineering, management, and building things that matter.',
+    title: 'Anh Nguyen — Technical Manager & Builder',
+    description: 'I build products, lead small teams, and make small useful tools — like a platform-aware password generator.',
     url: 'https://anhnd.com',
     siteName: 'Anh Nguyen',
     images: [
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
         url: 'https://anhnd.com/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Anh Nguyen — Engineer, Builder, Writer',
+        alt: 'Anh Nguyen — Technical Manager & Builder',
         type: 'image/png',
       },
     ],
@@ -48,8 +49,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Anh Nguyen — Engineer, Builder, Writer',
-    description: 'I build products, lead small teams, and write about what I learn along the way.',
+    title: 'Anh Nguyen — Technical Manager & Builder',
+    description: 'I build products, lead small teams, and make small useful tools.',
     creator: '@anhnd',
     images: ['https://anhnd.com/og-image.png'],
     site: '@anhnd',
@@ -102,7 +103,9 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
-        <link rel="alternate" type="application/rss+xml" title="Anh Nguyen — Notes" href="/feed.xml" />
+        {SHOW_BLOG && (
+          <link rel="alternate" type="application/rss+xml" title="Anh Nguyen — Notes" href="/feed.xml" />
+        )}
         <meta name="theme-color" content="#FF5F00" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

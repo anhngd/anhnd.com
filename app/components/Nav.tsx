@@ -2,11 +2,13 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { SHOW_BLOG } from '@/lib/site'
 
 const links = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
-  { href: '/notes', label: 'Notes' },
+  { href: '/tools', label: 'Tools' },
+  ...(SHOW_BLOG ? [{ href: '/notes', label: 'Notes' }] : []),
 ]
 
 export default function Nav() {

@@ -1,8 +1,12 @@
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import Nav from '../components/Nav'
 import { getSortedNotesData } from '@/lib/markdown'
+import { SHOW_BLOG } from '@/lib/site'
 
 export default function NotesPage() {
+  if (!SHOW_BLOG) redirect('/')
+
   const notes = getSortedNotesData()
 
   return (
