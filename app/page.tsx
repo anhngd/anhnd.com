@@ -143,7 +143,7 @@ export default function Home() {
                   Tools
                 </h2>
                 <p className="text-sm text-[#8A8886]" style={{ fontWeight: 300 }}>
-                  Small utilities I built for myself. Free, and everything runs in your browser.
+                  Small developer and security utilities I built for myself. Free, and everything runs in your browser.
                 </p>
               </div>
               <Link href="/tools" className="hidden sm:inline-flex items-center gap-1.5 text-sm text-[#605E5C] hover:text-[#FF5F00] transition-colors shrink-0">
@@ -153,26 +153,48 @@ export default function Home() {
             </div>
           </FadeIn>
 
-          {tools.map((tool) => (
-            <FadeIn key={tool.href} delay={0.08}>
-              <Link
-                href={tool.href}
-                className="group block p-6 sm:p-8 bg-[#1A1A1A] rounded-2xl text-white hover:bg-[#242424] transition-colors"
-              >
-                <span className="inline-block px-2.5 py-1 mb-5 text-[10px] uppercase tracking-wider bg-[#FF5F00] text-white rounded-full" style={{ fontWeight: 500 }}>
-                  New
-                </span>
-                <h3 className="text-xl sm:text-2xl mb-2" style={{ fontWeight: 400, letterSpacing: '-0.01em' }}>{tool.name}</h3>
-                <p className="text-sm sm:text-base text-[#B4B2AF] leading-relaxed max-w-lg mb-6" style={{ fontWeight: 300 }}>
-                  {tool.description}
-                </p>
-                <span className="inline-flex items-center gap-2 text-sm text-[#FF5F00] group-hover:gap-3 transition-all" style={{ fontWeight: 500 }}>
-                  Open tool
-                  {arrowRight}
-                </span>
-              </Link>
-            </FadeIn>
-          ))}
+          {tools
+            .filter((tool) => tool.featured)
+            .map((tool) => (
+              <FadeIn key={tool.href} delay={0.08}>
+                <Link
+                  href={tool.href}
+                  className="group block p-6 sm:p-8 bg-[#1A1A1A] rounded-2xl text-white hover:bg-[#242424] transition-colors"
+                >
+                  <span className="inline-block px-2.5 py-1 mb-5 text-[10px] uppercase tracking-wider bg-[#FF5F00] text-white rounded-full" style={{ fontWeight: 500 }}>
+                    Featured
+                  </span>
+                  <h3 className="text-xl sm:text-2xl mb-2" style={{ fontWeight: 400, letterSpacing: '-0.01em' }}>{tool.name}</h3>
+                  <p className="text-sm sm:text-base text-[#B4B2AF] leading-relaxed max-w-lg mb-6" style={{ fontWeight: 300 }}>
+                    {tool.description}
+                  </p>
+                  <span className="inline-flex items-center gap-2 text-sm text-[#FF5F00] group-hover:gap-3 transition-all" style={{ fontWeight: 500 }}>
+                    Open tool
+                    {arrowRight}
+                  </span>
+                </Link>
+              </FadeIn>
+            ))}
+
+          <FadeIn delay={0.12}>
+            <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {tools
+                .filter((tool) => !tool.featured)
+                .map((tool) => (
+                  <li key={tool.href}>
+                    <Link
+                      href={tool.href}
+                      className="group flex items-center justify-between gap-3 px-5 py-4 bg-white border border-[#F0EEEC] rounded-xl hover:border-[#FF5F00] transition-colors"
+                    >
+                      <span className="text-sm text-[#1A1A1A] group-hover:text-[#FF5F00] transition-colors" style={{ fontWeight: 400 }}>
+                        {tool.name}
+                      </span>
+                      <span className="text-[#B4B2AF] group-hover:text-[#FF5F00] transition-colors" aria-hidden="true">→</span>
+                    </Link>
+                  </li>
+                ))}
+            </ul>
+          </FadeIn>
         </div>
       </section>
 

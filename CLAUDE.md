@@ -24,19 +24,21 @@ app/
 │   ├── Nav.tsx           ← Sticky top nav (Notes link only when SHOW_BLOG)
 │   ├── Footer.tsx        ← Shared footer
 │   ├── FadeIn.tsx        ← Fade-in-on-scroll wrapper (client)
+│   ├── tools/            ← Shared tool building blocks: ToolPage (page shell + metadata),
+│   │                        ui.tsx (CopyButton, Segmented, Notice), toolStyles.ts, useNow.ts
 │   └── StructuredData.tsx← JSON-LD for SEO
 ├── about/                ← About page
 ├── tools/
-│   ├── page.tsx          ← Tools index
-│   └── password-generator/
-│       ├── page.tsx      ← Server page + metadata
-│       └── PasswordGenerator.tsx ← Client UI
+│   ├── page.tsx          ← Tools index (grouped by category)
+│   └── <slug>/           ← one folder per tool: page.tsx (server, metadata) + <Name>Tool.tsx (client UI)
+│       password-generator, json, base64-url, jwt-decoder, timestamp, regex-tester, cron-explainer
 ├── notes/                ← Blog (hidden, see below)
 └── status/               ← Server status dashboard (unlisted)
 
 content/notes/            ← Markdown blog posts (frontmatter + body)
 lib/site.ts               ← Site constants, SHOW_BLOG flag, shared copy, tools list
 lib/passwords.ts          ← Platform presets, generator, rule checks, strength grading
+lib/tools/                ← Pure logic for the developer tools (json, encoding, jwt, time, cron, regex)
 lib/markdown.ts           ← Markdown processing (gray-matter + remark)
 public/                   ← Static assets (og-image, icons, manifest)
 ```
@@ -49,8 +51,13 @@ Content in `content/notes/` is untouched. Set it to `true` to restore everything
 
 ## Tools
 
-Add a tool: create `app/tools/<slug>/page.tsx`, then add it to `tools` in `lib/site.ts`
-(that feeds the Tools page, home teaser and sitemap).
+Add a tool: create `app/tools/<slug>/page.tsx` using `ToolPage` + `toolMetadata`, put the UI in a
+`'use client'` component beside it, keep the logic in `lib/tools/` (no React, so it can be tested in
+plain Node), then add the tool to `tools` in `lib/site.ts` (feeds the Tools page, home page and sitemap).
+Tools must run entirely in the browser and never send or store what the user enters.
+
+Regex Tester runs patterns in a Blob Web Worker with a timeout, so catastrophic backtracking cannot
+freeze the page. The worker source lives in `lib/tools/regex.ts` as a plain JS string.
 
 1Click Password Generation (`/tools/password-generator`): every preset in `lib/passwords.ts` has a `basis` — `official` (platform docs),
 `typical` (platform only publishes recommendations) or `guidance` (ours). Only mark a preset

@@ -1,64 +1,30 @@
-import type { Metadata } from 'next'
-import Link from 'next/link'
-import Nav from '../../components/Nav'
-import Footer from '../../components/Footer'
-import StructuredData from '../../components/StructuredData'
+import ToolPage, { toolMetadata } from '../../components/tools/ToolPage'
 import PasswordGenerator from './PasswordGenerator'
-import { SITE } from '@/lib/site'
 
-const title = '1Click Password Generation'
+const name = '1Click Password Generation'
 const description =
   'Pick a platform — Google, Apple, GitHub, Wi-Fi and more — and get a random password that follows its rules, graded from Weak to Very strong, in one click. Generated in your browser.'
-const url = `${SITE.url}/tools/password-generator`
+const path = '/tools/password-generator'
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: url },
-  openGraph: { title: `${title} — Anh Nguyen`, description, url, siteName: SITE.name, type: 'website' },
-  twitter: { card: 'summary_large_image', title: `${title} — Anh Nguyen`, description },
-}
+export const metadata = toolMetadata({ name, description, path })
 
 export default function PasswordGeneratorPage() {
   return (
-    <main
-      className="min-h-screen flex flex-col bg-[#FAFAF9]"
-      style={{ fontFamily: 'var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif' }}
+    <ToolPage
+      name={name}
+      heading={
+        <>
+          <span className="text-[#FF5F00]">1Click</span> Password Generation
+        </>
+      }
+      tagline="Pick a platform. Get a password that fits its rules, graded from Weak to Very strong."
+      description={description}
+      path={path}
+      category="SecurityApplication"
     >
-      <StructuredData
-        type="WebApplication"
-        data={{
-          name: title,
-          description,
-          url,
-          applicationCategory: 'SecurityApplication',
-          operatingSystem: 'Any',
-          offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-          author: { '@id': `${SITE.url}/#person` },
-        }}
-      />
-
-      <Nav />
-
-      <div className="max-w-3xl w-full mx-auto px-4 sm:px-6 pt-10 sm:pt-14 pb-20">
-        <header className="mb-8">
-          <nav aria-label="Breadcrumb" className="text-sm text-[#8A8886] mb-4" style={{ fontWeight: 300 }}>
-            <Link href="/tools" className="hover:text-[#FF5F00] transition-colors">Tools</Link>
-            <span className="mx-2" aria-hidden="true">/</span>
-            <span className="text-[#605E5C]" aria-current="page">1Click Password Generation</span>
-          </nav>
-          <h1 className="text-3xl sm:text-4xl text-[#1A1A1A] mb-3" style={{ fontWeight: 300, letterSpacing: '-0.03em' }}>
-            <span className="text-[#FF5F00]">1Click</span> Password Generation
-          </h1>
-          <p className="text-base text-[#605E5C] leading-relaxed max-w-xl" style={{ fontWeight: 300 }}>
-            Pick a platform. Get a password that fits its rules, graded from Weak to Very strong.
-          </p>
-        </header>
-
+      <div className="max-w-3xl">
         <PasswordGenerator />
       </div>
-
-      <Footer />
-    </main>
+    </ToolPage>
   )
 }

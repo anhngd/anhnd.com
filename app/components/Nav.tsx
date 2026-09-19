@@ -11,12 +11,12 @@ const links = [
   ...(SHOW_BLOG ? [{ href: '/notes', label: 'Notes' }] : []),
 ]
 
-export default function Nav() {
+export default function Nav({ wide = false }: { wide?: boolean }) {
   const pathname = usePathname()
 
   return (
     <nav className="sticky top-0 z-30 bg-[#FAFAF9]/80 backdrop-blur-md border-b border-[#F0EEEC]">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+      <div className={`${wide ? 'max-w-4xl' : 'max-w-3xl'} mx-auto px-4 sm:px-6 h-14 flex items-center justify-between`}>
         <Link
           href="/"
           className="text-sm text-[#1A1A1A] tracking-tight"

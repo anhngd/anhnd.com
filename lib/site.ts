@@ -44,11 +44,62 @@ export const education = [
   { degree: 'Engineer, Applied Mathematics and Informatics', school: 'HUST, Hanoi' },
 ] as const
 
-export const tools = [
+export type ToolCategory = 'Security' | 'Developer'
+
+export interface ToolInfo {
+  href: string
+  name: string
+  description: string
+  category: ToolCategory
+  /** Shown as the large card on the home page. */
+  featured?: boolean
+}
+
+export const toolCategories: ToolCategory[] = ['Security', 'Developer']
+
+export const tools: readonly ToolInfo[] = [
   {
     href: '/tools/password-generator',
     name: '1Click Password Generation',
     description:
       'Pick a platform, get a password that follows its rules — graded from Weak to Very strong, copied in one click.',
+    category: 'Security',
+    featured: true,
   },
-] as const
+  {
+    href: '/tools/json',
+    name: 'JSON Formatter & Diff',
+    description: 'Validate, pretty-print or minify JSON with exact error locations, and compare two documents.',
+    category: 'Developer',
+  },
+  {
+    href: '/tools/base64-url',
+    name: 'Base64 & URL Encoder',
+    description: 'Encode and decode Base64 (with a URL-safe mode) and percent-encoded URLs. Safe for any language.',
+    category: 'Developer',
+  },
+  {
+    href: '/tools/jwt-decoder',
+    name: 'JWT Decoder',
+    description: 'Inspect a token’s header, payload and expiry. Decoded locally, never uploaded.',
+    category: 'Security',
+  },
+  {
+    href: '/tools/timestamp',
+    name: 'Unix Timestamp Converter',
+    description: 'Turn epoch seconds or milliseconds into dates in any time zone, and dates back into timestamps.',
+    category: 'Developer',
+  },
+  {
+    href: '/tools/regex-tester',
+    name: 'Regex Tester',
+    description: 'Test JavaScript regular expressions with live highlighting, capture groups and a replace preview.',
+    category: 'Developer',
+  },
+  {
+    href: '/tools/cron-explainer',
+    name: 'Cron Explainer',
+    description: 'Turn a cron expression into plain English and see exactly when it will run next.',
+    category: 'Developer',
+  },
+]

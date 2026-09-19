@@ -7,13 +7,13 @@ const links = [
   ...(SHOW_BLOG ? [{ href: '/notes', label: 'Notes' }] : []),
 ]
 
-export default function Footer() {
+export default function Footer({ wide = false }: { wide?: boolean }) {
   return (
     <footer
       role="contentinfo"
       className="mt-auto py-10 px-4 sm:px-6 border-t border-[#F0EEEC] bg-[#FAFAF9]"
     >
-      <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className={`${wide ? 'max-w-4xl' : 'max-w-3xl'} mx-auto flex flex-col sm:flex-row items-center justify-between gap-4`}>
         <p className="text-sm text-[#B4B2AF]" style={{ fontWeight: 300 }}>
           © {new Date().getFullYear()} anhnd.com
         </p>
