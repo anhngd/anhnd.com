@@ -1,15 +1,26 @@
 import type { Metadata, Viewport } from 'next'
-import { Space_Grotesk } from 'next/font/google'
+import { Inter, JetBrains_Mono } from 'next/font/google'
 import Script from 'next/script'
 import './globals.css'
 import { SHOW_BLOG } from '@/lib/site'
 
-const spaceGrotesk = Space_Grotesk({ 
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-  variable: '--font-space-grotesk',
-  display: 'swap'
+const inter = Inter({
+  subsets: ['latin', 'vietnamese'],
+  variable: '--font-inter',
+  display: 'swap',
 })
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin', 'vietnamese'],
+  variable: '--font-jetbrains-mono',
+  display: 'swap',
+})
+
+/**
+ * Runs before first paint so a visitor who chose a theme never sees a flash of the other one.
+ * With no saved choice the CSS follows the OS setting on its own.
+ */
+const themeScript = `try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}`
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://anhnd.com'),
@@ -87,7 +98,10 @@ export const metadata: Metadata = {
 
 // Viewport metadata
 export const viewport: Viewport = {
-  themeColor: '#ffffff',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#FAFAFA' },
+    { media: '(prefers-color-scheme: dark)', color: '#0A0A0B' },
+  ],
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
@@ -99,14 +113,14 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${spaceGrotesk.className} ${spaceGrotesk.variable}`}>
+    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         {SHOW_BLOG && (
           <link rel="alternate" type="application/rss+xml" title="Anh Nguyen — Notes" href="/feed.xml" />
         )}
-        <meta name="theme-color" content="#FF5F00" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <Script

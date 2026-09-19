@@ -7,9 +7,9 @@ Personal website and blog for Anh Nguyen (anhnd.com). Static site built with Nex
 ## Tech Stack
 
 - **Framework:** Next.js 16 (App Router, static export)
-- **Styling:** Tailwind CSS 4 with custom config
+- **Styling:** Tailwind CSS 4 driven by design tokens in `app/globals.css` (light + dark themes)
 - **Content:** Markdown files in `content/notes/` with gray-matter frontmatter
-- **Font:** Space Grotesk (via next/font)
+- **Fonts:** Inter (UI) and JetBrains Mono (code, passwords), via next/font, with the Vietnamese subset
 - **Package manager:** Yarn 4.9
 
 ## Project Structure
@@ -23,7 +23,8 @@ app/
 ├── components/
 │   ├── Nav.tsx           ← Sticky top nav (Notes link only when SHOW_BLOG)
 │   ├── Footer.tsx        ← Shared footer
-│   ├── FadeIn.tsx        ← Fade-in-on-scroll wrapper (client)
+│   ├── FadeIn.tsx        ← Fade-in-on-scroll wrapper (client); content stays visible without JS
+│   ├── ThemeToggle.tsx   ← System / Light / Dark switch (saved in localStorage 'theme')
 │   ├── tools/            ← Shared tool building blocks: ToolPage (page shell + metadata),
 │   │                        ui.tsx (CopyButton, Segmented, Notice), toolStyles.ts, useNow.ts
 │   └── StructuredData.tsx← JSON-LD for SEO
@@ -93,17 +94,33 @@ author: "AnhND"
 
 ## Design System
 
-- **Brand color:** #FF5F00 (orange)
-- **Background:** #FAFAF9 (off-white), #FFFFFF (content sections)
-- **Text:** #1A1A1A (primary), #605E5C (secondary), #8A8886 (muted)
-- **Borders:** #F0EEEC (light), #E1DFDD (medium)
-- **Font weights:** 300 (light/body), 400 (normal/headings), 500 (medium/buttons)
-- **Style:** Minimal, clean, light effects (dot pattern, fade-in on scroll). No dark mode.
+Modern dev-tool look: neutral surfaces, 1px hairline borders, tight corners (cards 12px, inner boxes 8px,
+buttons 6px), Inter with tight tracking on headings, orange used sparingly as the accent.
+
+**Colors come only from tokens** defined in `app/globals.css` (`:root` for light, `[data-theme="dark"]`
+and a `prefers-color-scheme` block for dark) and exposed as Tailwind utilities. Never write a hex color
+in a component; use the token so both themes stay correct.
+
+| Role | Utilities |
+| --- | --- |
+| Surfaces | `bg-page` (app background), `bg-card`, `bg-sunken`, `bg-sunken-2` |
+| Borders | `border-line`, `border-line-strong` |
+| Text | `text-ink` (primary), `text-ink-2`, `text-ink-3` (muted), `text-ink-4` (decorative only) |
+| Accent | `bg-brand` + `text-on-brand` (fills), `text-brand-ink` (accent text), `bg-brand-soft` + `text-brand-soft-ink` |
+| Primary button / featured card | `bg-invert` + `text-on-invert` (flips in dark mode); accent text on it: `text-brand-on-invert` |
+| Status | `ok-*`, `warn-*`, `danger-*` (`-bg`, `-line`, `-ink`) |
+| Password strength | `--tier-1` to `--tier-5` |
+
+Text contrast is checked against WCAG AA (4.5:1) for every text/background pair in both themes. If you
+change a token, recheck the pairs. Theme: follows the OS unless the visitor picks one with the toggle;
+a small inline script in `layout.tsx` applies the saved choice before first paint.
+
+Font weights: 400 body, 500 labels and small titles, 600 headings.
 
 ## Rules
 
 - Static export only — no server-side features (API routes, SSR, middleware). Tools run fully client-side; never send or store user input
-- No dark mode — single light theme
+- Light and dark themes both supported; style with tokens only (see Design System)
 - Keep dependencies minimal — avoid adding new packages unless necessary
 - Blog posts in English
 - Accessibility: proper aria labels, reduced-motion support, semantic HTML

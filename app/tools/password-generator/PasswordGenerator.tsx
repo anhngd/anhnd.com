@@ -22,18 +22,18 @@ const BASIS: Record<RuleBasis, { label: string; description: string; className: 
   official: {
     label: 'Official rules',
     description: 'These limits come from the platform’s own documentation.',
-    className: 'bg-[#E6F4EA] text-[#1E6B3A]',
+    className: 'bg-ok-bg text-ok-ink',
   },
   typical: {
     label: 'Typical rules',
     description:
       'The platform only publishes recommendations, so these are the limits usually enforced. The sign-up form has the final say.',
-    className: 'bg-[#FDF3DC] text-[#8A5A00]',
+    className: 'bg-warn-bg text-warn-ink',
   },
   guidance: {
     label: 'Our recommendation',
     description: 'No platform-specific rules exist for this, so this is what we recommend.',
-    className: 'bg-[#EEEDEB] text-[#484644]',
+    className: 'bg-sunken text-ink-2',
   },
 }
 
@@ -48,12 +48,12 @@ const iconProps = {
 } as const
 
 function CharView({ char }: { char: string }) {
-  const tone = /[0-9]/.test(char) ? 'text-[#FF5F00]' : /[a-zA-Z]/.test(char) ? 'text-[#1A1A1A]' : 'text-[#0F6CBD]'
+  const tone = /[0-9]/.test(char) ? 'text-brand-ink' : /[a-zA-Z]/.test(char) ? 'text-ink' : 'text-sym'
   return <span className={tone}>{char}</span>
 }
 
 const chevron = (
-  <svg {...iconProps} className="w-4 h-4 text-[#8A8886] transition-transform group-open:rotate-180">
+  <svg {...iconProps} className="w-4 h-4 text-ink-3 transition-transform group-open:rotate-180">
     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
   </svg>
 )
@@ -143,17 +143,17 @@ export default function PasswordGenerator() {
   ].filter((preset, index, all) => all.findIndex((other) => other.value === preset.value) === index)
 
   const toggleChip =
-    'flex items-center gap-2 px-3 py-1.5 text-xs text-[#605E5C] bg-white border border-[#E1DFDD] rounded-full cursor-pointer select-none transition-colors ' +
-    'peer-checked:bg-[#FFF1E8] peer-checked:border-[#FF5F00] peer-checked:text-[#B84400] peer-checked:[&_.dot]:bg-[#FF5F00] ' +
-    'peer-disabled:opacity-50 peer-disabled:cursor-not-allowed peer-focus-visible:ring-2 peer-focus-visible:ring-[#FF5F00] peer-focus-visible:ring-offset-2'
+    'flex items-center gap-2 px-3 py-1.5 text-xs text-ink-2 bg-card border border-line-strong rounded-full cursor-pointer select-none transition-colors ' +
+    'peer-checked:bg-brand-soft peer-checked:border-brand peer-checked:text-brand-soft-ink peer-checked:[&_.dot]:bg-brand ' +
+    'peer-disabled:opacity-50 peer-disabled:cursor-not-allowed peer-focus-visible:ring-2 peer-focus-visible:ring-brand peer-focus-visible:ring-offset-2'
 
   return (
     <div className="space-y-4">
-      <div className="bg-white border border-[#F0EEEC] rounded-2xl divide-y divide-[#F0EEEC]">
+      <div className="bg-card border border-line rounded-2xl divide-y divide-line">
         {/* Platform */}
         <fieldset className="p-5 sm:p-6">
           <legend className="sr-only">Platform</legend>
-          <p className="text-xs text-[#8A8886] mb-3" style={{ fontWeight: 500 }} aria-hidden="true">
+          <p className="text-xs text-ink-3 mb-3" style={{ fontWeight: 500 }} aria-hidden="true">
             Where will you use it?
           </p>
           <div className="flex flex-wrap gap-1.5">
@@ -170,7 +170,7 @@ export default function PasswordGenerator() {
                 />
                 <label
                   htmlFor={`platform-${platform.id}`}
-                  className="block px-3 py-1.5 text-[13px] text-[#484644] bg-[#FAFAF9] border border-[#F0EEEC] rounded-lg cursor-pointer transition-colors hover:border-[#1A1A1A] peer-checked:bg-[#1A1A1A] peer-checked:border-[#1A1A1A] peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-[#FF5F00] peer-focus-visible:ring-offset-2"
+                  className="block px-3 py-1.5 text-[13px] text-ink-2 bg-page border border-line rounded-lg cursor-pointer transition-colors hover:border-ink peer-checked:bg-invert peer-checked:border-ink peer-checked:text-on-invert peer-focus-visible:ring-2 peer-focus-visible:ring-brand peer-focus-visible:ring-offset-2"
                   style={{ fontWeight: 400 }}
                 >
                   {platform.name}
@@ -187,19 +187,19 @@ export default function PasswordGenerator() {
             onClick={() => copyToClipboard(password)}
             disabled={!password}
             title="Click to copy"
-            className="relative block w-full min-h-[4rem] px-4 py-4 pr-20 text-left bg-[#FAFAF9] border border-[#F0EEEC] rounded-xl font-mono text-lg sm:text-2xl leading-snug tracking-wide break-all hover:border-[#E1DFDD] focus-visible:ring-2 focus-visible:ring-[#FF5F00] focus-visible:outline-none transition-colors"
+            className="relative block w-full min-h-[4rem] px-4 py-4 pr-20 text-left bg-page border border-line rounded-xl font-mono text-lg sm:text-2xl leading-snug tracking-wide break-all hover:border-line-strong focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none transition-colors"
             aria-label={password ? (revealed ? `Copy password ${password}` : 'Copy hidden password') : 'Generating password'}
           >
-            {!password && <span className="text-[#B4B2AF]">Generating…</span>}
+            {!password && <span className="text-ink-4">Generating…</span>}
             {password && revealed && [...password].map((char, index) => <CharView key={index} char={char} />)}
-            {password && !revealed && <span className="text-[#8A8886]">{'•'.repeat(password.length)}</span>}
+            {password && !revealed && <span className="text-ink-3">{'•'.repeat(password.length)}</span>}
             <span
               className={`absolute top-3 right-3 px-2 py-1 text-[11px] rounded-md font-sans ${
                 copyState === 'copied'
-                  ? 'bg-[#E6F4EA] text-[#1E6B3A]'
+                  ? 'bg-ok-bg text-ok-ink'
                   : copyState === 'failed'
-                    ? 'bg-[#FDE7E9] text-[#A4262C]'
-                    : 'bg-[#F3F2F1] text-[#8A8886]'
+                    ? 'bg-danger-bg text-danger-ink'
+                    : 'bg-sunken text-ink-3'
               }`}
               style={{ fontWeight: 500, letterSpacing: 0 }}
               aria-hidden="true"
@@ -213,7 +213,7 @@ export default function PasswordGenerator() {
               type="button"
               onClick={() => copyToClipboard(password)}
               disabled={!password}
-              className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-[#FF5F00] text-white text-sm rounded-lg hover:bg-[#E55500] disabled:opacity-40 transition-colors"
+              className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-brand text-on-brand text-sm rounded-lg hover:bg-brand-hover disabled:opacity-40 transition-colors"
               style={{ fontWeight: 500 }}
             >
               <svg {...iconProps}>
@@ -224,7 +224,7 @@ export default function PasswordGenerator() {
             <button
               type="button"
               onClick={() => generate(platformId, options, true)}
-              className="inline-flex items-center gap-2 px-4 py-2.5 text-sm text-[#484644] border border-[#E1DFDD] rounded-lg hover:border-[#1A1A1A] transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2.5 text-sm text-ink-2 border border-line-strong rounded-lg hover:border-ink transition-colors"
               style={{ fontWeight: 400 }}
             >
               <svg {...iconProps}>
@@ -237,7 +237,7 @@ export default function PasswordGenerator() {
               type="button"
               onClick={() => setRevealed((value) => !value)}
               aria-pressed={!revealed}
-              className="inline-flex items-center gap-2 px-3 py-2.5 text-sm text-[#605E5C] rounded-lg hover:text-[#1A1A1A] transition-colors"
+              className="inline-flex items-center gap-2 px-3 py-2.5 text-sm text-ink-2 rounded-lg hover:text-ink transition-colors"
               style={{ fontWeight: 400 }}
             >
               <svg {...iconProps}>
@@ -265,11 +265,11 @@ export default function PasswordGenerator() {
                 <span
                   key={tier.level}
                   className="h-1.5 rounded-full transition-colors"
-                  style={{ backgroundColor: index <= strength.score ? strength.tier.color : '#EEEDEB' }}
+                  style={{ backgroundColor: index <= strength.score ? strength.tier.color : 'var(--sunken-2)' }}
                 />
               ))}
             </div>
-            <p className="mt-2.5 flex flex-wrap items-baseline gap-x-2 text-xs text-[#8A8886]" style={{ fontWeight: 300 }}>
+            <p className="mt-2.5 flex flex-wrap items-baseline gap-x-2 text-xs text-ink-3" style={{ fontWeight: 400 }}>
               <span className="text-sm" style={{ fontWeight: 500, color: strength.tier.color }}>{strength.tier.label}</span>
               <span aria-hidden="true">·</span>
               <span>~{Math.round(strength.bits)} bits</span>
@@ -283,8 +283,8 @@ export default function PasswordGenerator() {
         <div className="p-5 sm:p-6 space-y-4">
           <div>
             <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 mb-2">
-              <label htmlFor="length" className="text-xs text-[#8A8886]" style={{ fontWeight: 500 }}>
-                Length · <span className="text-[#1A1A1A] tabular-nums">{options.length}</span>
+              <label htmlFor="length" className="text-xs text-ink-3" style={{ fontWeight: 500 }}>
+                Length · <span className="text-ink tabular-nums">{options.length}</span>
               </label>
               <div className="flex flex-wrap gap-1">
                 {lengthPresets.map((preset) => (
@@ -295,8 +295,8 @@ export default function PasswordGenerator() {
                     aria-pressed={options.length === preset.value}
                     className={`px-2.5 py-1 text-[11px] rounded-full transition-colors ${
                       options.length === preset.value
-                        ? 'bg-[#1A1A1A] text-white'
-                        : 'bg-[#F3F2F1] text-[#605E5C] hover:bg-[#E8E6E3]'
+                        ? 'bg-invert text-on-invert'
+                        : 'bg-sunken text-ink-2 hover:bg-sunken-2'
                     }`}
                     style={{ fontWeight: 500 }}
                   >
@@ -313,7 +313,7 @@ export default function PasswordGenerator() {
               step={1}
               value={options.length}
               onChange={(event) => updateOptions({ length: Number(event.target.value) })}
-              className="w-full accent-[#FF5F00]"
+              className="w-full accent-brand-ink"
               aria-valuetext={`${options.length} characters`}
             />
           </div>
@@ -333,7 +333,7 @@ export default function PasswordGenerator() {
                 className={toggleChip}
                 title={symbolsForced ? `Required by ${policy.name}` : symbolsUnavailable ? `Not accepted by ${policy.name}` : undefined}
               >
-                <span className="dot w-1.5 h-1.5 rounded-full bg-[#D1D0CE]" aria-hidden="true" />
+                <span className="dot w-1.5 h-1.5 rounded-full bg-ink-4" aria-hidden="true" />
                 Symbols{symbolsForced ? ' (required)' : symbolsUnavailable ? ' (not allowed)' : ''}
               </label>
             </div>
@@ -346,7 +346,7 @@ export default function PasswordGenerator() {
                 className="peer sr-only"
               />
               <label htmlFor="opt-ambiguous" className={toggleChip} title="Skips 0 O 1 l I">
-                <span className="dot w-1.5 h-1.5 rounded-full bg-[#D1D0CE]" aria-hidden="true" />
+                <span className="dot w-1.5 h-1.5 rounded-full bg-ink-4" aria-hidden="true" />
                 No look-alikes (0 O 1 l I)
               </label>
             </div>
@@ -359,7 +359,7 @@ export default function PasswordGenerator() {
                 className="peer sr-only"
               />
               <label htmlFor="opt-autocopy" className={toggleChip} title="Copy each new password when you pick a platform or press Regenerate">
-                <span className="dot w-1.5 h-1.5 rounded-full bg-[#D1D0CE]" aria-hidden="true" />
+                <span className="dot w-1.5 h-1.5 rounded-full bg-ink-4" aria-hidden="true" />
                 Auto-copy
               </label>
             </div>
@@ -368,15 +368,15 @@ export default function PasswordGenerator() {
       </div>
 
       {/* Rules */}
-      <details className="group bg-white border border-[#F0EEEC] rounded-2xl">
-        <summary className="cursor-pointer list-none px-5 sm:px-6 py-4 flex items-center justify-between gap-3 rounded-2xl focus-visible:ring-2 focus-visible:ring-[#FF5F00] focus-visible:outline-none">
-          <span className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm text-[#484644]" style={{ fontWeight: 400 }}>
+      <details className="group bg-card border border-line rounded-2xl">
+        <summary className="cursor-pointer list-none px-5 sm:px-6 py-4 flex items-center justify-between gap-3 rounded-2xl focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none">
+          <span className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm text-ink-2" style={{ fontWeight: 400 }}>
             Rules for {policy.name}
             <span className={`px-2 py-0.5 text-[11px] rounded-full ${BASIS[policy.basis].className}`} style={{ fontWeight: 500 }}>
               {BASIS[policy.basis].label}
             </span>
             {checks.length > 0 && (
-              <span className={`text-xs ${passedChecks === checks.length ? 'text-[#3E9B5F]' : 'text-[#C4314B]'}`} style={{ fontWeight: 500 }}>
+              <span className={`text-xs ${passedChecks === checks.length ? 'text-ok-ink' : 'text-danger-ink'}`} style={{ fontWeight: 500 }}>
                 {passedChecks}/{checks.length} met
               </span>
             )}
@@ -385,14 +385,14 @@ export default function PasswordGenerator() {
         </summary>
 
         <div className="px-5 sm:px-6 pb-6">
-          <p className="text-xs text-[#8A8886] leading-relaxed mb-4" style={{ fontWeight: 300 }}>
+          <p className="text-xs text-ink-3 leading-relaxed mb-4" style={{ fontWeight: 400 }}>
             {BASIS[policy.basis].description}{' '}
             {policy.sourceUrl && (
               <a
                 href={policy.sourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline underline-offset-2 hover:text-[#FF5F00] transition-colors"
+                className="underline underline-offset-2 hover:text-brand-ink transition-colors"
               >
                 Source
               </a>
@@ -401,11 +401,11 @@ export default function PasswordGenerator() {
 
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 mb-5">
             {checks.map((check) => (
-              <li key={check.label} className="flex items-start gap-2 text-sm text-[#484644]">
+              <li key={check.label} className="flex items-start gap-2 text-sm text-ink-2">
                 <svg
                   {...iconProps}
                   strokeWidth={2}
-                  className={`w-4 h-4 mt-0.5 shrink-0 ${check.ok ? 'text-[#3E9B5F]' : 'text-[#C4314B]'}`}
+                  className={`w-4 h-4 mt-0.5 shrink-0 ${check.ok ? 'text-ok-ink' : 'text-danger-ink'}`}
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" d={check.ok ? 'M4.5 12.75l6 6 9-13.5' : 'M6 18L18 6M6 6l12 12'} />
                 </svg>
@@ -418,10 +418,10 @@ export default function PasswordGenerator() {
           </ul>
 
           {policy.notes.length > 0 && (
-            <ul className="space-y-1.5 pt-4 border-t border-[#F0EEEC]">
+            <ul className="space-y-1.5 pt-4 border-t border-line">
               {policy.notes.map((note) => (
-                <li key={note} className="flex items-start gap-2.5 text-[13px] text-[#605E5C] leading-relaxed" style={{ fontWeight: 300 }}>
-                  <span className="w-1 h-1 mt-2 rounded-full bg-[#B4B2AF] shrink-0" aria-hidden="true" />
+                <li key={note} className="flex items-start gap-2.5 text-[13px] text-ink-2 leading-relaxed" style={{ fontWeight: 400 }}>
+                  <span className="w-1 h-1 mt-2 rounded-full bg-ink-4 shrink-0" aria-hidden="true" />
                   {note}
                 </li>
               ))}
@@ -431,20 +431,20 @@ export default function PasswordGenerator() {
       </details>
 
       {/* Grading */}
-      <details className="group bg-white border border-[#F0EEEC] rounded-2xl">
-        <summary className="cursor-pointer list-none px-5 sm:px-6 py-4 text-sm text-[#484644] flex items-center justify-between rounded-2xl focus-visible:ring-2 focus-visible:ring-[#FF5F00] focus-visible:outline-none" style={{ fontWeight: 400 }}>
+      <details className="group bg-card border border-line rounded-2xl">
+        <summary className="cursor-pointer list-none px-5 sm:px-6 py-4 text-sm text-ink-2 flex items-center justify-between rounded-2xl focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none" style={{ fontWeight: 400 }}>
           How strength is graded
           {chevron}
         </summary>
         <div className="px-5 sm:px-6 pb-6">
-          <p className="text-sm text-[#605E5C] leading-relaxed mb-4" style={{ fontWeight: 300 }}>
+          <p className="text-sm text-ink-2 leading-relaxed mb-4" style={{ fontWeight: 400 }}>
             Strength is the entropy of the way the password was generated: how many equally likely passwords could
             have come out of the same settings. More bits means exponentially more guesses.
           </p>
           <table className="w-full text-sm">
             <caption className="sr-only">Strength tiers by entropy</caption>
             <thead>
-              <tr className="text-left text-xs text-[#8A8886]">
+              <tr className="text-left text-xs text-ink-3">
                 <th scope="col" className="pb-2 pr-4" style={{ fontWeight: 400 }}>Tier</th>
                 <th scope="col" className="pb-2" style={{ fontWeight: 400 }}>Entropy</th>
               </tr>
@@ -453,9 +453,9 @@ export default function PasswordGenerator() {
               {STRENGTH_TIERS.map((tier, index) => {
                 const next = STRENGTH_TIERS[index + 1]
                 return (
-                  <tr key={tier.level} className="border-t border-[#F0EEEC]">
+                  <tr key={tier.level} className="border-t border-line">
                     <th scope="row" className="py-2 pr-4 text-left" style={{ fontWeight: 500, color: tier.color }}>{tier.label}</th>
-                    <td className="py-2 text-[#605E5C] tabular-nums" style={{ fontWeight: 300 }}>
+                    <td className="py-2 text-ink-2 tabular-nums" style={{ fontWeight: 400 }}>
                       {next ? `${tier.minBits}–${next.minBits - 1} bits` : `${tier.minBits}+ bits`}
                     </td>
                   </tr>
@@ -463,7 +463,7 @@ export default function PasswordGenerator() {
               })}
             </tbody>
           </table>
-          <p className="text-xs text-[#8A8886] leading-relaxed mt-4" style={{ fontWeight: 300 }}>
+          <p className="text-xs text-ink-3 leading-relaxed mt-4" style={{ fontWeight: 400 }}>
             The crack-time figure assumes a fast offline attack (10 billion guesses per second) on a leaked password
             database. Online logins are rate-limited, so real attacks against a good password are far slower. Reusing
             a password across sites is what actually gets people breached, so use a different one everywhere.
@@ -471,10 +471,6 @@ export default function PasswordGenerator() {
         </div>
       </details>
 
-      <p className="text-xs text-[#8A8886] leading-relaxed px-1" style={{ fontWeight: 300 }}>
-        Generated in your browser with the Web Crypto API. Nothing is sent to a server, saved, or logged. Platform rules
-        change without notice; if a site rejects a password, follow the message on its form.
-      </p>
     </div>
   )
 }

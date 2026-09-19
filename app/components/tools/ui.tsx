@@ -44,7 +44,7 @@ export function CopyButton({
     variant === 'primary'
       ? primaryButton
       : variant === 'ghost'
-        ? 'inline-flex items-center gap-1.5 px-2 py-1 text-xs text-[#8A8886] rounded-md hover:text-[#1A1A1A] hover:bg-[#F3F2F1] disabled:opacity-40 transition-colors'
+        ? 'inline-flex items-center gap-1.5 px-2 py-1 text-xs text-ink-3 rounded-md hover:text-ink hover:bg-sunken disabled:opacity-40 transition-colors'
         : secondaryButton
 
   return (
@@ -81,7 +81,7 @@ export function Segmented<T extends string>({
   return (
     <fieldset>
       <legend className="sr-only">{legend}</legend>
-      <div className="inline-flex flex-wrap gap-1 p-1 bg-[#F3F2F1] rounded-xl">
+      <div className="inline-flex flex-wrap gap-1 p-1 bg-sunken rounded-xl">
         {options.map((option) => (
           <div key={option.value}>
             <input
@@ -95,7 +95,7 @@ export function Segmented<T extends string>({
             />
             <label
               htmlFor={`${name}-${option.value}`}
-              className="block px-3.5 py-1.5 text-sm text-[#605E5C] rounded-lg cursor-pointer transition-colors hover:text-[#1A1A1A] peer-checked:bg-white peer-checked:text-[#1A1A1A] peer-checked:shadow-sm peer-focus-visible:ring-2 peer-focus-visible:ring-[#FF5F00]"
+              className="block px-3.5 py-1.5 text-sm text-ink-2 rounded-lg cursor-pointer transition-colors hover:text-ink peer-checked:bg-card peer-checked:text-ink peer-checked:shadow-sm peer-focus-visible:ring-2 peer-focus-visible:ring-brand"
               style={{ fontWeight: value === option.value ? 500 : 400 }}
             >
               {option.label}
@@ -109,10 +109,10 @@ export function Segmented<T extends string>({
 
 export function Notice({ tone, children }: { tone: 'error' | 'warning' | 'info' | 'success'; children: React.ReactNode }) {
   const styles = {
-    error: 'bg-[#FDF0F1] border-[#F4C7CB] text-[#A4262C]',
-    warning: 'bg-[#FDF6E3] border-[#F1DFA6] text-[#7A5200]',
-    info: 'bg-[#F3F2F1] border-[#E1DFDD] text-[#484644]',
-    success: 'bg-[#E9F5EC] border-[#BFE0C8] text-[#1E6B3A]',
+    error: 'bg-danger-bg border-danger-line text-danger-ink',
+    warning: 'bg-warn-bg border-warn-line text-warn-ink',
+    info: 'bg-sunken border-line-strong text-ink-2',
+    success: 'bg-ok-bg border-ok-line text-ok-ink',
   }[tone]
 
   return (

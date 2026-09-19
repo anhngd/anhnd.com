@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import ThemeToggle from './ThemeToggle'
 import { SHOW_BLOG } from '@/lib/site'
 
 const links = [
@@ -15,14 +16,15 @@ export default function Nav({ wide = false }: { wide?: boolean }) {
   const pathname = usePathname()
 
   return (
-    <nav className="sticky top-0 z-30 bg-[#FAFAF9]/80 backdrop-blur-md border-b border-[#F0EEEC]">
-      <div className={`${wide ? 'max-w-4xl' : 'max-w-3xl'} mx-auto px-4 sm:px-6 h-14 flex items-center justify-between`}>
+    <nav className="sticky top-0 z-30 bg-page/80 backdrop-blur-md border-b border-line">
+      <div className="px-4 sm:px-6">
+      <div className={`${wide ? 'max-w-4xl' : 'max-w-3xl'} mx-auto h-14 flex items-center justify-between`}>
         <Link
           href="/"
-          className="text-sm text-[#1A1A1A] tracking-tight"
-          style={{ fontWeight: 500 }}
+          className="text-[15px] text-ink tracking-tight"
+          style={{ fontWeight: 600 }}
         >
-          Anh<span style={{ color: '#FF5F00' }}>ND</span>
+          Anh<span className="text-brand-ink">ND</span>
         </Link>
 
         <div className="flex items-center gap-1">
@@ -36,8 +38,8 @@ export default function Nav({ wide = false }: { wide?: boolean }) {
                 href={link.href}
                 className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
                   isActive
-                    ? 'text-[#1A1A1A] bg-[#F3F2F1]'
-                    : 'text-[#605E5C] hover:text-[#1A1A1A]'
+                    ? 'text-ink bg-sunken'
+                    : 'text-ink-2 hover:text-ink'
                 }`}
                 style={{ fontWeight: isActive ? 500 : 400 }}
                 aria-current={isActive ? 'page' : undefined}
@@ -46,7 +48,10 @@ export default function Nav({ wide = false }: { wide?: boolean }) {
               </Link>
             )
           })}
+          <span className="w-px h-4 bg-line-strong mx-1.5" aria-hidden="true" />
+          <ThemeToggle />
         </div>
+      </div>
       </div>
     </nav>
   )

@@ -14,13 +14,14 @@ export default function PasswordGeneratorPage() {
       name={name}
       heading={
         <>
-          <span className="text-[#FF5F00]">1Click</span> Password Generation
+          <span className="text-brand-ink">1Click</span> Password Generation
         </>
       }
       tagline="Pick a platform. Get a password that fits its rules, graded from Weak to Very strong."
       description={description}
       path={path}
       category="SecurityApplication"
+      note="Passwords are generated in your browser with the Web Crypto API and are never sent or stored. Only your Auto-copy preference is remembered on this device. Platform rules change without notice; if a site rejects a password, follow the message on its form."
     >
       <div className="max-w-3xl">
         <PasswordGenerator />

@@ -80,8 +80,8 @@ function readBrowser(): BrowserInfo {
 function Row({ name, children, copy }: { name: string; children: React.ReactNode; copy?: string }) {
   return (
     <div className="py-3 grid grid-cols-1 sm:grid-cols-[9rem_1fr_auto] gap-x-4 gap-y-1 sm:items-baseline">
-      <dt className="text-xs text-[#8A8886]">{name}</dt>
-      <dd className="text-sm text-[#1A1A1A] break-words min-w-0">{children}</dd>
+      <dt className="text-xs text-ink-3">{name}</dt>
+      <dd className="text-sm text-ink break-words min-w-0">{children}</dd>
       <div className="min-h-0">{copy && <CopyButton text={copy} variant="ghost" />}</div>
     </div>
   )
@@ -100,16 +100,16 @@ function InfoTable({ info, now }: { info: IpInfo; now: number | null }) {
   }
 
   return (
-    <dl className="divide-y divide-[#F0EEEC]">
+    <dl className="divide-y divide-line">
       <Row name="IP address" copy={info.ip}>
         <span className="font-mono text-[13px]">{info.ip}</span>
-        {info.version && <span className="ml-2 text-xs text-[#8A8886]">IPv{info.version}</span>}
+        {info.version && <span className="ml-2 text-xs text-ink-3">IPv{info.version}</span>}
       </Row>
       {place && (
         <Row name="Location">
           {info.flag && <span className="mr-1.5" aria-hidden="true">{info.flag}</span>}
           {place}
-          {info.postal && <span className="text-[#8A8886]"> · {info.postal}</span>}
+          {info.postal && <span className="text-ink-3"> · {info.postal}</span>}
         </Row>
       )}
       {info.latitude !== undefined && info.longitude !== undefined && (
@@ -119,7 +119,7 @@ function InfoTable({ info, now }: { info: IpInfo; now: number | null }) {
             href={`https://www.openstreetmap.org/?mlat=${info.latitude}&mlon=${info.longitude}#map=10/${info.latitude}/${info.longitude}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="ml-3 text-xs text-[#8A8886] underline underline-offset-2 hover:text-[#FF5F00] transition-colors"
+            className="ml-3 text-xs text-ink-3 underline underline-offset-2 hover:text-brand-ink transition-colors"
           >
             View on map
           </a>
@@ -127,15 +127,15 @@ function InfoTable({ info, now }: { info: IpInfo; now: number | null }) {
       )}
       {info.isp && <Row name="ISP">{info.isp}</Row>}
       {info.organization && info.organization !== info.isp && <Row name="Organization">{info.organization}</Row>}
-      {info.asn !== undefined && <Row name="ASN"><span className="font-mono text-[13px]">AS{info.asn}</span>{info.domain && <span className="text-[#8A8886]"> · {info.domain}</span>}</Row>}
+      {info.asn !== undefined && <Row name="ASN"><span className="font-mono text-[13px]">AS{info.asn}</span>{info.domain && <span className="text-ink-3"> · {info.domain}</span>}</Row>}
       {info.timezone && (
         <Row name="Time zone">
           {info.timezone.id}
-          <span className="text-[#8A8886]">
+          <span className="text-ink-3">
             {' '}
             {[info.timezone.abbreviation, info.timezone.utc && `UTC${info.timezone.utc}`].filter(Boolean).join(' · ')}
           </span>
-          {localTime && <span className="block text-xs text-[#8A8886] mt-0.5">Now there: {localTime}</span>}
+          {localTime && <span className="block text-xs text-ink-3 mt-0.5">Now there: {localTime}</span>}
         </Row>
       )}
     </dl>
@@ -218,12 +218,12 @@ export default function MyIpTool() {
   const failed = settled && !primary
   const ipRow = (version: string, state: Remote<string>) => (
     <div className="py-3 flex items-center justify-between gap-3">
-      <dt className="text-xs text-[#8A8886] w-14 shrink-0">{version}</dt>
-      <dd className="font-mono text-[13px] text-[#1A1A1A] break-all flex-1">
-        {state.status === 'loading' && <span className="text-[#B4B2AF]">Looking up…</span>}
+      <dt className="text-xs text-ink-3 w-14 shrink-0">{version}</dt>
+      <dd className="font-mono text-[13px] text-ink break-all flex-1">
+        {state.status === 'loading' && <span className="text-ink-4">Looking up…</span>}
         {state.status === 'ok' && state.value}
         {state.status === 'error' && (
-          <span className="text-[#8A8886] font-sans text-sm" style={{ fontWeight: 300 }}>
+          <span className="text-ink-3 font-sans text-sm" style={{ fontWeight: 400 }}>
             {version === 'IPv6' ? 'No IPv6 address detected' : 'Not available'}
           </span>
         )}
@@ -237,12 +237,12 @@ export default function MyIpTool() {
       {/* Public IP */}
       <section className={`${card} p-5 sm:p-7`} aria-labelledby="ip-public" aria-live="polite">
         <div className="flex items-start justify-between gap-3 mb-4">
-          <h2 id="ip-public" className="text-xs uppercase tracking-wider text-[#8A8886]" style={{ fontWeight: 500 }}>Your public IP</h2>
+          <h2 id="ip-public" className="text-xs uppercase tracking-wider text-ink-3" style={{ fontWeight: 600 }}>Your public IP</h2>
           <button type="button" onClick={refresh} className={chip}>Refresh</button>
         </div>
 
-        <p className="font-mono text-2xl sm:text-4xl text-[#1A1A1A] break-all leading-tight min-h-[2.5rem]">
-          {primary ?? (failed ? '—' : <span className="text-[#B4B2AF]">Looking up…</span>)}
+        <p className="font-mono text-2xl sm:text-4xl text-ink break-all leading-tight min-h-[2.5rem]">
+          {primary ?? (failed ? '—' : <span className="text-ink-4">Looking up…</span>)}
         </p>
         {primary && (
           <div className="mt-4">
@@ -259,7 +259,7 @@ export default function MyIpTool() {
           </div>
         )}
 
-        <dl className="mt-5 pt-2 border-t border-[#F0EEEC] divide-y divide-[#F0EEEC]">
+        <dl className="mt-5 pt-2 border-t border-line divide-y divide-line">
           {ipRow('IPv4', v4)}
           {ipRow('IPv6', v6)}
         </dl>
@@ -267,13 +267,13 @@ export default function MyIpTool() {
 
       {/* Location and network */}
       <section className={`${card} p-5 sm:p-7`} aria-labelledby="ip-details">
-        <h2 id="ip-details" className="text-xs uppercase tracking-wider text-[#8A8886] mb-2" style={{ fontWeight: 500 }}>Location & network</h2>
-        {details.status === 'loading' && <p className="py-3 text-sm text-[#B4B2AF]">Looking up…</p>}
-        {details.status === 'error' && <p className="py-3 text-sm text-[#8A8886]" style={{ fontWeight: 300 }}>{details.message}</p>}
+        <h2 id="ip-details" className="text-xs uppercase tracking-wider text-ink-3 mb-2" style={{ fontWeight: 600 }}>Location & network</h2>
+        {details.status === 'loading' && <p className="py-3 text-sm text-ink-4">Looking up…</p>}
+        {details.status === 'error' && <p className="py-3 text-sm text-ink-3" style={{ fontWeight: 400 }}>{details.message}</p>}
         {details.status === 'ok' && (
           <>
             <InfoTable info={details.value} now={now} />
-            <p className="mt-3 text-xs text-[#8A8886] leading-relaxed" style={{ fontWeight: 300 }}>
+            <p className="mt-3 text-xs text-ink-3 leading-relaxed" style={{ fontWeight: 400 }}>
               Location comes from an IP database and is usually only right to the city or region. VPNs, proxies, company
               networks and mobile carriers often show a different place from where you are.
             </p>
@@ -283,7 +283,7 @@ export default function MyIpTool() {
 
       {/* Lookup */}
       <section className={`${card} p-5 sm:p-7`} aria-labelledby="ip-lookup">
-        <h2 id="ip-lookup" className="text-xs uppercase tracking-wider text-[#8A8886] mb-4" style={{ fontWeight: 500 }}>Look up any IP</h2>
+        <h2 id="ip-lookup" className="text-xs uppercase tracking-wider text-ink-3 mb-4" style={{ fontWeight: 600 }}>Look up any IP</h2>
         <form
           onSubmit={(event) => {
             event.preventDefault()
@@ -308,7 +308,7 @@ export default function MyIpTool() {
           </button>
         </form>
         <div className="flex flex-wrap items-center gap-2 mt-3">
-          <span className="text-xs text-[#B4B2AF]">Try</span>
+          <span className="text-xs text-ink-4">Try</span>
           {SAMPLES.map((sample) => (
             <button key={sample} type="button" className={`${chip} font-mono`} onClick={() => void runLookup(sample)}>{sample}</button>
           ))}
@@ -329,12 +329,12 @@ export default function MyIpTool() {
 
       {/* Browser */}
       <section className={`${card} p-5 sm:p-7`} aria-labelledby="ip-browser">
-        <h2 id="ip-browser" className="text-xs uppercase tracking-wider text-[#8A8886] mb-1" style={{ fontWeight: 500 }}>Your browser</h2>
-        <p className="text-xs text-[#8A8886] mb-2" style={{ fontWeight: 300 }}>
+        <h2 id="ip-browser" className="text-xs uppercase tracking-wider text-ink-3 mb-1" style={{ fontWeight: 600 }}>Your browser</h2>
+        <p className="text-xs text-ink-3 mb-2" style={{ fontWeight: 400 }}>
           Read locally from your browser. Sites you visit can usually see this too; none of it is sent from here.
         </p>
         {browser ? (
-          <dl className="divide-y divide-[#F0EEEC]">
+          <dl className="divide-y divide-line">
             <Row name="Browser">{browser.browser}</Row>
             <Row name="Platform">{browser.platform}</Row>
             <Row name="Languages">{browser.languages}</Row>
@@ -344,7 +344,7 @@ export default function MyIpTool() {
             <Row name="Online">{browser.online ? 'Yes' : 'No'}</Row>
           </dl>
         ) : (
-          <p className="py-3 text-sm text-[#B4B2AF]">Reading…</p>
+          <p className="py-3 text-sm text-ink-4">Reading…</p>
         )}
       </section>
     </div>

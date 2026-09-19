@@ -17,17 +17,17 @@ export const metadata: Metadata = {
 export default function ToolsPage() {
   return (
     <main
-      className="min-h-screen flex flex-col bg-[#FAFAF9]"
-      style={{ fontFamily: 'var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif' }}
+      className="min-h-screen flex flex-col bg-page"
     >
       <Nav wide />
 
-      <div className="max-w-4xl w-full mx-auto px-4 sm:px-6 pt-12 sm:pt-16 pb-20">
+      <div className="w-full px-4 sm:px-6 pt-12 sm:pt-16 pb-20">
+        <div className="max-w-4xl mx-auto">
         <header className="mb-12">
-          <h1 className="text-3xl sm:text-4xl text-[#1A1A1A] mb-3" style={{ fontWeight: 300, letterSpacing: '-0.03em' }}>
+          <h1 className="text-3xl sm:text-4xl text-ink mb-3" style={{ fontWeight: 600, letterSpacing: '-0.03em' }}>
             Tools
           </h1>
-          <p className="text-base sm:text-lg text-[#605E5C] leading-relaxed max-w-xl" style={{ fontWeight: 300 }}>
+          <p className="text-base sm:text-lg text-ink-2 leading-relaxed max-w-xl" style={{ fontWeight: 400 }}>
             Small utilities I built because I wanted them. Free, no sign-up, and nearly everything runs in your browser — My IP is the exception, since it has to ask a lookup service.
           </p>
         </header>
@@ -35,7 +35,7 @@ export default function ToolsPage() {
         <div className="space-y-12">
           {toolCategories.map((category) => (
             <section key={category} aria-labelledby={`category-${category}`}>
-              <h2 id={`category-${category}`} className="text-xs uppercase tracking-wider text-[#8A8886] mb-4" style={{ fontWeight: 500 }}>
+              <h2 id={`category-${category}`} className="text-xs uppercase tracking-wider text-ink-3 mb-4" style={{ fontWeight: 600 }}>
                 {category}
               </h2>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -45,16 +45,16 @@ export default function ToolsPage() {
                     <li key={tool.href}>
                       <Link
                         href={tool.href}
-                        className="group flex flex-col h-full p-6 bg-white border border-[#F0EEEC] rounded-2xl hover:border-[#FF5F00] transition-colors"
+                        className="group flex flex-col h-full p-6 bg-card border border-line rounded-2xl hover:border-brand transition-colors"
                       >
-                        <span className="block w-6 h-0.5 bg-[#FF5F00] mb-5" aria-hidden="true" />
-                        <h3 className="text-lg text-[#1A1A1A] group-hover:text-[#FF5F00] transition-colors mb-2" style={{ fontWeight: 400 }}>
+                        <span className="block w-6 h-0.5 bg-brand mb-5" aria-hidden="true" />
+                        <h3 className="text-lg text-ink group-hover:text-brand-ink transition-colors mb-2" style={{ fontWeight: 500 }}>
                           {tool.name}
                         </h3>
-                        <p className="text-sm text-[#605E5C] leading-relaxed mb-6" style={{ fontWeight: 300 }}>
+                        <p className="text-sm text-ink-2 leading-relaxed mb-6" style={{ fontWeight: 400 }}>
                           {tool.description}
                         </p>
-                        <span className="mt-auto text-sm text-[#8A8886] group-hover:text-[#FF5F00] transition-colors" style={{ fontWeight: 500 }}>
+                        <span className="mt-auto text-sm text-ink-3 group-hover:text-brand-ink transition-colors" style={{ fontWeight: 500 }}>
                           Open →
                         </span>
                       </Link>
@@ -63,6 +63,7 @@ export default function ToolsPage() {
               </ul>
             </section>
           ))}
+        </div>
         </div>
       </div>
 

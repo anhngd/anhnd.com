@@ -37,7 +37,7 @@ const CHEAT_SHEET: [string, string][] = [
 /** The pattern box sits between the "/" and "/flags" labels, so it needs square ends and no side borders. */
 const patternField = field.replace('rounded-xl', 'rounded-none').replace('border border-', 'border-y border-')
 
-const HIGHLIGHT = ['bg-[#FFE0CC]', 'bg-[#FFC9A3]']
+const HIGHLIGHT = ['bg-mark-1', 'bg-mark-2']
 
 export default function RegexTool() {
   const [pattern, setPattern] = useState('')
@@ -88,7 +88,7 @@ export default function RegexTool() {
             </button>
           </div>
           <div className="flex items-stretch">
-            <span className="flex items-center px-3 font-mono text-sm text-[#8A8886] bg-[#F3F2F1] border border-r-0 border-[#E1DFDD] rounded-l-xl" aria-hidden="true">/</span>
+            <span className="flex items-center px-3 font-mono text-sm text-ink-3 bg-sunken border border-r-0 border-line-strong rounded-l-xl" aria-hidden="true">/</span>
             <input
               id="rx-pattern"
               value={pattern}
@@ -99,7 +99,7 @@ export default function RegexTool() {
               className={patternField}
               aria-invalid={shown?.ok === false}
             />
-            <span className="flex items-center px-3 font-mono text-sm text-[#8A8886] bg-[#F3F2F1] border border-l-0 border-[#E1DFDD] rounded-r-xl" aria-hidden="true">
+            <span className="flex items-center px-3 font-mono text-sm text-ink-3 bg-sunken border border-l-0 border-line-strong rounded-r-xl" aria-hidden="true">
               /{flags}
             </span>
           </div>
@@ -118,7 +118,7 @@ export default function RegexTool() {
                   className="peer sr-only"
                 />
                 <label htmlFor={`rx-flag-${item.flag}`} className={toggleChip} title={item.hint}>
-                  <span className="dot w-1.5 h-1.5 rounded-full bg-[#D1D0CE]" aria-hidden="true" />
+                  <span className="dot w-1.5 h-1.5 rounded-full bg-ink-4" aria-hidden="true" />
                   <span className="font-mono">{item.flag}</span> {item.name}
                 </label>
               </div>
@@ -126,7 +126,7 @@ export default function RegexTool() {
             <div>
               <input type="checkbox" id="rx-replace" checked={replaceOn} onChange={(event) => setReplaceOn(event.target.checked)} className="peer sr-only" />
               <label htmlFor="rx-replace" className={toggleChip}>
-                <span className="dot w-1.5 h-1.5 rounded-full bg-[#D1D0CE]" aria-hidden="true" />
+                <span className="dot w-1.5 h-1.5 rounded-full bg-ink-4" aria-hidden="true" />
                 Replace
               </label>
             </div>
@@ -151,7 +151,7 @@ export default function RegexTool() {
         {replaceOn && (
           <div>
             <label htmlFor="rx-replacement" className={`${label} block mb-2`} style={{ fontWeight: 500 }}>
-              Replacement <span className="text-[#B4B2AF]" style={{ fontWeight: 300 }}>· $1, $&lt;name&gt;, $&amp; are supported</span>
+              Replacement <span className="text-ink-4" style={{ fontWeight: 400 }}>· $1, $&lt;name&gt;, $&amp; are supported</span>
             </label>
             <input
               id="rx-replacement"
@@ -168,16 +168,16 @@ export default function RegexTool() {
       {shown?.ok && (
         <>
           <section className={`${card} p-5 sm:p-6`} aria-labelledby="rx-result" aria-live="polite">
-            <h2 id="rx-result" className="text-sm text-[#484644] mb-4" style={{ fontWeight: 500 }}>
+            <h2 id="rx-result" className="text-sm text-ink-2 mb-4" style={{ fontWeight: 600 }}>
               {matches.length === 0
                 ? 'No matches'
                 : `${matches.length}${shown.truncated ? '+' : ''} ${matches.length === 1 ? 'match' : 'matches'}`}
               {shown.truncated && (
-                <span className="text-[#8A8886]" style={{ fontWeight: 300 }}> · showing the first {MAX_MATCHES}</span>
+                <span className="text-ink-3" style={{ fontWeight: 400 }}> · showing the first {MAX_MATCHES}</span>
               )}
             </h2>
             {text && (
-              <pre className="font-mono text-[13px] leading-relaxed text-[#1A1A1A] whitespace-pre-wrap break-words">
+              <pre className="font-mono text-[13px] leading-relaxed text-ink whitespace-pre-wrap break-words">
                 {segments.map((segment, index) =>
                   segment.match === null ? (
                     <span key={index}>{segment.text}</span>
@@ -192,7 +192,7 @@ export default function RegexTool() {
           {replaceOn && shown.replaced !== null && (
             <section className={`${card} p-5 sm:p-6`}>
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-xs uppercase tracking-wider text-[#8A8886]" style={{ fontWeight: 500 }}>Replace result</h2>
+                <h2 className="text-xs uppercase tracking-wider text-ink-3" style={{ fontWeight: 600 }}>Replace result</h2>
                 <CopyButton text={shown.replaced} variant="ghost" />
               </div>
               <textarea value={shown.replaced} readOnly aria-label="Replace result" className={`${readonlyField} min-h-[6rem] resize-y`} />
@@ -201,14 +201,14 @@ export default function RegexTool() {
 
           {matches.length > 0 && (
             <section className={`${card} p-5 sm:p-6`} aria-labelledby="rx-details">
-              <h2 id="rx-details" className="text-xs uppercase tracking-wider text-[#8A8886] mb-3" style={{ fontWeight: 500 }}>Match details</h2>
-              <ol className="divide-y divide-[#F0EEEC]">
+              <h2 id="rx-details" className="text-xs uppercase tracking-wider text-ink-3 mb-3" style={{ fontWeight: 600 }}>Match details</h2>
+              <ol className="divide-y divide-line">
                 {matches.slice(0, 50).map((match, index) => (
                   <li key={index} className="py-3">
                     <p className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm">
-                      <span className="text-[#8A8886] text-xs tabular-nums w-6">#{index + 1}</span>
-                      <code className="font-mono text-[13px] text-[#1A1A1A] break-all">{match.text === '' ? '(empty match)' : JSON.stringify(match.text)}</code>
-                      <span className="text-xs text-[#8A8886]">at index {match.index}</span>
+                      <span className="text-ink-3 text-xs tabular-nums w-6">#{index + 1}</span>
+                      <code className="font-mono text-[13px] text-ink break-all">{match.text === '' ? '(empty match)' : JSON.stringify(match.text)}</code>
+                      <span className="text-xs text-ink-3">at index {match.index}</span>
                     </p>
                     {match.groups.length > 0 && (
                       <dl className="mt-2 ml-9 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-xs">
@@ -216,11 +216,11 @@ export default function RegexTool() {
                           const name = Object.keys(match.named).find((key) => match.named[key] === group && group !== null)
                           return (
                             <div key={groupIndex} className="contents">
-                              <dt className="text-[#8A8886]">
+                              <dt className="text-ink-3">
                                 Group {groupIndex + 1}
                                 {name && <span className="font-mono"> ({name})</span>}
                               </dt>
-                              <dd className="font-mono text-[#484644] break-all">{group === null ? <span className="text-[#B4B2AF]">undefined</span> : JSON.stringify(group)}</dd>
+                              <dd className="font-mono text-ink-2 break-all">{group === null ? <span className="text-ink-4">undefined</span> : JSON.stringify(group)}</dd>
                             </div>
                           )
                         })}
@@ -230,31 +230,31 @@ export default function RegexTool() {
                 ))}
               </ol>
               {matches.length > 50 && (
-                <p className="mt-3 text-xs text-[#8A8886]" style={{ fontWeight: 300 }}>Showing the first 50 matches in this list.</p>
+                <p className="mt-3 text-xs text-ink-3" style={{ fontWeight: 400 }}>Showing the first 50 matches in this list.</p>
               )}
             </section>
           )}
         </>
       )}
 
-      <details className="group bg-white border border-[#F0EEEC] rounded-2xl">
-        <summary className="cursor-pointer list-none px-5 sm:px-6 py-4 text-sm text-[#484644] flex items-center justify-between rounded-2xl focus-visible:ring-2 focus-visible:ring-[#FF5F00] focus-visible:outline-none">
+      <details className="group bg-card border border-line rounded-2xl">
+        <summary className="cursor-pointer list-none px-5 sm:px-6 py-4 text-sm text-ink-2 flex items-center justify-between rounded-2xl focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none">
           Syntax cheat sheet
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-[#8A8886] transition-transform group-open:rotate-180" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-ink-3 transition-transform group-open:rotate-180" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
           </svg>
         </summary>
         <dl className="px-5 sm:px-6 pb-6 grid grid-cols-1 sm:grid-cols-[14rem_1fr] gap-x-6 gap-y-2.5">
           {CHEAT_SHEET.map(([token, meaning]) => (
             <div key={token} className="contents">
-              <dt className="font-mono text-[13px] text-[#1A1A1A]">{token}</dt>
-              <dd className="text-sm text-[#605E5C] mb-2 sm:mb-0" style={{ fontWeight: 300 }}>{meaning}</dd>
+              <dt className="font-mono text-[13px] text-ink">{token}</dt>
+              <dd className="text-sm text-ink-2 mb-2 sm:mb-0" style={{ fontWeight: 400 }}>{meaning}</dd>
             </div>
           ))}
         </dl>
       </details>
 
-      <p className="text-xs text-[#8A8886] leading-relaxed" style={{ fontWeight: 300 }}>
+      <p className="text-xs text-ink-3 leading-relaxed" style={{ fontWeight: 400 }}>
         Uses your browser’s JavaScript regex engine (ECMAScript), so results match what your JS code will do. Other
         languages differ in small ways, especially lookbehind, named groups and flags. Patterns run in a background
         worker and are stopped after 1.5 seconds, which protects the page from catastrophic backtracking.

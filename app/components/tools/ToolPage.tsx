@@ -39,8 +39,7 @@ export default function ToolPage({
 }) {
   return (
     <main
-      className="min-h-screen flex flex-col bg-[#FAFAF9]"
-      style={{ fontFamily: 'var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif' }}
+      className="min-h-screen flex flex-col bg-page"
     >
       <StructuredData
         type="WebApplication"
@@ -57,26 +56,28 @@ export default function ToolPage({
 
       <Nav wide />
 
-      <div className="max-w-4xl w-full mx-auto px-4 sm:px-6 pt-10 sm:pt-14 pb-20">
+      <div className="w-full px-4 sm:px-6 pt-10 sm:pt-14 pb-20">
+        <div className="max-w-4xl mx-auto">
         <header className="mb-8">
-          <nav aria-label="Breadcrumb" className="text-sm text-[#8A8886] mb-4" style={{ fontWeight: 300 }}>
-            <Link href="/tools" className="hover:text-[#FF5F00] transition-colors">Tools</Link>
+          <nav aria-label="Breadcrumb" className="text-sm text-ink-3 mb-4" style={{ fontWeight: 400 }}>
+            <Link href="/tools" className="hover:text-brand-ink transition-colors">Tools</Link>
             <span className="mx-2" aria-hidden="true">/</span>
-            <span className="text-[#605E5C]" aria-current="page">{name}</span>
+            <span className="text-ink-2" aria-current="page">{name}</span>
           </nav>
-          <h1 className="text-3xl sm:text-4xl text-[#1A1A1A] mb-3" style={{ fontWeight: 300, letterSpacing: '-0.03em' }}>
+          <h1 className="text-3xl sm:text-4xl text-ink mb-3" style={{ fontWeight: 600, letterSpacing: '-0.03em' }}>
             {heading ?? name}
           </h1>
-          <p className="text-base text-[#605E5C] leading-relaxed max-w-xl" style={{ fontWeight: 300 }}>
+          <p className="text-base text-ink-2 leading-relaxed max-w-xl" style={{ fontWeight: 400 }}>
             {tagline}
           </p>
         </header>
 
         {children}
 
-        <p className="mt-8 text-xs text-[#8A8886] leading-relaxed px-1" style={{ fontWeight: 300 }}>
+        <p className="mt-8 text-xs text-ink-3 leading-relaxed px-1" style={{ fontWeight: 400 }}>
           {note ?? 'Runs entirely in your browser. Nothing you enter is sent to a server, saved, or logged.'}
         </p>
+        </div>
       </div>
 
       <Footer wide />

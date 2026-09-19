@@ -25,11 +25,11 @@ function ErrorFrame({ text, error }: { text: string; error: JsonError }) {
         {error.line > 0 && ` — line ${error.line}, column ${error.column}`}
       </p>
       {error.line > 0 && (
-        <pre className="mt-2 overflow-x-auto font-mono text-xs leading-relaxed text-[#1A1A1A]">
+        <pre className="mt-2 overflow-x-auto font-mono text-xs leading-relaxed text-ink">
           {shown}
           {'\n'}
           {' '.repeat(Math.max(0, error.column - 1 - start))}
-          <span className="text-[#C4314B]">^</span>
+          <span className="text-danger-ink">^</span>
         </pre>
       )}
     </Notice>
@@ -42,9 +42,9 @@ function preview(value: unknown): string {
 }
 
 const KIND_STYLE: Record<DiffEntry['kind'], { symbol: string; label: string; className: string }> = {
-  added: { symbol: '+', label: 'Added', className: 'bg-[#E9F5EC] text-[#1E6B3A]' },
-  removed: { symbol: '−', label: 'Removed', className: 'bg-[#FDF0F1] text-[#A4262C]' },
-  changed: { symbol: '~', label: 'Changed', className: 'bg-[#FDF6E3] text-[#7A5200]' },
+  added: { symbol: '+', label: 'Added', className: 'bg-ok-bg text-ok-ink' },
+  removed: { symbol: '−', label: 'Removed', className: 'bg-danger-bg text-danger-ink' },
+  changed: { symbol: '~', label: 'Changed', className: 'bg-warn-bg text-warn-ink' },
 }
 
 function FormatPanel() {
@@ -75,7 +75,7 @@ function FormatPanel() {
         <div>
           <input type="checkbox" id="json-sort" checked={sortKeys} onChange={(event) => setSortKeys(event.target.checked)} className="peer sr-only" />
           <label htmlFor="json-sort" className={toggleChip}>
-            <span className="dot w-1.5 h-1.5 rounded-full bg-[#D1D0CE]" aria-hidden="true" />
+            <span className="dot w-1.5 h-1.5 rounded-full bg-ink-4" aria-hidden="true" />
             Sort keys
           </label>
         </div>
@@ -119,7 +119,7 @@ function FormatPanel() {
 
       {parsed && !parsed.ok && <ErrorFrame text={input} error={parsed.error} />}
       {parsed?.ok && (
-        <p className="text-xs text-[#3E9B5F]" style={{ fontWeight: 500 }} role="status">
+        <p className="text-xs text-ok-ink" style={{ fontWeight: 500 }} role="status">
           Valid JSON · {input.length.toLocaleString()} → {output.length.toLocaleString()} characters
         </p>
       )}
@@ -178,16 +178,16 @@ function DiffPanel() {
       {entries && (
         <div className={`${card} p-5 sm:p-6`} aria-live="polite">
           {entries.length === 0 ? (
-            <p className="text-sm text-[#3E9B5F]" style={{ fontWeight: 500 }}>No differences — the two documents are identical.</p>
+            <p className="text-sm text-ok-ink" style={{ fontWeight: 500 }}>No differences — the two documents are identical.</p>
           ) : (
             <>
-              <p className="text-sm text-[#484644] mb-4" style={{ fontWeight: 500 }}>
+              <p className="text-sm text-ink-2 mb-4" style={{ fontWeight: 500 }}>
                 {entries.length} {entries.length === 1 ? 'difference' : 'differences'}
-                <span className="text-[#8A8886]" style={{ fontWeight: 300 }}>
+                <span className="text-ink-3" style={{ fontWeight: 400 }}>
                   {' '}· {count('added')} added · {count('removed')} removed · {count('changed')} changed
                 </span>
               </p>
-              <ul className="divide-y divide-[#F0EEEC]">
+              <ul className="divide-y divide-line">
                 {entries.map((entry) => {
                   const style = KIND_STYLE[entry.kind]
                   return (
@@ -195,11 +195,11 @@ function DiffPanel() {
                       <span className={`shrink-0 self-start w-[5.5rem] text-center px-2 py-0.5 text-[11px] rounded-full ${style.className}`} style={{ fontWeight: 500 }}>
                         {style.symbol} {style.label}
                       </span>
-                      <code className="font-mono text-[13px] text-[#1A1A1A] break-all sm:w-52 shrink-0">{entry.path}</code>
-                      <span className="font-mono text-xs text-[#605E5C] break-all">
-                        {entry.kind !== 'added' && <span className="text-[#A4262C]">{preview(entry.before)}</span>}
-                        {entry.kind === 'changed' && <span className="text-[#8A8886]"> → </span>}
-                        {entry.kind !== 'removed' && <span className="text-[#1E6B3A]">{preview(entry.after)}</span>}
+                      <code className="font-mono text-[13px] text-ink break-all sm:w-52 shrink-0">{entry.path}</code>
+                      <span className="font-mono text-xs text-ink-2 break-all">
+                        {entry.kind !== 'added' && <span className="text-danger-ink">{preview(entry.before)}</span>}
+                        {entry.kind === 'changed' && <span className="text-ink-3"> → </span>}
+                        {entry.kind !== 'removed' && <span className="text-ok-ink">{preview(entry.after)}</span>}
                       </span>
                     </li>
                   )
@@ -207,7 +207,7 @@ function DiffPanel() {
               </ul>
             </>
           )}
-          <p className="mt-4 text-xs text-[#8A8886]" style={{ fontWeight: 300 }}>
+          <p className="mt-4 text-xs text-ink-3" style={{ fontWeight: 400 }}>
             Arrays are compared by position, so inserting an item near the start shows every later item as changed.
           </p>
         </div>

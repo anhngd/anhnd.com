@@ -6,8 +6,7 @@ import { SITE, education, facts, focusAreas } from '@/lib/site'
 export default function AboutPage() {
   return (
     <main
-      className="min-h-screen flex flex-col bg-[#FAFAF9]"
-      style={{ fontFamily: 'var(--font-space-grotesk), "Space Grotesk", system-ui, sans-serif' }}
+      className="min-h-screen flex flex-col bg-page"
     >
       <StructuredData
         type="Person"
@@ -26,34 +25,34 @@ export default function AboutPage() {
 
       {/* Intro */}
       <section aria-label="Introduction" className="relative px-4 sm:px-6 pt-16 sm:pt-24 pb-14 sm:pb-16 overflow-hidden">
-        <div className="absolute inset-0 dot-pattern opacity-[0.4]" aria-hidden="true" />
+        <div className="absolute inset-0 dot-pattern dot-fade opacity-70" aria-hidden="true" />
         <div
           className="absolute top-0 -left-32 w-[420px] h-[420px] rounded-full opacity-[0.06] blur-3xl pointer-events-none"
-          style={{ background: 'radial-gradient(circle, #FF5F00 0%, transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, var(--brand) 0%, transparent 70%)' }}
           aria-hidden="true"
         />
 
         <div className="max-w-3xl mx-auto relative z-10">
-          <p className="text-sm text-[#8A8886] mb-3" style={{ fontWeight: 300 }}>About</p>
+          <p className="text-sm text-ink-3 mb-3" style={{ fontWeight: 400 }}>About</p>
           <h1
-            className="text-4xl sm:text-5xl md:text-6xl text-[#1A1A1A] leading-[1.05] mb-5"
-            style={{ fontWeight: 300, letterSpacing: '-0.03em' }}
+            className="text-4xl sm:text-5xl md:text-6xl text-ink leading-[1.05] mb-5"
+            style={{ fontWeight: 600, letterSpacing: '-0.03em' }}
           >
-            Anh <span className="text-[#FF5F00]">Nguyen</span>
+            Anh <span className="text-brand-ink">Nguyen</span>
           </h1>
-          <p className="text-lg sm:text-xl text-[#605E5C] leading-relaxed max-w-xl" style={{ fontWeight: 300 }}>
+          <p className="text-lg sm:text-xl text-ink-2 leading-relaxed max-w-xl" style={{ fontWeight: 400 }}>
             {SITE.intro}
           </p>
         </div>
       </section>
 
       {/* At a glance */}
-      <section aria-label="At a glance" className="bg-white border-y border-[#F0EEEC] px-4 sm:px-6 py-10">
+      <section aria-label="At a glance" className="bg-card border-y border-line px-4 sm:px-6 py-10">
         <dl className="max-w-3xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-8">
           {facts.map((fact) => (
             <div key={fact.label}>
-              <dt className="text-xs text-[#8A8886] mb-1.5">{fact.label}</dt>
-              <dd className="text-base sm:text-lg text-[#1A1A1A] leading-snug" style={{ fontWeight: 400 }}>{fact.value}</dd>
+              <dt className="text-xs text-ink-3 mb-1.5">{fact.label}</dt>
+              <dd className="text-base sm:text-lg text-ink leading-snug" style={{ fontWeight: 400 }}>{fact.value}</dd>
             </div>
           ))}
         </dl>
@@ -63,49 +62,49 @@ export default function AboutPage() {
       <section className="px-4 sm:px-6 py-14 sm:py-20">
         <div className="max-w-3xl mx-auto space-y-14">
           <div>
-            <h2 className="text-xs uppercase tracking-wider text-[#8A8886] mb-4" style={{ fontWeight: 500 }}>
+            <h2 className="text-xs uppercase tracking-wider text-ink-3 mb-4" style={{ fontWeight: 600 }}>
               Background
             </h2>
-            <p className="text-base sm:text-lg leading-relaxed text-[#484644] max-w-2xl" style={{ fontWeight: 300 }}>
+            <p className="text-base sm:text-lg leading-relaxed text-ink-2 max-w-2xl" style={{ fontWeight: 400 }}>
               15+ years building across gaming, government tech, and enterprise systems — turning real problems into products, from mobile apps to data platforms. As a solo founder, I wear every hat and learn something new every day.
             </p>
           </div>
 
           <div>
-            <h2 className="text-xs uppercase tracking-wider text-[#8A8886] mb-5" style={{ fontWeight: 500 }}>
+            <h2 className="text-xs uppercase tracking-wider text-ink-3 mb-5" style={{ fontWeight: 600 }}>
               Focus areas
             </h2>
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
               {focusAreas.map((area) => (
                 <li key={area.title}>
-                  <p className="flex items-center gap-2 text-sm text-[#1A1A1A] mb-1" style={{ fontWeight: 500 }}>
-                    <span className="w-1 h-1 rounded-full bg-[#FF5F00] shrink-0" aria-hidden="true" />
+                  <p className="flex items-center gap-2 text-sm text-ink mb-1" style={{ fontWeight: 500 }}>
+                    <span className="w-1 h-1 rounded-full bg-brand shrink-0" aria-hidden="true" />
                     {area.title}
                   </p>
-                  <p className="text-sm text-[#605E5C] leading-relaxed pl-3" style={{ fontWeight: 300 }}>{area.description}</p>
+                  <p className="text-sm text-ink-2 leading-relaxed pl-3" style={{ fontWeight: 400 }}>{area.description}</p>
                 </li>
               ))}
             </ul>
           </div>
 
           <div>
-            <h2 className="text-xs uppercase tracking-wider text-[#8A8886] mb-4" style={{ fontWeight: 500 }}>
+            <h2 className="text-xs uppercase tracking-wider text-ink-3 mb-4" style={{ fontWeight: 600 }}>
               Education
             </h2>
             <ul className="space-y-4">
               {education.map((item) => (
                 <li key={item.degree}>
-                  <p className="text-sm text-[#1A1A1A]" style={{ fontWeight: 500 }}>{item.degree}</p>
-                  <p className="text-xs text-[#8A8886]" style={{ fontWeight: 300 }}>{item.school}</p>
+                  <p className="text-sm text-ink" style={{ fontWeight: 500 }}>{item.degree}</p>
+                  <p className="text-xs text-ink-3" style={{ fontWeight: 400 }}>{item.school}</p>
                 </li>
               ))}
             </ul>
           </div>
 
-          <div className="pt-8 border-t border-[#F0EEEC]">
+          <div className="pt-8 border-t border-line">
             <a
               href={`mailto:${SITE.email}`}
-              className="inline-flex items-center gap-2 text-sm text-[#FF5F00] hover:text-[#E55500] transition-colors"
+              className="inline-flex items-center gap-2 text-sm text-brand-ink hover:text-brand-hover transition-colors"
               style={{ fontWeight: 500 }}
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4" aria-hidden="true">

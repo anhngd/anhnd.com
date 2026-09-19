@@ -469,11 +469,11 @@ export interface StrengthTier {
 }
 
 export const STRENGTH_TIERS: StrengthTier[] = [
-  { level: 'very-weak', label: 'Very weak', minBits: 0, color: '#C4314B' },
-  { level: 'weak', label: 'Weak', minBits: 28, color: '#D9822B' },
-  { level: 'fair', label: 'Fair', minBits: 36, color: '#B8960C' },
-  { level: 'strong', label: 'Strong', minBits: 60, color: '#3E9B5F' },
-  { level: 'very-strong', label: 'Very strong', minBits: 80, color: '#0F7B6C' },
+  { level: 'very-weak', label: 'Very weak', minBits: 0, color: 'var(--tier-1)' },
+  { level: 'weak', label: 'Weak', minBits: 28, color: 'var(--tier-2)' },
+  { level: 'fair', label: 'Fair', minBits: 36, color: 'var(--tier-3)' },
+  { level: 'strong', label: 'Strong', minBits: 60, color: 'var(--tier-4)' },
+  { level: 'very-strong', label: 'Very strong', minBits: 80, color: 'var(--tier-5)' },
 ]
 
 /** Assumed attacker speed for the offline estimate: 10 billion guesses per second (GPU rig, fast hash). */

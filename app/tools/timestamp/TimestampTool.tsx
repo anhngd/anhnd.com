@@ -19,8 +19,8 @@ import {
 function Row({ name, value }: { name: string; value: string }) {
   return (
     <div className="py-2.5 flex items-center justify-between gap-3">
-      <dt className="text-xs text-[#8A8886] shrink-0 w-28">{name}</dt>
-      <dd className="font-mono text-[13px] text-[#1A1A1A] break-all flex-1">{value}</dd>
+      <dt className="text-xs text-ink-3 shrink-0 w-28">{name}</dt>
+      <dd className="font-mono text-[13px] text-ink break-all flex-1">{value}</dd>
       <CopyButton text={value} variant="ghost" label="Copy" />
     </div>
   )
@@ -42,14 +42,14 @@ export default function TimestampTool() {
     <div className="space-y-5">
       <section className={`${card} p-5 sm:p-6`} aria-labelledby="ts-now">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-          <h2 id="ts-now" className="text-xs uppercase tracking-wider text-[#8A8886]" style={{ fontWeight: 500 }}>Now</h2>
+          <h2 id="ts-now" className="text-xs uppercase tracking-wider text-ink-3" style={{ fontWeight: 600 }}>Now</h2>
           <div>
             <label htmlFor="ts-zone" className="sr-only">Time zone</label>
             <select
               id="ts-zone"
               value={zone}
               onChange={(event) => setZone(event.target.value)}
-              className="text-sm text-[#484644] bg-white border border-[#E1DFDD] rounded-lg px-3 py-1.5 focus:outline-none focus:border-[#FF5F00] focus:ring-2 focus:ring-[#FF5F00]/20"
+              className="text-sm text-ink-2 bg-card border border-line-strong rounded-lg px-3 py-1.5 focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
             >
               {ZONES.map((option) => (
                 <option key={option.id} value={option.id}>{zoneLabel(option.id, option.label)}</option>
@@ -57,7 +57,7 @@ export default function TimestampTool() {
             </select>
           </div>
         </div>
-        <dl className="divide-y divide-[#F0EEEC]">
+        <dl className="divide-y divide-line">
           <Row name="Seconds" value={now === null ? '—' : String(Math.floor(now / 1000))} />
           <Row name="Milliseconds" value={now === null ? '—' : String(now)} />
           <Row name="Date" value={now === null ? '—' : formatInZone(new Date(now), zone)} />
@@ -66,7 +66,7 @@ export default function TimestampTool() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         <section className={`${card} p-5 sm:p-6`} aria-labelledby="ts-to-date">
-          <h2 id="ts-to-date" className="text-xs uppercase tracking-wider text-[#8A8886] mb-4" style={{ fontWeight: 500 }}>
+          <h2 id="ts-to-date" className="text-xs uppercase tracking-wider text-ink-3 mb-4" style={{ fontWeight: 600 }}>
             Timestamp or date → readable
           </h2>
           <div className="flex items-center justify-between mb-2">
@@ -90,9 +90,9 @@ export default function TimestampTool() {
             {parsed && (
               <>
                 {parsed.unit && (
-                  <p className="text-xs text-[#8A8886] mb-2" style={{ fontWeight: 300 }}>Read as {parsed.unit}.</p>
+                  <p className="text-xs text-ink-3 mb-2" style={{ fontWeight: 400 }}>Read as {parsed.unit}.</p>
                 )}
-                <dl className="divide-y divide-[#F0EEEC]">
+                <dl className="divide-y divide-line">
                   <Row name="Selected zone" value={formatInZone(parsed.date, zone)} />
                   <Row name="UTC" value={formatInZone(parsed.date, 'UTC')} />
                   <Row name="ISO 8601" value={parsed.date.toISOString()} />
@@ -103,7 +103,7 @@ export default function TimestampTool() {
               </>
             )}
             {!input.trim() && (
-              <p className="text-xs text-[#8A8886] leading-relaxed" style={{ fontWeight: 300 }}>
+              <p className="text-xs text-ink-3 leading-relaxed" style={{ fontWeight: 400 }}>
                 Seconds, milliseconds, microseconds and nanoseconds are told apart by length. Dates without a zone are
                 read in your browser’s local time.
               </p>
@@ -112,7 +112,7 @@ export default function TimestampTool() {
         </section>
 
         <section className={`${card} p-5 sm:p-6`} aria-labelledby="ts-to-stamp">
-          <h2 id="ts-to-stamp" className="text-xs uppercase tracking-wider text-[#8A8886] mb-4" style={{ fontWeight: 500 }}>
+          <h2 id="ts-to-stamp" className="text-xs uppercase tracking-wider text-ink-3 mb-4" style={{ fontWeight: 600 }}>
             Date → timestamp
           </h2>
           <label htmlFor="ts-wall" className={`${label} block mb-2`}>Date and time in the selected zone</label>
@@ -136,14 +136,14 @@ export default function TimestampTool() {
 
           <div className="mt-4">
             {fromWall ? (
-              <dl className="divide-y divide-[#F0EEEC]">
+              <dl className="divide-y divide-line">
                 <Row name="Seconds" value={String(Math.floor(fromWall.getTime() / 1000))} />
                 <Row name="Milliseconds" value={String(fromWall.getTime())} />
                 <Row name="UTC" value={formatInZone(fromWall, 'UTC')} />
                 <Row name="ISO 8601" value={fromWall.toISOString()} />
               </dl>
             ) : (
-              <p className="text-xs text-[#8A8886] leading-relaxed" style={{ fontWeight: 300 }}>
+              <p className="text-xs text-ink-3 leading-relaxed" style={{ fontWeight: 400 }}>
                 Pick a date and time to get its Unix timestamp. Changing the zone above changes which instant it means.
               </p>
             )}

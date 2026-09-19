@@ -11,27 +11,27 @@ export default function Footer({ wide = false }: { wide?: boolean }) {
   return (
     <footer
       role="contentinfo"
-      className="mt-auto py-10 px-4 sm:px-6 border-t border-[#F0EEEC] bg-[#FAFAF9]"
+      className="mt-auto py-10 px-4 sm:px-6 border-t border-line bg-page"
     >
       <div className={`${wide ? 'max-w-4xl' : 'max-w-3xl'} mx-auto flex flex-col sm:flex-row items-center justify-between gap-4`}>
-        <p className="text-sm text-[#B4B2AF]" style={{ fontWeight: 300 }}>
+        <p className="text-sm text-ink-4" style={{ fontWeight: 400 }}>
           © {new Date().getFullYear()} anhnd.com
         </p>
 
-        <nav aria-label="Footer" className="flex items-center gap-5 text-sm text-[#8A8886]">
+        <nav aria-label="Footer" className="flex items-center gap-5 text-sm text-ink-3">
           {links.map((link) => (
-            <Link key={link.href} href={link.href} className="hover:text-[#FF5F00] transition-colors">
+            <Link key={link.href} href={link.href} className="hover:text-brand-ink transition-colors">
               {link.label}
             </Link>
           ))}
-          <a href={`mailto:${SITE.email}`} className="hover:text-[#FF5F00] transition-colors">
+          <a href={`mailto:${SITE.email}`} className="hover:text-brand-ink transition-colors">
             Email
           </a>
           <a
             href={SITE.github}
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-[#FF5F00] transition-colors"
+            className="hover:text-brand-ink transition-colors"
           >
             GitHub
           </a>

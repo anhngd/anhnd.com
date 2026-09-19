@@ -65,7 +65,7 @@ export default function EncoderTool() {
           <div>
             <input type="checkbox" id="enc-urlsafe" checked={urlSafe} onChange={(event) => setUrlSafe(event.target.checked)} className="peer sr-only" />
             <label htmlFor="enc-urlsafe" className={toggleChip} title="Uses - and _ instead of + and /, and drops the = padding">
-              <span className="dot w-1.5 h-1.5 rounded-full bg-[#D1D0CE]" aria-hidden="true" />
+              <span className="dot w-1.5 h-1.5 rounded-full bg-ink-4" aria-hidden="true" />
               URL-safe alphabet
             </label>
           </div>
@@ -86,7 +86,7 @@ export default function EncoderTool() {
           <div>
             <input type="checkbox" id="enc-plus" checked={plusAsSpace} onChange={(event) => setPlusAsSpace(event.target.checked)} className="peer sr-only" />
             <label htmlFor="enc-plus" className={toggleChip} title="Form-encoded data writes spaces as +">
-              <span className="dot w-1.5 h-1.5 rounded-full bg-[#D1D0CE]" aria-hidden="true" />
+              <span className="dot w-1.5 h-1.5 rounded-full bg-ink-4" aria-hidden="true" />
               Treat + as space
             </label>
           </div>
@@ -117,7 +117,7 @@ export default function EncoderTool() {
             className={`${field} min-h-[16rem] resize-y`}
             aria-invalid={!result.ok}
           />
-          <p className="mt-1.5 text-xs text-[#8A8886]" style={{ fontWeight: 300 }}>{input.length.toLocaleString()} characters</p>
+          <p className="mt-1.5 text-xs text-ink-3" style={{ fontWeight: 400 }}>{input.length.toLocaleString()} characters</p>
         </div>
 
         <div>
@@ -135,13 +135,13 @@ export default function EncoderTool() {
             placeholder="Result appears here"
             className={`${readonlyField} min-h-[16rem] resize-y`}
           />
-          <p className="mt-1.5 text-xs text-[#8A8886]" style={{ fontWeight: 300 }}>{output.length.toLocaleString()} characters</p>
+          <p className="mt-1.5 text-xs text-ink-3" style={{ fontWeight: 400 }}>{output.length.toLocaleString()} characters</p>
         </div>
       </div>
 
       {!result.ok && <Notice tone="error">{result.error}</Notice>}
 
-      <p className="text-xs text-[#8A8886] leading-relaxed" style={{ fontWeight: 300 }}>
+      <p className="text-xs text-ink-3 leading-relaxed" style={{ fontWeight: 400 }}>
         {kind === 'base64'
           ? 'Text is converted as UTF-8 first, so accents, emoji and non-Latin scripts round-trip correctly. Decoding accepts both the standard and URL-safe alphabets, with or without padding.'
           : 'Component encoding escapes everything except letters, digits and - _ . ! ~ * \' ( ) — use it for a single query value. Full URL keeps the separators (: / ? # & =) intact.'}

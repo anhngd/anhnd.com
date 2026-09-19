@@ -23,10 +23,10 @@ function JsonBlock({ title, value }: { title: string; value: unknown }) {
   return (
     <section className={`${card} p-5`}>
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-xs uppercase tracking-wider text-[#8A8886]" style={{ fontWeight: 500 }}>{title}</h2>
+        <h2 className="text-xs uppercase tracking-wider text-ink-3" style={{ fontWeight: 600 }}>{title}</h2>
         <CopyButton text={text} variant="ghost" />
       </div>
-      <pre className="overflow-x-auto font-mono text-[13px] leading-relaxed text-[#1A1A1A]">{text}</pre>
+      <pre className="overflow-x-auto font-mono text-[13px] leading-relaxed text-ink">{text}</pre>
     </section>
   )
 }
@@ -78,17 +78,17 @@ export default function JwtTool() {
 
           {token.claims.length > 0 && (
             <section className={`${card} p-5`} aria-labelledby="jwt-times">
-              <h2 id="jwt-times" className="text-xs uppercase tracking-wider text-[#8A8886] mb-3" style={{ fontWeight: 500 }}>Time claims</h2>
-              <dl className="divide-y divide-[#F0EEEC]">
+              <h2 id="jwt-times" className="text-xs uppercase tracking-wider text-ink-3 mb-3" style={{ fontWeight: 600 }}>Time claims</h2>
+              <dl className="divide-y divide-line">
                 {token.claims.map((claim) => {
                   const date = new Date(claim.seconds * 1000)
                   return (
                     <div key={claim.name} className="py-2.5 grid grid-cols-1 sm:grid-cols-[9rem_1fr_auto] gap-x-4 gap-y-1 sm:items-baseline">
-                      <dt className="text-sm text-[#484644]" style={{ fontWeight: 500 }}>
-                        {claim.label} <code className="font-mono text-xs text-[#8A8886]">({claim.name})</code>
+                      <dt className="text-sm text-ink-2" style={{ fontWeight: 500 }}>
+                        {claim.label} <code className="font-mono text-xs text-ink-3">({claim.name})</code>
                       </dt>
-                      <dd className="font-mono text-[13px] text-[#1A1A1A]">{formatInZone(date, LOCAL_ZONE)}</dd>
-                      <dd className="text-xs text-[#8A8886]">{now === null ? '' : relativeTime(date, now)}</dd>
+                      <dd className="font-mono text-[13px] text-ink">{formatInZone(date, LOCAL_ZONE)}</dd>
+                      <dd className="text-xs text-ink-3">{now === null ? '' : relativeTime(date, now)}</dd>
                     </div>
                   )
                 })}
@@ -98,11 +98,11 @@ export default function JwtTool() {
 
           <section className={`${card} p-5`}>
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-xs uppercase tracking-wider text-[#8A8886]" style={{ fontWeight: 500 }}>Signature</h2>
+              <h2 className="text-xs uppercase tracking-wider text-ink-3" style={{ fontWeight: 600 }}>Signature</h2>
               <CopyButton text={token.signature} variant="ghost" />
             </div>
-            <p className="font-mono text-[13px] leading-relaxed text-[#1A1A1A] break-all">{token.signature || '(empty)'}</p>
-            <p className="mt-3 text-xs text-[#8A8886] leading-relaxed" style={{ fontWeight: 300 }}>
+            <p className="font-mono text-[13px] leading-relaxed text-ink break-all">{token.signature || '(empty)'}</p>
+            <p className="mt-3 text-xs text-ink-3 leading-relaxed" style={{ fontWeight: 400 }}>
               The signature is <strong style={{ fontWeight: 500 }}>not verified</strong>. Decoding only reads what the
               token claims; anyone can create a token with any contents. Verify signatures on your server with the
               issuer’s key.
@@ -112,7 +112,7 @@ export default function JwtTool() {
       )}
 
       {!input && (
-        <p className="text-sm text-[#8A8886] leading-relaxed" style={{ fontWeight: 300 }}>
+        <p className="text-sm text-ink-3 leading-relaxed" style={{ fontWeight: 400 }}>
           Paste a token to read its header, payload and expiry. Tokens are decoded locally and never uploaded, but treat
           live production tokens as secrets anyway.
         </p>
