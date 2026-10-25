@@ -35,7 +35,7 @@ const CHEAT_SHEET: [string, string][] = [
 ]
 
 /** The pattern box sits between the "/" and "/flags" labels, so it needs square ends and no side borders. */
-const patternField = field.replace('rounded-xl', 'rounded-none').replace('border border-', 'border-y border-')
+const patternField = `${field} rounded-none border-x-0`
 
 const HIGHLIGHT = ['bg-mark-1', 'bg-mark-2']
 
@@ -88,7 +88,7 @@ export default function RegexTool() {
             </button>
           </div>
           <div className="flex items-stretch">
-            <span className="flex items-center px-3 font-mono text-sm text-ink-3 bg-sunken border border-r-0 border-line-strong rounded-l-xl" aria-hidden="true">/</span>
+            <span className="flex items-center px-3 font-mono text-sm text-ink-3 bg-sunken border border-r-0 border-line-strong rounded-l-lg" aria-hidden="true">/</span>
             <input
               id="rx-pattern"
               value={pattern}
@@ -99,7 +99,7 @@ export default function RegexTool() {
               className={patternField}
               aria-invalid={shown?.ok === false}
             />
-            <span className="flex items-center px-3 font-mono text-sm text-ink-3 bg-sunken border border-l-0 border-line-strong rounded-r-xl" aria-hidden="true">
+            <span className="flex items-center px-3 font-mono text-sm text-ink-3 bg-sunken border border-l-0 border-line-strong rounded-r-lg" aria-hidden="true">
               /{flags}
             </span>
           </div>
@@ -237,7 +237,7 @@ export default function RegexTool() {
         </>
       )}
 
-      <details className="group bg-card border border-line rounded-2xl">
+      <details className="group soft-card overflow-hidden">
         <summary className="cursor-pointer list-none px-5 sm:px-6 py-4 text-sm text-ink-2 flex items-center justify-between rounded-2xl focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none">
           Syntax cheat sheet
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-ink-3 transition-transform group-open:rotate-180" aria-hidden="true">

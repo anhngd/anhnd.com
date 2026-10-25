@@ -23,7 +23,7 @@ export default function PasswordGeneratorPage() {
       category="SecurityApplication"
       note="Passwords are generated in your browser with the Web Crypto API and are never sent or stored. Only your Auto-copy preference is remembered on this device. Platform rules change without notice; if a site rejects a password, follow the message on its form."
     >
-      <div className="max-w-3xl">
+      <div className="max-w-3xl mx-auto">
         <PasswordGenerator />
       </div>
     </ToolPage>

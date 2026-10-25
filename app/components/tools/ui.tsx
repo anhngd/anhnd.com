@@ -81,7 +81,7 @@ export function Segmented<T extends string>({
   return (
     <fieldset>
       <legend className="sr-only">{legend}</legend>
-      <div className="inline-flex flex-wrap gap-1 p-1 bg-sunken rounded-xl">
+      <div className="mac-segment inline-flex flex-wrap gap-1 p-1">
         {options.map((option) => (
           <div key={option.value}>
             <input
@@ -95,7 +95,7 @@ export function Segmented<T extends string>({
             />
             <label
               htmlFor={`${name}-${option.value}`}
-              className="block px-3.5 py-1.5 text-sm text-ink-2 rounded-lg cursor-pointer transition-colors hover:text-ink peer-checked:bg-card peer-checked:text-ink peer-checked:shadow-sm peer-focus-visible:ring-2 peer-focus-visible:ring-brand"
+              className="mac-segment-item block px-3.5 py-1.5 text-sm text-ink-2 cursor-pointer hover:text-ink peer-focus-visible:ring-2 peer-focus-visible:ring-brand"
               style={{ fontWeight: value === option.value ? 500 : 400 }}
             >
               {option.label}
@@ -116,7 +116,7 @@ export function Notice({ tone, children }: { tone: 'error' | 'warning' | 'info' 
   }[tone]
 
   return (
-    <div role={tone === 'error' ? 'alert' : 'status'} className={`px-4 py-3 text-sm leading-relaxed border rounded-xl ${styles}`}>
+    <div role={tone === 'error' ? 'alert' : 'status'} className={`px-4 py-3 text-sm leading-relaxed border rounded-xl shadow-[var(--shadow-control)] ${styles}`}>
       {children}
     </div>
   )

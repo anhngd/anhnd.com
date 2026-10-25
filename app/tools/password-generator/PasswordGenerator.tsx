@@ -15,6 +15,7 @@ import {
   type GeneratorOptions,
   type RuleBasis,
 } from '@/lib/passwords'
+import { toggleChip } from '@/app/components/tools/toolStyles'
 
 const AUTO_COPY_KEY = 'anhnd.password-generator.auto-copy'
 
@@ -142,14 +143,9 @@ export default function PasswordGenerator() {
     { label: 'Max', value: max },
   ].filter((preset, index, all) => all.findIndex((other) => other.value === preset.value) === index)
 
-  const toggleChip =
-    'flex items-center gap-2 px-3 py-1.5 text-xs text-ink-2 bg-card border border-line-strong rounded-full cursor-pointer select-none transition-colors ' +
-    'peer-checked:bg-brand-soft peer-checked:border-brand peer-checked:text-brand-soft-ink peer-checked:[&_.dot]:bg-brand ' +
-    'peer-disabled:opacity-50 peer-disabled:cursor-not-allowed peer-focus-visible:ring-2 peer-focus-visible:ring-brand peer-focus-visible:ring-offset-2'
-
   return (
     <div className="space-y-4">
-      <div className="bg-card border border-line rounded-2xl divide-y divide-line">
+      <div className="soft-card divide-y divide-line overflow-hidden">
         {/* Platform */}
         <fieldset className="p-5 sm:p-6">
           <legend className="sr-only">Platform</legend>
@@ -170,7 +166,7 @@ export default function PasswordGenerator() {
                 />
                 <label
                   htmlFor={`platform-${platform.id}`}
-                  className="block px-3 py-1.5 text-[13px] text-ink-2 bg-page border border-line rounded-lg cursor-pointer transition-colors hover:border-ink peer-checked:bg-invert peer-checked:border-ink peer-checked:text-on-invert peer-focus-visible:ring-2 peer-focus-visible:ring-brand peer-focus-visible:ring-offset-2"
+                  className="mac-push block px-3 py-1.5 text-[13px] text-ink-2 cursor-pointer hover:text-ink peer-checked:bg-brand peer-checked:bg-none peer-checked:border-brand-hover peer-checked:text-on-brand peer-focus-visible:ring-2 peer-focus-visible:ring-brand peer-focus-visible:ring-offset-2"
                   style={{ fontWeight: 400 }}
                 >
                   {platform.name}
@@ -187,7 +183,7 @@ export default function PasswordGenerator() {
             onClick={() => copyToClipboard(password)}
             disabled={!password}
             title="Click to copy"
-            className="relative block w-full min-h-[4rem] px-4 py-4 pr-20 text-left bg-page border border-line rounded-xl font-mono text-lg sm:text-2xl leading-snug tracking-wide break-all hover:border-line-strong focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none transition-colors"
+            className="mac-field relative block w-full min-h-[4rem] px-4 py-4 pr-20 text-left bg-sunken font-mono text-lg sm:text-2xl leading-snug tracking-wide break-all hover:border-line-strong focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none"
             aria-label={password ? (revealed ? `Copy password ${password}` : 'Copy hidden password') : 'Generating password'}
           >
             {!password && <span className="text-ink-4">Generating…</span>}
@@ -213,7 +209,7 @@ export default function PasswordGenerator() {
               type="button"
               onClick={() => copyToClipboard(password)}
               disabled={!password}
-              className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-brand text-on-brand text-sm rounded-lg hover:bg-brand-hover disabled:opacity-40 transition-colors"
+              className="mac-primary flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-2.5 text-sm disabled:opacity-40"
               style={{ fontWeight: 500 }}
             >
               <svg {...iconProps}>
@@ -224,7 +220,7 @@ export default function PasswordGenerator() {
             <button
               type="button"
               onClick={() => generate(platformId, options, true)}
-              className="inline-flex items-center gap-2 px-4 py-2.5 text-sm text-ink-2 border border-line-strong rounded-lg hover:border-ink transition-colors"
+              className="mac-push inline-flex items-center gap-2 px-4 py-2.5 text-sm text-ink-2 hover:text-ink"
               style={{ fontWeight: 400 }}
             >
               <svg {...iconProps}>
@@ -237,7 +233,7 @@ export default function PasswordGenerator() {
               type="button"
               onClick={() => setRevealed((value) => !value)}
               aria-pressed={!revealed}
-              className="inline-flex items-center gap-2 px-3 py-2.5 text-sm text-ink-2 rounded-lg hover:text-ink transition-colors"
+              className="inline-flex items-center gap-2 px-3 py-2.5 text-sm text-ink-2 rounded-lg hover:text-ink hover:bg-sunken transition-colors"
               style={{ fontWeight: 400 }}
             >
               <svg {...iconProps}>
@@ -295,7 +291,7 @@ export default function PasswordGenerator() {
                     aria-pressed={options.length === preset.value}
                     className={`px-2.5 py-1 text-[11px] rounded-full transition-colors ${
                       options.length === preset.value
-                        ? 'bg-invert text-on-invert'
+                        ? 'bg-brand text-on-brand'
                         : 'bg-sunken text-ink-2 hover:bg-sunken-2'
                     }`}
                     style={{ fontWeight: 500 }}
@@ -368,7 +364,7 @@ export default function PasswordGenerator() {
       </div>
 
       {/* Rules */}
-      <details className="group bg-card border border-line rounded-2xl">
+      <details className="group soft-card overflow-hidden">
         <summary className="cursor-pointer list-none px-5 sm:px-6 py-4 flex items-center justify-between gap-3 rounded-2xl focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none">
           <span className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm text-ink-2" style={{ fontWeight: 400 }}>
             Rules for {policy.name}
@@ -431,7 +427,7 @@ export default function PasswordGenerator() {
       </details>
 
       {/* Grading */}
-      <details className="group bg-card border border-line rounded-2xl">
+      <details className="group soft-card overflow-hidden">
         <summary className="cursor-pointer list-none px-5 sm:px-6 py-4 text-sm text-ink-2 flex items-center justify-between rounded-2xl focus-visible:ring-2 focus-visible:ring-brand focus-visible:outline-none" style={{ fontWeight: 400 }}>
           How strength is graded
           {chevron}

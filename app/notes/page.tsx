@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import Nav from '../components/Nav'
+import Footer from '../components/Footer'
 import { getSortedNotesData } from '@/lib/markdown'
 import { SHOW_BLOG } from '@/lib/site'
 
@@ -10,12 +11,13 @@ export default function NotesPage() {
   const notes = getSortedNotesData()
 
   return (
-    <main className="min-h-screen bg-page">
+    <main className="min-h-screen flex flex-col bg-page">
       <Nav />
-      <div className="max-w-3xl mx-auto py-12 sm:py-16 px-4 sm:px-6">
-        <header className="mb-10 flex items-start justify-between gap-4">
+      <div className="relative max-w-3xl w-full mx-auto py-10 sm:py-14 px-4 sm:px-6">
+        <div className="aurora" aria-hidden="true" />
+        <header className="relative mb-8 flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl text-ink mb-2" style={{ fontWeight: 600, letterSpacing: '-0.02em' }}>
+            <h1 className="text-4xl sm:text-5xl text-ink mb-3" style={{ fontWeight: 600, letterSpacing: '-0.035em' }}>
               Notes
             </h1>
             <p className="text-sm text-ink-3" style={{ fontWeight: 400 }}>
@@ -40,12 +42,12 @@ export default function NotesPage() {
             No notes yet. Stay tuned.
           </p>
         ) : (
-          <div className="space-y-0">
+          <div className="relative soft-card divide-y divide-line overflow-hidden">
             {notes.map((note) => (
-              <article key={note.id} className="group border-b border-line last:border-b-0">
+              <article key={note.id} className="group">
                 <Link
                   href={`/notes/${note.id}`}
-                  className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-6 py-5 hover:bg-card -mx-3 px-3 rounded-lg transition-colors"
+                  className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-6 px-5 py-5 hover:bg-sunken transition-colors"
                 >
                   <time
                     dateTime={note.date}
@@ -82,6 +84,8 @@ export default function NotesPage() {
           </div>
         )}
       </div>
+
+      <Footer />
     </main>
   )
 }

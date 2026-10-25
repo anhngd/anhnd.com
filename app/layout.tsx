@@ -1,38 +1,38 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter, JetBrains_Mono } from 'next/font/google'
+import { Google_Sans, Google_Sans_Code } from 'next/font/google'
 import Script from 'next/script'
 import './globals.css'
 import { SHOW_BLOG } from '@/lib/site'
 
-const inter = Inter({
-  subsets: ['latin', 'vietnamese'],
-  variable: '--font-inter',
+const googleSans = Google_Sans({
+  subsets: ['latin', 'latin-ext', 'vietnamese'],
+  variable: '--font-google-sans',
   display: 'swap',
 })
 
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin', 'vietnamese'],
-  variable: '--font-jetbrains-mono',
+const googleSansCode = Google_Sans_Code({
+  subsets: ['latin', 'latin-ext', 'vietnamese'],
+  variable: '--font-google-sans-code',
   display: 'swap',
 })
 
 /**
- * Runs before first paint so a visitor who chose a theme never sees a flash of the other one.
- * With no saved choice the CSS follows the OS setting on its own.
+ * Runs before first paint so a visitor who chose dark never sees a flash of light.
+ * The site is light by default, so only the 'dark' choice is applied here.
  */
-const themeScript = `try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}`
+const themeScript = `try{if(localStorage.getItem('theme')==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}`
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://anhnd.com'),
   title: {
     template: '%s | Anh Nguyen',
-    default: 'Anh Nguyen — Technical Manager & Builder',
+    default: 'Anh Nguyen — Builder of products and lean teams',
   },
-  description: 'Personal site of Anh Nguyen — technical manager and solo founder based in Vietnam. I build products, lead small teams, and make small useful tools.',
+  description: 'Personal site of Anh Nguyen. I build products, lead lean teams, and turn ambitious ideas into meaningful impact.',
   keywords: [
-    'Anh Nguyen', 'AnhND', 'Technical Manager', 'Solo Founder',
-    'Big Data', 'AI', 'Machine Learning', 'Full-stack Developer',
-    'Engineering Management', 'Leadership', 'Digital Transformation', 'Password Generator',
+    'Anh Nguyen', 'AnhND', 'Big Data', 'AI', 'Machine Learning',
+    'Full-stack Developer', 'Digital Transformation', 'Developer Tools',
+    'Password Generator', 'JSON Formatter', 'JWT Decoder',
     'Vietnam', 'HUST', 'Applied Mathematics',
   ],
   authors: [{ name: 'Anh Nguyen', url: 'https://anhnd.com' }],
@@ -42,8 +42,8 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: 'Anh Nguyen — Technical Manager & Builder',
-    description: 'I build products, lead small teams, and make small useful tools — like a platform-aware password generator.',
+    title: 'Anh Nguyen — Builder of products and lean teams',
+    description: 'I build products, lead lean teams, and turn ambitious ideas into meaningful impact.',
     url: 'https://anhnd.com',
     siteName: 'Anh Nguyen',
     images: [
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
         url: 'https://anhnd.com/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Anh Nguyen — Technical Manager & Builder',
+        alt: 'Anh Nguyen — Builder of products and lean teams',
         type: 'image/png',
       },
     ],
@@ -60,8 +60,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Anh Nguyen — Technical Manager & Builder',
-    description: 'I build products, lead small teams, and make small useful tools.',
+    title: 'Anh Nguyen — Builder of products and lean teams',
+    description: 'I build products, lead lean teams, and turn ambitious ideas into meaningful impact.',
     creator: '@anhnd',
     images: ['https://anhnd.com/og-image.png'],
     site: '@anhnd',
@@ -98,10 +98,8 @@ export const metadata: Metadata = {
 
 // Viewport metadata
 export const viewport: Viewport = {
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#FAFAFA' },
-    { media: '(prefers-color-scheme: dark)', color: '#0A0A0B' },
-  ],
+  // The site is light by default, so the browser chrome matches it.
+  themeColor: '#F7F8FC',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
@@ -113,7 +111,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${googleSans.variable} ${googleSansCode.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <link rel="icon" href="/favicon.ico" sizes="any" />

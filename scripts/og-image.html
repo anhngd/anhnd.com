@@ -1,0 +1,83 @@
+<!doctype html>
+<!--
+  Source of public/og-image.png (1200x630). To regenerate after a copy change:
+  "Google Chrome" --headless --window-size=1200,630 --screenshot=public/og-image.png scripts/og-image.html
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html { width: 1200px; height: 630px; overflow: hidden; }
+      body {
+        width: 1200px;
+        height: 630px;
+        font-family: 'Google Sans', system-ui, sans-serif;
+        background: #F7F8FC;
+        color: #14161D;
+        position: relative;
+        overflow: hidden;
+      }
+      .wash-a, .wash-b {
+        position: absolute;
+        border-radius: 9999px;
+        filter: blur(90px);
+      }
+      .wash-a { width: 620px; height: 620px; top: -220px; right: -140px; background: rgba(255, 138, 61, 0.30); }
+      .wash-b { width: 520px; height: 520px; top: -160px; left: -180px; background: rgba(84, 150, 255, 0.26); }
+      .frame {
+        position: relative;
+        height: 100%;
+        padding: 76px 80px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      h1 {
+        font-size: 88px;
+        font-weight: 600;
+        letter-spacing: -0.04em;
+        line-height: 1.02;
+      }
+      .lead {
+        font-size: 34px;
+        font-weight: 400;
+        line-height: 1.35;
+        letter-spacing: -0.015em;
+        color: #4A5160;
+        max-width: 940px;
+      }
+      .rule { height: 1px; background: #E7E9F1; }
+      .meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding-top: 26px;
+        font-size: 22px;
+        color: #646B7C;
+      }
+      .meta strong { color: #14161D; font-weight: 500; }
+      .dot { color: #C2410C; }
+    </style>
+  </head>
+  <body>
+    <div class="wash-a"></div>
+    <div class="wash-b"></div>
+    <div class="frame">
+      <h1>Anh Nguyen</h1>
+
+      <p class="lead">I build products, lead lean teams, and turn ambitious ideas into meaningful impact.</p>
+
+      <div>
+        <div class="rule"></div>
+        <div class="meta">
+          <span><strong>anhnd.com</strong> <span class="dot">·</span> Hanoi, Vietnam</span>
+          <span>me@anhnd.com</span>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

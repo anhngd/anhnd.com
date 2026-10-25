@@ -182,10 +182,18 @@ export default function StatusDashboard() {
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // The first fetch is scheduled rather than called in the effect body, so the
+  // demo-data path does not set state synchronously during the effect.
   useEffect(() => {
-    fetchData()
-    const t = setInterval(fetchData, REFRESH_INTERVAL)
-    return () => clearInterval(t)
+    let cancelled = false
+    const run = () => { if (!cancelled) void fetchData() }
+    const first = window.setTimeout(run, 0)
+    const t = window.setInterval(run, REFRESH_INTERVAL)
+    return () => {
+      cancelled = true
+      window.clearTimeout(first)
+      window.clearInterval(t)
+    }
   }, [fetchData])
 
   if (!data) return null
