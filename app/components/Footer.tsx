@@ -13,7 +13,7 @@ export default function Footer({ wide = false }: { wide?: boolean }) {
 
         <nav aria-label="Footer" className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-ink-3">
           {SHOW_BLOG && <Link href="/notes" className="hover:text-ink transition-colors">Notes</Link>}
-          <a href={SITE.my} className="hover:text-ink transition-colors">My</a>
+          <a href={SITE.my} target="_blank" rel="noopener noreferrer" className="hover:text-ink transition-colors">My</a>
           <Link href="/tools" className="hover:text-ink transition-colors">Tools</Link>
           <a href={`mailto:${SITE.email}`} className="hover:text-ink transition-colors">Email</a>
           <a href={SITE.github} target="_blank" rel="noopener noreferrer" className="hover:text-ink transition-colors">
