@@ -10,10 +10,11 @@ Personal website and blog for Anh Nguyen (anhnd.com). Static site built with Nex
 - **Styling:** Tailwind CSS 4 driven by design tokens in `app/globals.css` (light + dark themes)
 - **Content:** Markdown files in `content/notes/` with gray-matter frontmatter
 - **Fonts:** Google Sans (UI) and Google Sans Code (code, passwords), via next/font, with the Vietnamese subset
-- **Package manager:** Yarn 4.9
+- **Package manager:** Yarn 4.18
 
-TypeScript stays on 6.x: TypeScript 7 is outside the range typescript-eslint accepts
-(`>=4.8.4 <6.1.0`) and Yarn's builtin TS patch cannot apply to it yet.
+TypeScript stays on 6.x. TypeScript 7 installs and both `yarn build` and `tsc --noEmit` pass with
+it, but `yarn lint` dies: typescript-eslint refuses to load against the TS 7 API
+(typescript-eslint#10940). Revisit once it ships TS 7 support.
 
 ## Project Structure
 
