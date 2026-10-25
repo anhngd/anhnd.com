@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import Nav from './components/Nav'
 import Footer from './components/Footer'
@@ -5,6 +6,10 @@ import Section from './components/Section'
 import StructuredData from './components/StructuredData'
 import { getSortedNotesData } from '@/lib/markdown'
 import { SHOW_BLOG, SITE, education, facts, focusAreas } from '@/lib/site'
+
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+}
 
 const arrowRight = (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-3.5 h-3.5" aria-hidden="true">
@@ -17,14 +22,28 @@ export default function Home() {
 
   return (
     <main className="min-h-screen flex flex-col bg-page">
+      {/* A personal profile page: ProfilePage wraps the Person it is about. */}
+      <StructuredData
+        type="ProfilePage"
+        data={{
+          '@id': `${SITE.url}/#profilepage`,
+          url: SITE.url,
+          name: `${SITE.name} — personal profile`,
+          isPartOf: { '@id': `${SITE.url}/#website` },
+          mainEntity: { '@id': `${SITE.url}/#person` },
+          inLanguage: 'en',
+        }}
+      />
       <StructuredData
         type="WebSite"
         data={{
           '@id': `${SITE.url}/#website`,
           name: SITE.name,
+          alternateName: 'AnhND',
           description: SITE.intro,
           url: SITE.url,
-          author: { '@id': `${SITE.url}/#person` },
+          inLanguage: 'en',
+          publisher: { '@id': `${SITE.url}/#person` },
         }}
       />
       <StructuredData
@@ -32,10 +51,26 @@ export default function Home() {
         data={{
           '@id': `${SITE.url}/#person`,
           name: SITE.name,
+          alternateName: 'AnhND',
+          givenName: 'Anh',
+          familyName: 'Nguyen',
           url: SITE.url,
+          mainEntityOfPage: { '@id': `${SITE.url}/#profilepage` },
           description: SITE.intro,
-          alumniOf: 'Hanoi University of Science and Technology',
-          sameAs: [SITE.github],
+          image: `${SITE.url}${SITE.image}`,
+          email: `mailto:${SITE.email}`,
+          address: {
+            '@type': 'PostalAddress',
+            addressLocality: SITE.city,
+            addressCountry: SITE.country,
+          },
+          alumniOf: {
+            '@type': 'CollegeOrUniversity',
+            name: SITE.university.name,
+            url: SITE.university.url,
+          },
+          knowsAbout: focusAreas.map((area) => area.title),
+          sameAs: [SITE.github, SITE.my],
         }}
       />
 

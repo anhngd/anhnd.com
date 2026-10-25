@@ -1,11 +1,11 @@
 {
-  "name": "Anh Nguyen — Technical Manager & Builder",
+  "name": "Anh Nguyen — Builder of products and lean teams",
   "short_name": "Anh Nguyen",
-  "description": "Personal site of Anh Nguyen — technical manager, solo founder, and builder of small useful tools.",
+  "description": "Personal site of Anh Nguyen. I build products, lead lean teams, and turn ambitious ideas into meaningful impact.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FAFAF9",
-  "theme_color": "#FF5F00",
+  "background_color": "#F7F8FC",
+  "theme_color": "#F7F8FC",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",

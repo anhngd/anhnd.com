@@ -38,9 +38,6 @@ export const metadata: Metadata = {
   authors: [{ name: 'Anh Nguyen', url: 'https://anhnd.com' }],
   creator: 'Anh Nguyen',
   publisher: 'Anh Nguyen',
-  alternates: {
-    canonical: '/',
-  },
   openGraph: {
     title: 'Anh Nguyen — Builder of products and lean teams',
     description: 'I build products, lead lean teams, and turn ambitious ideas into meaningful impact.',
@@ -56,7 +53,11 @@ export const metadata: Metadata = {
       },
     ],
     locale: 'en_US',
-    type: 'website',
+    // A personal profile, not a generic site: lets networks render it as a person.
+    type: 'profile',
+    firstName: 'Anh',
+    lastName: 'Nguyen',
+    username: 'anhnd',
   },
   twitter: {
     card: 'summary_large_image',

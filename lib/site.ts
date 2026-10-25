@@ -5,6 +5,15 @@ export const SITE = {
   github: 'https://github.com/anhnd',
   /** Personal dashboard on a subdomain; linked from the footer. */
   my: 'https://my.anhnd.com',
+  twitter: '@anhnd',
+  /** Not shown on the page; search engines use it for the profile card. */
+  image: '/avatar_profile.jpeg',
+  city: 'Hanoi',
+  country: 'VN',
+  university: {
+    name: 'Hanoi University of Science and Technology',
+    url: 'https://hust.edu.vn',
+  },
   intro: 'I build products, lead lean teams, and turn ambitious ideas into meaningful impact.',
 } as const
 

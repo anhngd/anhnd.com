@@ -12,8 +12,16 @@ export const metadata: Metadata = {
   title: 'Tools',
   description,
   alternates: { canonical: `${SITE.url}/tools` },
-  openGraph: { title: 'Tools — Anh Nguyen', description, url: `${SITE.url}/tools`, siteName: SITE.name, type: 'website' },
-  twitter: { card: 'summary_large_image', title: 'Tools — Anh Nguyen', description },
+  openGraph: {
+    title: 'Tools — Anh Nguyen',
+    description,
+    url: `${SITE.url}/tools`,
+    siteName: SITE.name,
+    type: 'website',
+    locale: 'en_US',
+    images: [{ url: `${SITE.url}/og-image.png`, width: 1200, height: 630, alt: 'Tools — Anh Nguyen', type: 'image/png' }],
+  },
+  twitter: { card: 'summary_large_image', title: 'Tools — Anh Nguyen', description, images: [`${SITE.url}/og-image.png`] },
 }
 
 export default function ToolsPage() {

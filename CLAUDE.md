@@ -150,6 +150,24 @@ small inline script in `layout.tsx` applies that choice before first paint.
 Font weights: 400 body, 500 labels and small titles, 600 headings. Google Sans is used for everything,
 including article prose; Google Sans Code for code, passwords and other monospace values.
 
+## SEO
+
+The home page is a personal profile, and the markup says so: `ProfilePage` wraps the `Person`
+(`#person`), `WebSite` points at the same node, and Open Graph uses `type: profile`. The `Person`
+node carries image, email, address, `alumniOf` and `knowsAbout` (generated from `focusAreas`), so
+keep it in step when that copy changes. Tool pages add `WebApplication` + `BreadcrumbList`.
+
+Things that are easy to break, so check them after touching metadata:
+
+- `trailingSlash: true`, so every canonical and every sitemap URL ends with `/`. They must match.
+- The canonical lives on each page, never in the root layout — a root canonical is inherited by
+  `/status` and the 404 page and tells Google they are the home page.
+- Every page needs its own `openGraph.images`: a page that sets `openGraph` replaces the root's,
+  image included. `toolMetadata()` handles this for the tools.
+- `/status`, the 404 page and (while `SHOW_BLOG` is false) `/notes` are `noindex`.
+- `public/og-image.png` is generated from `scripts/og-image.html`; regenerate it when the headline
+  copy changes, and keep `public/site.webmanifest` in step with the site name and theme color.
+
 ## Rules
 
 - Static export only — no server-side features (API routes, SSR, middleware). Tools run fully client-side; never send or store user input

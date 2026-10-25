@@ -1,6 +1,11 @@
-'use client'
-
+import type { Metadata } from 'next'
 import Link from 'next/link'
+
+export const metadata: Metadata = {
+  title: 'Page not found',
+  // A 404 should never be indexed, and the static export has no status code to say so.
+  robots: { index: false, follow: false },
+}
 
 export default function NotFound() {
   return (

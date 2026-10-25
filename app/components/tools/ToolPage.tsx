@@ -8,12 +8,22 @@ import { SITE, tools } from '@/lib/site'
 
 export function toolMetadata({ name, description, path }: { name: string; description: string; path: string }): Metadata {
   const url = `${SITE.url}${path}`
+  const image = `${SITE.url}/og-image.png`
+
   return {
     title: name,
     description,
     alternates: { canonical: url },
-    openGraph: { title: `${name} — Anh Nguyen`, description, url, siteName: SITE.name, type: 'website' },
-    twitter: { card: 'summary_large_image', title: `${name} — Anh Nguyen`, description },
+    openGraph: {
+      title: `${name} — Anh Nguyen`,
+      description,
+      url,
+      siteName: SITE.name,
+      type: 'website',
+      locale: 'en_US',
+      images: [{ url: image, width: 1200, height: 630, alt: `${name} — Anh Nguyen`, type: 'image/png' }],
+    },
+    twitter: { card: 'summary_large_image', title: `${name} — Anh Nguyen`, description, images: [image] },
   }
 }
 
@@ -60,8 +70,21 @@ export default function ToolPage({
           url: `${SITE.url}${path}`,
           applicationCategory: category,
           operatingSystem: 'Any',
+          browserRequirements: 'Requires JavaScript',
+          isAccessibleForFree: true,
           offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-          author: { '@id': `${SITE.url}/#person` },
+          author: { '@type': 'Person', name: SITE.name, url: SITE.url },
+          publisher: { '@type': 'Person', name: SITE.name, url: SITE.url },
+        }}
+      />
+      <StructuredData
+        type="BreadcrumbList"
+        data={{
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: SITE.name, item: SITE.url },
+            { '@type': 'ListItem', position: 2, name: 'Tools', item: `${SITE.url}/tools` },
+            { '@type': 'ListItem', position: 3, name, item: `${SITE.url}${path}` },
+          ],
         }}
       />
 
