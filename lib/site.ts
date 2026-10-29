@@ -14,6 +14,8 @@ export const SITE = {
     name: 'Hanoi University of Science and Technology',
     url: 'https://hust.edu.vn',
   },
+  /** The only line on the landing page: the Lạc bird of the Đông Sơn drums, flying out. */
+  statement: 'Lạc Go Global',
   intro: 'I build products, lead lean teams, and turn ambitious ideas into meaningful impact.',
 } as const
 
