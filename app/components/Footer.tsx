@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import ThemeToggle from './ThemeToggle'
 import { SHOW_BLOG, SITE } from '@/lib/site'
 
 export default function Footer({ wide = false }: { wide?: boolean }) {
@@ -13,7 +12,6 @@ export default function Footer({ wide = false }: { wide?: boolean }) {
         </p>
 
         <nav aria-label="Footer" className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-ink-3">
-          <ThemeToggle />
           {SHOW_BLOG && <Link href="/notes" className="hover:text-ink transition-colors">Notes</Link>}
           <a href={SITE.my} target="_blank" rel="noopener noreferrer" className="hover:text-ink transition-colors">My</a>
           <Link href="/tools" className="hover:text-ink transition-colors">Tools</Link>

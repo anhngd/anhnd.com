@@ -2,13 +2,14 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import ThemeToggle from './ThemeToggle'
 import { SHOW_BLOG } from '@/lib/site'
 
 // Tools are deliberately not here: the site leads with the person, and the only
 // link to the tools lives in the footer.
 const links = SHOW_BLOG ? [{ href: '/notes', label: 'Notes' }] : []
 
-/** A quiet top bar for the inner pages: the name, and Notes when the blog is on. */
+/** A quiet top bar: the name and the theme switch. Nothing else. */
 export default function Nav({ wide = false }: { wide?: boolean }) {
   const pathname = usePathname()
 
@@ -40,6 +41,8 @@ export default function Nav({ wide = false }: { wide?: boolean }) {
               </Link>
             )
           })}
+          {links.length > 0 && <span className="w-px h-4 bg-line mx-2" aria-hidden="true" />}
+          <ThemeToggle />
         </div>
       </nav>
     </header>

@@ -20,14 +20,14 @@ it, but `yarn lint` dies: typescript-eslint refuses to load against the TS 7 API
 
 ```
 app/
-├── page.tsx              ← Landing page: one line (SITE.statement). No nav, no footer,
-│                         no decoration, no /about page.
+├── page.tsx              ← Home: the whole personal site (masthead, profile, background,
+│                         what I do, education, contact). There is no /about page.
 ├── layout.tsx            ← Root layout, metadata, fonts
 ├── globals.css           ← Global styles, CSS variables
 ├── not-found.tsx         ← 404 page
 ├── components/
-│   ├── Nav.tsx           ← Quiet top bar for the inner pages (not the landing page)
-│   ├── Footer.tsx        ← Shared footer: theme switch, and the only link to the tools
+│   ├── Nav.tsx           ← Quiet top bar: name + theme switch (Notes only when SHOW_BLOG)
+│   ├── Footer.tsx        ← Shared footer; the only link to the tools lives here
 │   ├── Section.tsx       ← The page rhythm: hairline rule, numbered label in the left margin
 │   ├── ToolIcon.tsx      ← macOS-style gradient app icon (glyph + data-tint)
 │   ├── FadeIn.tsx        ← Fade-in-on-scroll wrapper (client); content stays visible without JS
@@ -110,13 +110,11 @@ soft color wash (`.aurora`) behind hero sections, definition lists split into tw
 only for links and accents. The tools keep the window chrome: generous corners (windows 14px, fields
 and buttons 8–10px), soft layered shadows, gradient app icons.
 
-The home page is a landing page and holds exactly one meaningful line, `SITE.statement`, centered on
-an otherwise empty screen — no nav, no footer, no background wash, no links. Resist adding anything
-to it; put it on an inner page instead. `/tools` is therefore reachable only by its URL (it stays in
-the sitemap). The inner pages still carry the nav and the footer, and the footer is where the theme
-switch lives. `Section` (numbered label in the left margin) is the rhythm for those pages; keep the
-chrome and the content on the same grid — page padding goes *outside* the measured `max-w-4xl`
-column, exactly as `Section` does it, or the nav and footer drift away from the text.
+The home page is the whole personal site — a type-only masthead (no photo), then numbered sections
+(`Section`) whose labels sit in the left margin. Tools are not advertised there: the single entry
+point is the small `Tools` link in the footer (and `/tools` itself). Keep the chrome and the content
+on the same grid: page padding goes *outside* the measured `max-w-4xl` column, exactly as `Section`
+does it, otherwise the nav and footer drift away from the text.
 
 **Colors come only from tokens** defined in `app/globals.css` (`:root` for light, `[data-theme="dark"]`
 and a `prefers-color-scheme` block for dark) and exposed as Tailwind utilities. Never write a hex color
@@ -168,9 +166,8 @@ Things that are easy to break, so check them after touching metadata:
 - Every page needs its own `openGraph.images`: a page that sets `openGraph` replaces the root's,
   image included. `toolMetadata()` handles this for the tools.
 - `/status`, the 404 page and (while `SHOW_BLOG` is false) `/notes` are `noindex`.
-- `public/og-image.png` is generated from `scripts/og-image.html` and repeats `SITE.statement`;
-  regenerate it whenever that line changes, and keep `public/site.webmanifest` in step with the site
-  name and theme color.
+- `public/og-image.png` is generated from `scripts/og-image.html`; regenerate it when the headline
+  copy changes, and keep `public/site.webmanifest` in step with the site name and theme color.
 
 ## Rules
 
